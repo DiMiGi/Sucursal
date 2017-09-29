@@ -16,21 +16,21 @@
           <div class="form-group" title="Título de la pestaña de la página" rel="tooltip">
             <label for="look-feel.title" class="col-2 col-form-label">Título de la página</label>
             <div class="col-10">
-              <input class="form-control" type="text" id="look-feel.title" setting-input value="<%= Setting['look-feel.title'] %>">
+              <input class="form-control" type="text" id="look-feel.title" setting-input value="<%= @settings['look-feel.title'] %>">
             </div>
           </div>
 
           <div class="form-group" title="Título que aparece al lado del logo de Movistar" rel="tooltip">
             <label for="look-feel.header" class="col-2 col-form-label">Título del banner</label>
             <div class="col-10">
-              <input class="form-control" type="text" id="look-feel.header" setting-input value="<%= Setting['look-feel.header'] %>">
+              <input class="form-control" type="text" id="look-feel.header" setting-input value="<%= @settings['look-feel.header'] %>">
             </div>
           </div>
 
           <div class="form-group" title="Probando con valores númericos" rel="tooltip">
             <label for="random.number" class="col-2 col-form-label">Número de prueba</label>
             <div class="col-10">
-              <input class="form-control" type="number" id="random.number" setting-input value="<%= Setting['random.number'] %>">
+              <input class="form-control" type="number" id="random.number" setting-input value="<%= @settings['random.number'] %>">
             </div>
           </div>
 
