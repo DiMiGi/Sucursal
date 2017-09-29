@@ -41,7 +41,12 @@ GEM
     arel (8.0.0)
     auto_strip_attributes (2.1.0)
       activerecord (>= 3.0)
+    autoprefixer-rails (7.1.4.1)
+      execjs
     bcrypt (3.1.11)
+    bootstrap-sass (3.3.7)
+      autoprefixer-rails (>= 5.2.1)
+      sass (>= 3.3.4)
     builder (3.2.3)
     byebug (9.1.0)
     coffee-rails (4.2.2)
@@ -201,6 +206,7 @@ PLATFORMS
 
 DEPENDENCIES
   auto_strip_attributes (~> 2.1)
+  bootstrap-sass (~> 3.3.6)
   byebug
   coffee-rails (~> 4.2)
   devise
@@ -215,7 +221,7 @@ DEPENDENCIES
   rails (~> 5.1.4)
   rails_12factor
   rspec-rails (~> 3.6)
-  sass-rails (~> 5.0)
+  sass-rails (>= 3.2)
   sqlite3
   turbolinks (~> 5)
   tzinfo-data

@@ -12,6 +12,6 @@
 //
 //= require jquery
 //= require rails-ujs
-//= require bootstrap/dist/js/bootstrap
+//= require bootstrap-sprockets
 //= require notifyjs-browser/dist/notify
 //= require_tree .
