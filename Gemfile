@@ -32,7 +32,6 @@ gem 'devise'
 gem "auto_strip_attributes", "~> 2.1"
 gem 'pundit'
 gem 'will_paginate', '~> 3.1.0'
-gem 'webpacker'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
