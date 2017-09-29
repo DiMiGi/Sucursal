@@ -1,0 +1,19 @@
+# config/app.yml for rails-settings-cached
+defaults: &defaults
+  foo: "Foo"
+  bar: 123
+  look-feel:
+    title: Sucursal Movistar
+    header: Sucursal Movistar ♥
+
+  random:
+    number: 1234
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

@@ -16,5 +16,9 @@ $(document).ready(function(){
       $li.addClass("open");
     }
   });
-  
+
+
+  $("[rel='tooltip']").tooltip();
+
+
 });

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sucursal Movistar</title>
+    <title><%= Setting['look-feel.title'] %></title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -17,7 +17,7 @@
 	           <div class="col-md-5">
 	              <!-- Logo -->
 	              <div class="logo">
-	                 <h1><a href="index.html"><%= image_tag("logo35x26.png") %> Sucursal Movistar</a></h1>
+	                 <h1><a href="index.html"><%= image_tag("logo35x26.png") %> <%= Setting['look-feel.header'] %></a></h1>
 	              </div>
 	           </div>
 	           <div class="col-md-5">
@@ -81,6 +81,7 @@
                     <% end %>
 
                     <% if current_staff.admin? %>
+                    <li><%= link_to 'Configuración global', :settings %></li>
                     <li><a href="calendar.html"><i class="glyphicon glyphicon-record"></i> Admin menu 1</a></li>
                     <li><a href="stats.html"><i class="glyphicon glyphicon-tasks"></i> Admin menu 2</a></li>
                     <li><a href="tables.html"><i class="glyphicon glyphicon-pencil"></i> Admin menu 3</a></li>
