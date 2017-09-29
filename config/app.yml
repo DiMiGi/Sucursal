@@ -5,7 +5,6 @@ defaults: &defaults
   look-feel:
     title: Sucursal Movistar
     header: Sucursal Movistar ♥
-
   random:
     number: 1234
 

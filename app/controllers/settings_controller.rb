@@ -18,15 +18,12 @@ class SettingsController < ApplicationController
 
     keys = []
 
-    params[:data].each do |key|
-      keys << key
-    end
-
-    settings = Setting.where(var: keys)
-
-    settings.each do |setting|
-      setting.value = params[:data][setting.var]
-      setting.save
+    ActiveRecord::Base.transaction do
+      params[:data].each do |key, value|
+        setting = Setting.find_by(var: key) || Setting.new(var: key, value: value)
+        setting.value = value
+        setting.save
+      end
     end
 
     render :json => :ok
