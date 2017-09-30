@@ -1,31 +1,36 @@
 class SettingPolicy < ApplicationPolicy
 
   def index?
-    user.admin?
+    onlyAdmin
   end
 
   def show?
-    user.admin?
+    onlyAdmin
   end
 
   def create?
-    user.admin?
+    onlyAdmin
   end
 
   def new?
-    user.admin?
+    onlyAdmin
   end
 
   def update?
-    user.admin?
+    onlyAdmin
   end
 
   def edit?
-    user.admin?
+    onlyAdmin
   end
 
   def destroy?
-    user.admin?
+    onlyAdmin
+  end
+
+  private
+  def onlyAdmin
+    user != nil && user.admin?
   end
 
 end
