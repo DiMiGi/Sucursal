@@ -10,7 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170929190917) do
+ActiveRecord::Schema.define(version: 20170930154957) do
+
+  create_table "branch_offices", force: :cascade do |t|
+    t.string "direccion", limit: 60, null: false
+    t.integer "comuna_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comuna_id"], name: "index_branch_offices_on_comuna_id"
+  end
+
+  create_table "comunas", force: :cascade do |t|
+    t.string "name", limit: 60, null: false
+    t.integer "region_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["region_id"], name: "index_comunas_on_region_id"
+  end
+
+  create_table "regions", force: :cascade do |t|
+    t.string "name", limit: 60, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "settings", force: :cascade do |t|
     t.string "var", null: false
