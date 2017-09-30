@@ -15,9 +15,9 @@ RSpec.describe Staff, type: :model do
   end
 
   it "quita espacios a su nombre al inicio y final" do
-    staff = FactoryGirl.create(:staff, :names => "              A             ")
+    staff = FactoryGirl.create(:staff, :names => "              A         ", first_surname: "  bbb  ", second_surname: "  cc ")
     expect(staff).to be_valid
-    expect(staff.names).to eq "A"
+    expect(staff.nombre_completo).to eq "A Bbb Cc"
   end
 
   it "usuario puede tener nombres y primer apellido pero segundo apellido es opcional" do
@@ -28,7 +28,7 @@ RSpec.describe Staff, type: :model do
   end
 
   it "quita espacios dobles en el nombre y pone mayusculas al inicio de cada nombre" do
-    staff = FactoryGirl.create(:staff, :names => "  fELipE     ChrisTOPher  ", first_surname: " DíAZ   de    Valdés  ")
+    staff = FactoryGirl.create(:staff, :names => "  fELipE     ChrisTOPher  ", first_surname: "  díAZ   de    Valdés  ")
     expect(staff).to be_valid
     expect(staff.names).to eq "Felipe Christopher"
     expect(staff.first_surname).to eq "Díaz De Valdés"

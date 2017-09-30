@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   get '/settings', to: 'settings#index'
   put '/settings', to: 'settings#update'
 
+  get '/staff', to: 'staffs#new'
+
 end

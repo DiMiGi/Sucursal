@@ -30,7 +30,7 @@ class SettingPolicy < ApplicationPolicy
 
   private
   def onlyAdmin
-    user != nil && user.admin?
+    !user.nil? && user.admin?
   end
 
 end
