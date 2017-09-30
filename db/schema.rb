@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170930154957) do
+ActiveRecord::Schema.define(version: 20170930175626) do
 
   create_table "branch_offices", force: :cascade do |t|
-    t.string "direccion", limit: 60, null: false
+    t.string "address", limit: 60, null: false
     t.integer "comuna_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -58,6 +58,9 @@ ActiveRecord::Schema.define(version: 20170930154957) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "position", default: 0
+    t.string "fullname"
+    t.integer "branch_office_id"
+    t.index ["branch_office_id"], name: "index_staffs_on_branch_office_id"
     t.index ["email"], name: "index_staffs_on_email", unique: true
     t.index ["reset_password_token"], name: "index_staffs_on_reset_password_token", unique: true
   end
