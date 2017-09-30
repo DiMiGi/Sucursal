@@ -24,14 +24,24 @@ class Staff < ApplicationRecord
 
   belongs_to :branch_office, optional: true
 
-  auto_strip_attributes :fullname, :squish => true
+  auto_strip_attributes :names, :squish => true
+  auto_strip_attributes :first_surname, :squish => true
+  auto_strip_attributes :second_surname, :squish => true
 
-  validates_length_of :fullname, :minimum => 1
+  validates_length_of :names, :minimum => 1
+  validates_length_of :first_surname, :minimum => 1
 
   validates_with SucursalAsignadaCorrectamente
 
   after_validation :mayusculas_nombre
 
+  def nombre_completo
+    completo = names + ' ' + first_surname
+    if second_surname
+      completo = completo + ' ' + second_surname
+    end
+    return completo
+  end
 
   def executive?
     position == :executive.to_s
@@ -52,7 +62,9 @@ class Staff < ApplicationRecord
   private
   def mayusculas_nombre
     return unless errors.blank?
-    self.fullname = self.fullname.split.map(&:capitalize)*' '
+    self.names = self.names.split.map(&:capitalize)*' '
+    self.first_surname = self.first_surname.split.map(&:capitalize)*' '
+    self.second_surname = self.second_surname.split.map(&:capitalize)*' ' if self.second_surname
   end
 
 

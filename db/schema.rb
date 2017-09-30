@@ -58,7 +58,9 @@ ActiveRecord::Schema.define(version: 20170930175626) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "position", default: 0
-    t.string "fullname"
+    t.string "names"
+    t.string "first_surname"
+    t.string "second_surname"
     t.integer "branch_office_id"
     t.index ["branch_office_id"], name: "index_staffs_on_branch_office_id"
     t.index ["email"], name: "index_staffs_on_email", unique: true

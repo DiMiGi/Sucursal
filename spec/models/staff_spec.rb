@@ -8,20 +8,30 @@ RSpec.describe Staff, type: :model do
   end
 
   it "quita espacios a su nombre al inicio y final y valida luego de eso su largo" do
-    staff = FactoryGirl.build(:staff, :fullname => "                           ")
+    staff = FactoryGirl.build(:staff, :names => "                   ")
+    expect(staff).to_not be_valid
+    staff = FactoryGirl.build(:staff, :first_surname => "     ")
     expect(staff).to_not be_valid
   end
 
   it "quita espacios a su nombre al inicio y final" do
-    staff = FactoryGirl.create(:staff, :fullname => "              A             ")
+    staff = FactoryGirl.create(:staff, :names => "              A             ")
     expect(staff).to be_valid
-    expect(staff.fullname).to eq "A"
+    expect(staff.names).to eq "A"
+  end
+
+  it "usuario puede tener nombres y primer apellido pero segundo apellido es opcional" do
+    staff = FactoryGirl.create(:staff, :names => "carlos andres", first_surname: "guzman", second_surname: "vilches")
+    expect(staff.nombre_completo).to eq "Carlos Andres Guzman Vilches"
+    staff = FactoryGirl.create(:staff, :names => "christine  ", first_surname: "pino ", second_surname: "  ")
+    expect(staff.nombre_completo).to eq "Christine Pino"
   end
 
   it "quita espacios dobles en el nombre y pone mayusculas al inicio de cada nombre" do
-    staff = FactoryGirl.create(:staff, :fullname => "  fELipE     VilCHES ")
+    staff = FactoryGirl.create(:staff, :names => "  fELipE     ChrisTOPher  ", first_surname: " DíAZ   de    Valdés  ")
     expect(staff).to be_valid
-    expect(staff.fullname).to eq "Felipe Vilches"
+    expect(staff.names).to eq "Felipe Christopher"
+    expect(staff.first_surname).to eq "Díaz De Valdés"
   end
 
   it "dos usuarios no pueden tener el mismo correo electronico" do

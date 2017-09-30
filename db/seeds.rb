@@ -24,10 +24,10 @@ bo3 = BranchOffice.create!(address: 'Av. Providencia #789', comuna_id: metropoli
 bo4 = BranchOffice.create!(address: 'Autopista Central #101', comuna_id: metropolitana.comunas[20].id)
 
 
-Staff.create!(branch_office: bo1, fullname: "juan cespedes", email: 'juan@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:executive])
-Staff.create!(branch_office: bo2, fullname: "pedro vilches", email: 'pedro@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:executive])
-Staff.create!(branch_office: bo4, fullname: "natalia guzman", email: 'natalia@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:manager])
-Staff.create!(branch_office: bo3, fullname: "pablo silva", email: 'pablo@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:manager])
-Staff.create!(branch_office: bo1, fullname: "carlos vasquez", email: 'carlos@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:supervisor])
+Staff.create!(branch_office: bo1, names: "juan andres", first_surname: "valdes", second_surname: "vasquez", email: 'juan@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:executive])
+Staff.create!(branch_office: bo2, names: "pedro pablo", first_surname: "silva", second_surname: "osorio", email: 'pedro@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:executive])
+Staff.create!(branch_office: bo4, names: "natalia belen", first_surname: "vilches", second_surname: "cespedes", email: 'natalia@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:manager])
+Staff.create!(branch_office: bo3, names: "pablo matias", first_surname: "Díaz de Valdés", second_surname: "pastene", email: 'pablo@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:manager])
+Staff.create!(branch_office: bo1, names: "richard", first_surname: "li", email: 'carlos@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:supervisor])
 
-Staff.create!(branch_office: nil, fullname: "rodrigo silva", email: 'admin@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:admin])
+Staff.create!(branch_office: nil, names: "rodrigo juan", first_surname: "jong", second_surname: "un", email: 'admin@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:admin])
