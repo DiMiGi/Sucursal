@@ -1,4 +1,4 @@
-class StaffsController < ApplicationController
+class StaffController < ApplicationController
 
   before_action :authenticate_staff!
   #before_action :set_staff, only: [:update, :destroy]

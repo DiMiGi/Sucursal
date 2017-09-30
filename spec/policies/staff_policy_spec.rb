@@ -65,9 +65,6 @@ describe StaffPolicy do
       it { is_expected.to permit_action(:create) }
     end
 
-
-
   end
-
 
 end
