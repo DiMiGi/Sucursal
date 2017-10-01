@@ -5,11 +5,11 @@ var BranchOfficeSelector = function(jQueryObj){
 
 
   var offices = {};
-  var spinner = jQueryObj.find("#obteniendo-sucursales");
+  var spinner = jQueryObj.find(".obteniendo-sucursales");
 
 
   function showAddresses(region, comuna){
-    var select = jQueryObj.find("#address-select");
+    var select = jQueryObj.find(".address-select");
     select.empty();
     var addr = offices[region][comuna];
     for(var i in addr){
@@ -18,7 +18,7 @@ var BranchOfficeSelector = function(jQueryObj){
   }
 
   function showComunas(region){
-    var select = jQueryObj.find("#comuna-select");
+    var select = jQueryObj.find(".comuna-select");
     select.empty();
     for(var key in offices[region]){
       select.append('<option value="' + key + '">' + key + '</option>');
@@ -27,7 +27,7 @@ var BranchOfficeSelector = function(jQueryObj){
   }
 
   function showAllRegions(){
-    var select = jQueryObj.find("#region-select");
+    var select = jQueryObj.find(".region-select");
     select.empty();
     for(var key in offices){
       select.append('<option value="' + key + '">' + key + '</option>');
@@ -36,9 +36,9 @@ var BranchOfficeSelector = function(jQueryObj){
   }
 
   this.obtenerSucursal = function(){
-    var region = jQueryObj.find("#region-select").val();
-    var comuna = jQueryObj.find("#comuna-select").val();
-    var address = jQueryObj.find("#address-select").val();
+    var region = jQueryObj.find(".region-select").val();
+    var comuna = jQueryObj.find(".comuna-select").val();
+    var address = jQueryObj.find(".address-select").val();
     var result;
 
     for(i in offices[region][comuna]){
@@ -51,21 +51,21 @@ var BranchOfficeSelector = function(jQueryObj){
       id: result.id,
       address: result.address,
       region: region,
-      comuna: comuna 
+      comuna: comuna
     };
   }
 
   function showSelects(){
     jQueryObj.empty();
-    jQueryObj.append('<select class="form-control" id="region-select"></select>');
-    jQueryObj.append('<select class="form-control" id="comuna-select"></select>');
-    jQueryObj.append('<select class="form-control" id="address-select"></select>');
+    jQueryObj.append('<select class="form-control region-select"></select>');
+    jQueryObj.append('<select class="form-control comuna-select"></select>');
+    jQueryObj.append('<select class="form-control address-select"></select>');
 
-    jQueryObj.find("#comuna-select").change(function(){
-      showAddresses(jQueryObj.find("#region-select").val(), $(this).val());
+    jQueryObj.find(".comuna-select").change(function(){
+      showAddresses(jQueryObj.find(".region-select").val(), $(this).val());
     });
 
-    jQueryObj.find("#region-select").change(function(){
+    jQueryObj.find(".region-select").change(function(){
       showComunas($(this).val());
     });
 
