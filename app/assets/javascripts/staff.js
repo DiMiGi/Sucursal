@@ -18,7 +18,7 @@ $(document).ready(function(){
       select.empty();
       var addr = offices[region][comuna];
       for(var i in addr){
-        select.append(`<option value="${addr[i]}">${addr[i].address}</option>`);
+        select.append('<option value="' + addr[i] + '">' + addr[i].address + '</option>');
       }
     }
 
@@ -26,7 +26,7 @@ $(document).ready(function(){
       var select = $("#comuna-select");
       select.empty();
       for(var key in offices[region]){
-        select.append(`<option value="${key}">${key}</option>`);
+        select.append('<option value="' + key + '">' + key + '</option>');
       }
       showAddresses(region, select.val());
     }
@@ -35,7 +35,7 @@ $(document).ready(function(){
       var select = $("#region-select");
       select.empty();
       for(var key in offices){
-        select.append(`<option value="${key}">${key}</option>`);
+        select.append('<option value="' + key + '">' + key + '</option>');
       }
       showComunas(select.val());
     }
