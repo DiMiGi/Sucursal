@@ -7,6 +7,11 @@ RSpec.describe Staff, type: :model do
     expect(staff).to be_valid
   end
 
+  it "valida usuarios sin primer apellido" do
+    expect(FactoryGirl.build(:staff, :first_surname => "")).to_not be_valid
+    expect(FactoryGirl.build(:staff, :first_surname => "  ")).to_not be_valid
+  end
+
   it "quita espacios a su nombre al inicio y final y valida luego de eso su largo" do
     staff = FactoryGirl.build(:staff, :names => "                   ")
     expect(staff).to_not be_valid
@@ -54,9 +59,17 @@ RSpec.describe Staff, type: :model do
   it "usuario administrador es invalido cuando tiene asignada una sucursal" do
     staff = FactoryGirl.build(:staff, :admin, :branch_office => FactoryGirl.create(:branch_office))
     expect(staff).to_not be_valid
-
     staff = FactoryGirl.build(:staff, :admin, :branch_office => nil)
     expect(staff).to be_valid
+  end
+
+  it "muestra correctamente el nombre corto (es decir, primer nombre y primer apellido)" do
+    staff = FactoryGirl.create(:staff, names: " felipe   chris", first_surname: "  vilch")
+    expect(staff.name_surname).to eq "Felipe Vilch"
+
+    staff = FactoryGirl.create(:staff, names: "   a", first_surname: "  díAZ   dE Valdés", second_surname: "qqwweerty")
+    expect(staff.name_surname).to eq "A Díaz De Valdés"
+
   end
 
 

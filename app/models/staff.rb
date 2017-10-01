@@ -43,6 +43,10 @@ class Staff < ApplicationRecord
     return full
   end
 
+  def name_surname
+    names.split(" ")[0] + " " + first_surname 
+  end
+
   def executive?
     position == :executive.to_s
   end

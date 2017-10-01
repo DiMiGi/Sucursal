@@ -47,7 +47,7 @@ $(document).ready(function(){
     }
 
     $("#save-user").click(function(){
-      console.log("asdasd")
+      console.log("Guardar el archivo")
 
     });
 
