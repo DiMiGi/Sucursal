@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :staff do
 
-    sequence :email { |n| "username#{n}@mail.com" }
+    sequence :email do |n| "username#{n}@mail.com" end
     names "roberto pablo"
     first_surname "caceres"
     second_surname "garcia"
@@ -9,13 +9,13 @@ FactoryGirl.define do
     password  "123456789"
     password_confirmation  "123456789"
 
-    trait :executive { position :executive }
-    trait :supervisor { position :supervisor }
-    trait :manager { position :manager }
-    trait :admin {
+    trait :executive do position :executive end
+    trait :supervisor do position :supervisor end
+    trait :manager do position :manager end
+    trait :admin do
       position :admin
       branch_office nil
-    }
+    end
 
     association :branch_office
 
