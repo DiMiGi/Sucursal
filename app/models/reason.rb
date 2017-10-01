@@ -1,2 +1,0 @@
-class Reason < ApplicationRecord
-end

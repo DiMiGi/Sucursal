@@ -21,22 +21,15 @@ $(document).ready(function(){
       branchOfficeId = officeSelector.getBranchOffice().id;
     }
 
-    var names = form.find("[name=names]").val();
-    var firstSurname = form.find("[name=first-surname]").val();
-    var secondSurname = form.find("[name=second-surname]").val();
-    var password = form.find("[name=password]").val();
-    var passwordConfirmation = form.find("[name=password-confirmation]").val();
-    var email = form.find("[name=email]").val();
-
     var data = {
-      names: names,
-      first_surname: firstSurname,
-      second_surname: secondSurname,
+      names: form.find("[name=names]").val(),
+      first_surname: form.find("[name=first-surname]").val(),
+      second_surname: form.find("[name=second-surname]").val(),
       branch_office_id: branchOfficeId,
-      position: position,
-      password,
-      password_confirmation: passwordConfirmation,
-      email
+      position,
+      password: form.find("[name=password]").val(),
+      password_confirmation: form.find("[name=password-confirmation]").val(),
+      email: form.find("[name=email]").val()
     };
 
     btnSubmit.prop('disabled', true);
@@ -46,7 +39,11 @@ $(document).ready(function(){
       data: JSON.stringify(data),
       method: 'POST',
       success: function(res){
+        $.notify("Usuario fue creado correctamente.", "success");
 
+        form.find("input[type=text]").val('');
+        form.find("input[type=email]").val('');
+        form.find("input[type=password]").val('');
 
         btnSubmit.prop('disabled', false);
       },
@@ -60,9 +57,5 @@ $(document).ready(function(){
         }
       }
     });
-
-
   });
-
-
 });

@@ -49,6 +49,8 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails', '~> 3.6'
   gem 'pundit-matchers', '~> 1.3.1'
+  gem 'capybara'
+
 end
 
 group :development do

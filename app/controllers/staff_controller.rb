@@ -18,7 +18,11 @@ class StaffController < ApplicationController
 
   def create
 
-    newStaff = Staff.new(staff_params)
+    attributes = staff_params
+    attributes['password'] = params[:password]
+    attributes['password_confirmation'] = params[:password_confirmation]
+
+    newStaff = Staff.new(attributes)
     authorize newStaff
 
     if newStaff.save
@@ -35,7 +39,7 @@ class StaffController < ApplicationController
   end
 
   def staff_params
-    params.fetch(:staff).permit(:names, :password, :password_confirmation, :first_surname, :second_surname, :branch_office_id, :position, :email)
+    params.fetch(:staff).permit(:names, :first_surname, :second_surname, :branch_office_id, :position, :email)
   end
 
 end
