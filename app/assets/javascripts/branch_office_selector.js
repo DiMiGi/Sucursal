@@ -47,7 +47,12 @@ var BranchOfficeSelector = function(jQueryObj){
       }
     }
 
-    return { id: result.id, address: result.address, region, comuna };
+    return {
+      id: result.id,
+      address: result.address,
+      region: region,
+      comuna: comuna 
+    };
   }
 
   function showSelects(){
