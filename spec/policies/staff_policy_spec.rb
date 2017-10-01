@@ -65,6 +65,11 @@ describe StaffPolicy do
       it { is_expected.to permit_action(:create) }
     end
 
+    context 'el usuario a crear es de sucursal distinta que el jefe de sucursal que lo esta creando' do
+      let(:newStaff) { FactoryGirl.build(:staff, :executive, :branch_office_id => branch_office + 1) }
+      it { is_expected.to forbid_action(:create) }
+    end
+
   end
 
 end
