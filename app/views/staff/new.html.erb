@@ -1,0 +1,81 @@
+<div id="new-user-form" class="row">
+
+  <div class="col-md-12">
+    <h2>Crear personal</h2>
+  </div>
+
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="content-box-large box-with-header">
+
+          <div class="form-group" title="Todos los nombres de la persona (sin incluir apellidos)" rel="tooltip">
+            <label for="look-feel.title" class="col-2 col-form-label">Nombres</label>
+            <div class="col-10">
+              <input class="form-control" type="text" id="" placeholder="Juan Pedro">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="look-feel.title" class="col-2 col-form-label">Primer apellido</label>
+            <div class="col-10">
+              <input class="form-control" type="text" id="" placeholder="Apellido paterno">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="look-feel.title" class="col-2 col-form-label">Segundo apellido</label>
+            <div class="col-10">
+              <input class="form-control" type="text" id="" placeholder="Apellido materno (campo opcional)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-2 col-form-label">Tipo de personal</label>
+            <select class="form-control">
+
+              <option>Ejecutivo</option>
+              <option>Supervisor</option>
+
+              <% if current_staff.admin? %>
+                <option>Jefe de sucursal</option>
+                <option>Administrador</option>
+              <% end %>
+            </select>
+          </div>
+
+
+
+          <% if current_staff.admin? %>
+            <div class="form-group" id="branch-office-list-by-location">
+              <label class="col-2 col-form-label">Seleccione sucursal</label>
+
+              <div id="obteniendo-sucursales">
+                <span class="glyphicon glyphicon-refresh spinning"></span> Obteniendo sucursales
+              </div>
+
+              <select style="display: none;" class="form-control" id="region-select"></select>
+              <select style="display: none;" class="form-control" id="comuna-select"></select>
+              <select style="display: none;" class="form-control" id="address-select"></select>
+
+            </div>
+          <% else %>
+            <p>
+              El nuevo usuario sera asignado a la sucursal <b><%= @branch_office %></b>
+            </p>
+          <% end %>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <button class="btn btn-primary" id="save-user">Crear usuario</button> <span style="display: none;" class="glyphicon glyphicon-refresh spinning"></span>
+  </div>
+
+</div>

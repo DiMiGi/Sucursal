@@ -1,8 +1,9 @@
 Region.create!(name: 'Región de Tarapacá')
-Region.create!(name: 'Región del Libertador General Bernardo O\'Higgins')
 Region.create!(name: 'Región del Maule')
+ohiggins = Region.create!(name: 'Región del Libertador General Bernardo O\'Higgins')
 metropolitana = Region.create(name: 'Región Metropolitana de Santiago')
 
+comunas_hoggins = ['Rancagua', 'Machali', 'Graneros', 'San Francisco'];
 
 comunas_metropolitana = ['Cerrillos', 'La Reina', 'Pudahuel', 'Cerro Navia', 'Las Condes',
 'Quilicura', 'Conchalí', 'Lo Barnechea', 'Quinta Normal', 'El Bosque',
@@ -16,12 +17,21 @@ comunas_metropolitana.each do |comuna|
   metropolitana.comunas << Comuna.new(name: comuna)
 end
 
+comunas_hoggins.each do |comuna|
+  ohiggins.comunas << Comuna.new(name: comuna)
+end
+
 metropolitana.save!
 
 bo1 = BranchOffice.create!(address: 'Calle Principal #123', comuna_id: metropolitana.comunas[3].id)
 bo2 = BranchOffice.create!(address: 'Paseo Bulnes #456', comuna_id: metropolitana.comunas[6].id)
 bo3 = BranchOffice.create!(address: 'Av. Providencia #789', comuna_id: metropolitana.comunas[10].id)
 bo4 = BranchOffice.create!(address: 'Autopista Central #101', comuna_id: metropolitana.comunas[20].id)
+bo5 = BranchOffice.create!(address: 'Avenida Alameda #777', comuna_id: metropolitana.comunas[20].id)
+
+bo6 = BranchOffice.create!(address: 'Miguel Ramirez #123', comuna_id: ohiggins.comunas[0].id)
+bo7 = BranchOffice.create!(address: 'Araucana #789', comuna_id: ohiggins.comunas[0].id)
+bo8 = BranchOffice.create!(address: 'Carretera del Cobre #456', comuna_id: ohiggins.comunas[1].id)
 
 
 Staff.create!(branch_office: bo1, names: "juan andres", first_surname: "valdes", second_surname: "vasquez", email: 'juan@mail.com', password: '123123', password_confirmation: '123123', position: Staff.positions[:executive])

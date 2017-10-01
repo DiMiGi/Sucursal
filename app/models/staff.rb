@@ -33,14 +33,14 @@ class Staff < ApplicationRecord
 
   validates_with SucursalAsignadaCorrectamente
 
-  after_validation :mayusculas_nombre
+  after_validation :capitalize_name
 
-  def nombre_completo
-    completo = names + ' ' + first_surname
+  def full_name
+    full = names + ' ' + first_surname
     if second_surname
-      completo = completo + ' ' + second_surname
+      full = full + ' ' + second_surname
     end
-    return completo
+    return full
   end
 
   def executive?
@@ -60,7 +60,7 @@ class Staff < ApplicationRecord
   end
 
   private
-  def mayusculas_nombre
+  def capitalize_name
     return unless errors.blank?
     self.names = self.names.split.map(&:capitalize)*' '
     self.first_surname = self.first_surname.split.map(&:capitalize)*' '

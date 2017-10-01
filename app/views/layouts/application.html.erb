@@ -8,7 +8,7 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
+  <body class="<%= controller_name %>" id="<%= action_name %>">
     <div class="header">
 	     <div class="container">
 	        <div class="row">
@@ -78,9 +78,12 @@
                     <li><a href="tables.html"><i class="glyphicon glyphicon-record"></i> Manager menu 3</a></li>
                     <% end %>
 
+                    <% if current_staff.admin? || current_staff.manager? %>
+                    <li><%= link_to 'Crear usuario', :new_staff %></li>
+                    <% end %>
+
                     <% if current_staff.admin? %>
                     <li><%= link_to 'Configuración global', :settings %></li>
-                    <li><%= link_to 'Crear usuario', :new_staff %></li>
                     <li><a href="calendar.html"><i class="glyphicon glyphicon-record"></i> Admin menu 1</a></li>
                     <li><a href="stats.html"><i class="glyphicon glyphicon-tasks"></i> Admin menu 2</a></li>
                     <li><a href="tables.html"><i class="glyphicon glyphicon-pencil"></i> Admin menu 3</a></li>

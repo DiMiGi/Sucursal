@@ -9,6 +9,11 @@ class StaffController < ApplicationController
 
   def new
     authorize Staff
+
+    if current_staff.manager?
+      @branch_office = current_staff.branch_office.full_address
+    end
+
   end
 
   def create

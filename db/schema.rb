@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 20170930193641) do
     t.index ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true
   end
 
-  create_table "staffs", force: :cascade do |t|
+  create_table "staff", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -67,9 +67,9 @@ ActiveRecord::Schema.define(version: 20170930193641) do
     t.string "first_surname"
     t.string "second_surname"
     t.integer "branch_office_id"
-    t.index ["branch_office_id"], name: "index_staffs_on_branch_office_id"
-    t.index ["email"], name: "index_staffs_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_staffs_on_reset_password_token", unique: true
+    t.index ["branch_office_id"], name: "index_staff_on_branch_office_id"
+    t.index ["email"], name: "index_staff_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_staff_on_reset_password_token", unique: true
   end
 
 end
