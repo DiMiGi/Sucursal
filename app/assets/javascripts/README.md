@@ -38,6 +38,11 @@ horario.clear(); // Desmarca todos los bloques
 // Si el bloque no existe, no tiene efecto.
 horario.select(dia, bloque);
 horario.unselect(dia, bloque);
+
+// Las siguientes funciones son para deshabilitar los clics del usuario, y que no se pueda interactuar con la tabla.
+horario.disable();
+horario.enable();
+horario.isDisabled(); // true | false
 ```
 
 ## Selector de sucursales

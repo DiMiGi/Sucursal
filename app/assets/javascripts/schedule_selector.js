@@ -1,6 +1,8 @@
 var ScheduleSelector = function(jQueryObj, range){
 
   var selectedClass = 'selected-time-block';
+  var selectedClassDisabled = 'selected-time-block-disabled';
+  var disabled = false;
 
   if(range.interval == null || typeof range.interval === 'undefined'){
     range.interval = 30;
@@ -34,8 +36,37 @@ var ScheduleSelector = function(jQueryObj, range){
   jQueryObj.html(table);
 
   jQueryObj.on('click', 'td[day]', function(){
+    if(disabled) return;
     $(this).toggleClass(selectedClass);
   });
+
+  this.disable = function(){
+    disabled = true;
+
+    jQueryObj.find('td[day]').each(function(){
+      if($(this).hasClass(selectedClass)){
+        $(this).removeClass(selectedClass);
+        $(this).addClass(selectedClassDisabled);
+      }
+    });
+
+  }
+
+  this.enable = function(){
+    disabled = false;
+
+    jQueryObj.find('td[day]').each(function(){
+      if($(this).hasClass(selectedClassDisabled)){
+        $(this).addClass(selectedClass);
+        $(this).removeClass(selectedClassDisabled);
+      }
+    });
+
+  }
+
+  this.isDisabled = function(){
+    return disabled;
+  }
 
   this.getAll = function(){
 
@@ -48,7 +79,7 @@ var ScheduleSelector = function(jQueryObj, range){
 
       $(this).find('td[day]').each(function(){
         var day = $(this).attr('day');
-        if($(this).hasClass(selectedClass)){
+        if($(this).hasClass(selectedClass) || $(this).hasClass(selectedClassDisabled)){
           list.push({
             day, hh, mm
           });
@@ -61,14 +92,15 @@ var ScheduleSelector = function(jQueryObj, range){
 
   this.clear = function(){
     jQueryObj.find('td[day]').removeClass(selectedClass);
+    jQueryObj.find('td[day]').removeClass(selectedClassDisabled);
   }
 
   this.select = function(day, block){
-    jQueryObj.find('tr[hh='+block.hh+'][mm='+block.mm+']').find('td[day='+day+']').addClass(selectedClass);
+    jQueryObj.find('tr[hh='+block.hh+'][mm='+block.mm+']').find('td[day='+day+']').addClass(disabled? selectedClassDisabled : selectedClass);
   }
 
   this.unselect = function(day, block){
-    jQueryObj.find('tr[hh='+block.hh+'][mm='+block.mm+']').find('td[day='+day+']').removeClass(selectedClass);
+    jQueryObj.find('tr[hh='+block.hh+'][mm='+block.mm+']').find('td[day='+day+']').removeClass(disabled? selectedClassDisabled : selectedClass);
   }
 
 
