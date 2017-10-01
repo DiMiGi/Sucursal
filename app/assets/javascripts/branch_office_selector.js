@@ -1,7 +1,7 @@
-var BranchOfficeSelector = function(jQueryObj, loadingMessage = "Obteniendo sucursales..."){
+var BranchOfficeSelector = function(jQueryObj){
 
 
-  jQueryObj.html('<span class="glyphicon glyphicon-refresh spinning"></span> ' + loadingMessage);
+  jQueryObj.html('<span class="glyphicon glyphicon-refresh spinning"></span> Obteniendo sucursales...');
 
 
   var offices = {};
