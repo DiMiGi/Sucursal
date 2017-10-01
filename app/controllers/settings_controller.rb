@@ -16,7 +16,7 @@ class SettingsController < ApplicationController
       Setting[key] = value
     end
 
-    render :json => { :error => msg }, :status => :ok
+    render :json => {}, :status => :ok
 
   end
 
