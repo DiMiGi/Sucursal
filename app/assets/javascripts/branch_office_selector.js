@@ -35,7 +35,7 @@ var BranchOfficeSelector = function(jQueryObj){
     showComunas(select.val());
   }
 
-  this.obtenerSucursal = function(){
+  this.getBranchOffice = function(){
     var region = jQueryObj.find(".region-select").val();
     var comuna = jQueryObj.find(".comuna-select").val();
     var address = jQueryObj.find(".address-select").val();

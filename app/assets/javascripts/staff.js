@@ -2,11 +2,11 @@ $(document).ready(function(){
 
   $("#branch-office-list-by-location").each(function(){
 
-    var selectorSucursal = new BranchOfficeSelector($("#selector-sucursales"));
+    var officeSelector = new BranchOfficeSelector($("#office-selector"));
 
     $("#save-user").click(function(){
 
-      console.log(selectorSucursal.obtenerSucursal());
+      console.log(officeSelector.getBranchOffice());
 
     });
 
