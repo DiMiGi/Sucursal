@@ -17,13 +17,14 @@ class StaffController < ApplicationController
   end
 
   def create
-    staff = Staff.new(staff_params)
-    authorize @staff
 
-    if staff.save
-      render json: staff, status: :created
+    newStaff = Staff.new(staff_params)
+    authorize newStaff
+
+    if newStaff.save
+      render json: newStaff, status: :created
     else
-      render json: staff.errors, status: :unprocessable_entity
+      render json: newStaff.errors, status: :unprocessable_entity
     end
   end
 
@@ -34,7 +35,7 @@ class StaffController < ApplicationController
   end
 
   def staff_params
-    params.fetch(:staff).permit(:names, :first_name, :second_name, :branch_office, :position)
+    params.fetch(:staff).permit(:names, :password, :password_confirmation, :first_surname, :second_surname, :branch_office_id, :position, :email)
   end
 
 end

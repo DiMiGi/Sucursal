@@ -1,3 +1,8 @@
+AttentionType.create!(id: 1, name: 'Servicio técnico')
+AttentionType.create!(id: 2, name: 'Atención comercial')
+AttentionType.create!(id: 3, name: 'Recambio')
+AttentionType.create!(id: 4, name: 'Accesorios')
+
 Region.create!(name: 'Región de Tarapacá')
 Region.create!(name: 'Región del Maule')
 ohiggins = Region.create!(name: 'Región del Libertador General Bernardo O\'Higgins')
