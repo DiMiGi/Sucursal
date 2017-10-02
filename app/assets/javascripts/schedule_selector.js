@@ -81,7 +81,9 @@ var ScheduleSelector = function(jQueryObj, range){
         var day = $(this).attr('day');
         if($(this).hasClass(selectedClass) || $(this).hasClass(selectedClassDisabled)){
           list.push({
-            day, hh, mm
+            day: day,
+            hh: hh,
+            mm: mm
           });
         }
       });
