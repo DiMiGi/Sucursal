@@ -1,16 +1,16 @@
 <div class="col-md-6">
 
-  <h2><%=t :sign_in %></h2>
+  <h2>Iniciar sesión</h2>
 
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
     <div class="form-group">
-      <%= f.label :email %><br />
+      <%= f.label :email %>
       <%= f.email_field :email, autofocus: true, :class => "form-control" %>
     </div>
 
     <div class="form-group">
-      <%= f.label :password %><br />
+      <%= f.label :password %>
       <%= f.password_field :password, autocomplete: "off", :class => "form-control" %>
     </div>
 

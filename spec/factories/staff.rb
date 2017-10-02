@@ -6,8 +6,8 @@ FactoryGirl.define do
     first_surname "caceres"
     second_surname "garcia"
 
-    password  "123456789"
-    password_confirmation  "123456789"
+    password "123456789"
+    password_confirmation { password }
 
     trait :executive do position :executive end
     trait :supervisor do position :supervisor end
