@@ -1,7 +1,12 @@
 class BranchOfficesController < ApplicationController
 
-  #before_action :authenticate_staff!, :except => [:get_by_location]
+  before_action :authenticate_staff!, :except => [:get_by_location]
   before_action :set_branch_office, only: [:update_attention_types_estimations]
+
+  def pundit_user
+    current_staff
+  end
+
 
   def index
   end
@@ -22,20 +27,19 @@ class BranchOfficesController < ApplicationController
   #
   def update_attention_types_estimations
 
+    authorize @branch_office
+
     duration_estimations = params[:duration_estimations]
 
-    estimations = []
-
-    duration_estimations.each do |est|
-      estimations << DurationEstimation.new(
-        :attention_type_id => est[:attention_type_id],
-        :duration => est[:duration],
-        :branch_office_id => @branch_office.id)
+    ActiveRecord::Base.transaction do
+      DurationEstimation.where(branch_office_id: @branch_office.id).delete_all
+      duration_estimations.each do |est|
+        @branch_office.duration_estimations << DurationEstimation.new(
+          :attention_type_id => est[:attention_type_id],
+          :duration => est[:duration],
+          :branch_office_id => @branch_office.id)
+      end
     end
-
-    DurationEstimation.where(branch_office_id: @branch_office.id).delete_all
-    @branch_office.duration_estimations = estimations
-    @branch_office.save
 
     render :json => {}, :status => :ok
 
@@ -66,6 +70,8 @@ class BranchOfficesController < ApplicationController
 
   end
 
+
+  private
 
   def set_branch_office
     @branch_office = BranchOffice.find(params[:id])

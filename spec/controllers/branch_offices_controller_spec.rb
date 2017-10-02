@@ -51,7 +51,7 @@ RSpec.describe BranchOfficesController, type: :controller do
         # Se borran las 3 anteriores y solo quedan 2
         expect(DurationEstimation.count).to eq 2
 
-      end
+      end     
 
     end
 
