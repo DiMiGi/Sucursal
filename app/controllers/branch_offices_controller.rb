@@ -1,6 +1,6 @@
 class BranchOfficesController < ApplicationController
 
-  before_action :authenticate_staff!, :except => [:get_by_location]
+  #before_action :authenticate_staff!, :except => [:get_by_location]
   before_action :set_branch_office, only: [:update_attention_types_estimations]
 
   def index
@@ -27,10 +27,13 @@ class BranchOfficesController < ApplicationController
     estimations = []
 
     duration_estimations.each do |est|
-      estimations << DurationEstimation.new(:attention_type_id => est[:attention_type_id], :duration => est[:duration])
+      estimations << DurationEstimation.new(
+        :attention_type_id => est[:attention_type_id],
+        :duration => est[:duration],
+        :branch_office_id => @branch_office.id)
     end
 
-    @branch_office.duration_estimations.clear
+    DurationEstimation.where(branch_office_id: @branch_office.id).delete_all
     @branch_office.duration_estimations = estimations
     @branch_office.save
 
