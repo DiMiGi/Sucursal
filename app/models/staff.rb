@@ -14,6 +14,18 @@ class BranchOfficeCorrectlyAssigned < ActiveModel::Validator
   end
 end
 
+class AttentionTypeCorrectlyAssigned < ActiveModel::Validator
+  def validate(staff)
+
+    # Valida que solo los supervisores y ejecutivos tengan asignado un tipo de atencion
+
+    if (!(staff.executive? || staff.supervisor?)) && staff.attention_type != nil
+      staff.errors[:attention_type] << 'Solo supervisores y ejecutivos pueden tener un tipo de atencion asignado'
+    end
+
+  end
+end
+
 class Staff < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -23,6 +35,7 @@ class Staff < ApplicationRecord
   enum position: [:executive, :supervisor, :manager, :admin]
 
   belongs_to :branch_office, optional: true
+  belongs_to :attention_type, optional: true
 
   has_many :time_blocks
 
@@ -34,6 +47,7 @@ class Staff < ApplicationRecord
   validates_length_of :first_surname, :minimum => 1
 
   validates_with BranchOfficeCorrectlyAssigned
+  validates_with AttentionTypeCorrectlyAssigned
 
   after_validation :capitalize_name
 

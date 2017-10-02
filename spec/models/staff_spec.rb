@@ -69,6 +69,14 @@ RSpec.describe Staff, type: :model do
 
     staff = FactoryGirl.create(:staff, names: "   a", first_surname: "  díAZ   dE Valdés", second_surname: "qqwweerty")
     expect(staff.name_surname).to eq "A Díaz De Valdés"
+  end
+
+
+  it "usuario que no atiende ni supervisa motivos de atencion es invalido si tiene asignado una" do
+    expect(FactoryGirl.build(:staff, :executive, :attention_type => FactoryGirl.create(:attention_type))).to be_valid
+    expect(FactoryGirl.build(:staff, :supervisor, :attention_type => FactoryGirl.create(:attention_type))).to be_valid
+    expect(FactoryGirl.build(:staff, :manager, :attention_type => FactoryGirl.create(:attention_type))).to_not be_valid
+    expect(FactoryGirl.build(:staff, :admin, :attention_type => FactoryGirl.create(:attention_type))).to_not be_valid
 
   end
 

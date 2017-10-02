@@ -1,7 +1,7 @@
 class StaffController < ApplicationController
 
   before_action :authenticate_staff!
-  #before_action :set_staff, only: [:update, :destroy]
+  before_action :set_staff, only: [:update_time_blocks]
 
   def pundit_user
     current_staff
@@ -30,6 +30,26 @@ class StaffController < ApplicationController
     else
       render json: newStaff.errors, status: :unprocessable_entity
     end
+  end
+
+
+  def update_time_blocks
+
+    authorize @staff
+
+    time_blocks = params[:time_blocks]
+
+    ActiveRecord::Base.transaction do
+      TimeBlock.where(staff_id: @staff.id).delete_all
+      time_blocks.each do |block|
+        @staff.time_blocks << TimeBlock.new(
+          :weekday => block[:weekday],
+          :hour => block[:hour],
+          :minutes => block[:minutes])
+      end
+    end
+
+    render :json => {}, :status => :ok
   end
 
 

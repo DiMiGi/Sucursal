@@ -20,6 +20,9 @@ FactoryGirl.define do
     end
 
     association :branch_office
+    association :attention_type, strategy: :null
+
+
 
   end
 end

@@ -36,8 +36,7 @@ class BranchOfficesController < ApplicationController
       duration_estimations.each do |est|
         @branch_office.duration_estimations << DurationEstimation.new(
           :attention_type_id => est[:attention_type_id],
-          :duration => est[:duration],
-          :branch_office_id => @branch_office.id)
+          :duration => est[:duration])
       end
     end
 

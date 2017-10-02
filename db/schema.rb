@@ -77,6 +77,8 @@ ActiveRecord::Schema.define(version: 20171002022333) do
     t.string "first_surname"
     t.string "second_surname"
     t.integer "branch_office_id"
+    t.integer "attention_type_id"
+    t.index ["attention_type_id"], name: "index_staff_on_attention_type_id"
     t.index ["branch_office_id"], name: "index_staff_on_branch_office_id"
     t.index ["email"], name: "index_staff_on_email", unique: true
     t.index ["reset_password_token"], name: "index_staff_on_reset_password_token", unique: true

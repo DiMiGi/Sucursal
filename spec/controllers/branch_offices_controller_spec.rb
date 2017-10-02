@@ -36,6 +36,9 @@ RSpec.describe BranchOfficesController, type: :controller do
         expect(branch_office.duration_estimations[0].attention_type_id).to eq 1
         expect(branch_office.duration_estimations[1].attention_type_id).to eq 2
         expect(branch_office.duration_estimations[2].attention_type_id).to eq 3
+        expect(branch_office.duration_estimations[0].branch_office_id).to eq branch_office.id
+        expect(branch_office.duration_estimations[1].branch_office_id).to eq branch_office.id
+        expect(branch_office.duration_estimations[2].branch_office_id).to eq branch_office.id
         expect(DurationEstimation.count).to eq 3
 
         # Hacer la segunda actualizacion
@@ -47,11 +50,16 @@ RSpec.describe BranchOfficesController, type: :controller do
         expect(branch_office.duration_estimations[0].duration).to eq 30
         expect(branch_office.duration_estimations[1].attention_type_id).to eq 5
         expect(branch_office.duration_estimations[1].duration).to eq 45
+        expect(branch_office.duration_estimations[0].branch_office_id).to eq branch_office.id
+        expect(branch_office.duration_estimations[1].branch_office_id).to eq branch_office.id
 
         # Se borran las 3 anteriores y solo quedan 2
         expect(DurationEstimation.count).to eq 2
 
-      end     
+        # No queda ninguna con ID null (prevenir fallas de integridad)
+        expect(DurationEstimation.where(:branch_office_id => nil).count).to eq 0
+
+      end
 
     end
 
