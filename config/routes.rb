@@ -8,7 +8,10 @@ Rails.application.routes.draw do
   put '/settings', to: 'settings#update'
 
   resources :staff
-  #resources :branch_offices
+
+  scope :branch_offices do
+    put ':id/attention_types', to: 'branch_offices#update_attention_types_estimations'
+  end
 
   # Servicio que entrega un JSON con regiones, y en cada region, sus comunas,
   # y anidadas sus sucursales. Sirve para poder buscar una sucursal por lugar.
