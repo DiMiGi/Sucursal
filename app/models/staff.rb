@@ -1,4 +1,4 @@
-class SucursalAsignadaCorrectamente < ActiveModel::Validator
+class BranchOfficeCorrectlyAssigned < ActiveModel::Validator
   def validate(staff)
 
     # Valida que un usuario administrador no tenga asignada una sucursal,
@@ -24,6 +24,8 @@ class Staff < ApplicationRecord
 
   belongs_to :branch_office, optional: true
 
+  has_many :time_blocks
+
   auto_strip_attributes :names, :squish => true
   auto_strip_attributes :first_surname, :squish => true
   auto_strip_attributes :second_surname, :squish => true
@@ -31,7 +33,7 @@ class Staff < ApplicationRecord
   validates_length_of :names, :minimum => 1
   validates_length_of :first_surname, :minimum => 1
 
-  validates_with SucursalAsignadaCorrectamente
+  validates_with BranchOfficeCorrectlyAssigned
 
   after_validation :capitalize_name
 
@@ -44,7 +46,7 @@ class Staff < ApplicationRecord
   end
 
   def name_surname
-    names.split(" ")[0] + " " + first_surname 
+    names.split(" ")[0] + " " + first_surname
   end
 
   def executive?

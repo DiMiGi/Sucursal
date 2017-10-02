@@ -1,6 +1,6 @@
 class CreateDurationEstimations < ActiveRecord::Migration[5.1]
   def change
-    create_table :duration_estimations do |t|
+    create_table :duration_estimations, id: false do |t|
       t.integer :duration
     end
 

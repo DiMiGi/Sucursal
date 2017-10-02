@@ -6,6 +6,8 @@ FactoryGirl.define do
     first_surname "caceres"
     second_surname "garcia"
 
+    position :supervisor
+
     password "123456789"
     password_confirmation { password }
 

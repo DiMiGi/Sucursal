@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171001235857) do
+ActiveRecord::Schema.define(version: 20171002022333) do
 
   create_table "attention_types", force: :cascade do |t|
     t.string "name", null: false
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20171001235857) do
     t.index ["region_id"], name: "index_comunas_on_region_id"
   end
 
-  create_table "duration_estimations", force: :cascade do |t|
+  create_table "duration_estimations", id: false, force: :cascade do |t|
     t.integer "duration"
     t.integer "branch_office_id"
     t.integer "attention_type_id"
@@ -80,6 +80,17 @@ ActiveRecord::Schema.define(version: 20171001235857) do
     t.index ["branch_office_id"], name: "index_staff_on_branch_office_id"
     t.index ["email"], name: "index_staff_on_email", unique: true
     t.index ["reset_password_token"], name: "index_staff_on_reset_password_token", unique: true
+  end
+
+  create_table "time_blocks", id: false, force: :cascade do |t|
+    t.integer "weekday"
+    t.integer "hour"
+    t.integer "minutes"
+    t.integer "staff_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["staff_id", "weekday", "hour", "minutes"], name: "index_unique_time_block", unique: true
+    t.index ["staff_id"], name: "index_time_blocks_on_staff_id"
   end
 
 end
