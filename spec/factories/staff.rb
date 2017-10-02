@@ -11,17 +11,24 @@ FactoryGirl.define do
     password "123456789"
     password_confirmation { password }
 
-    trait :executive do position :executive end
-    trait :supervisor do position :supervisor end
-    trait :manager do position :manager end
+    trait :executive do
+      position :executive
+    end
+    trait :supervisor do
+      position :supervisor
+    end
+    trait :manager do
+      position :manager
+      attention_type nil
+    end
     trait :admin do
       position :admin
       branch_office nil
+      attention_type nil
     end
 
     association :branch_office
-    association :attention_type, strategy: :null
-
+    association :attention_type
 
 
   end

@@ -1,4 +1,4 @@
-class CorrectlyAssigned < ActiveModel::Validator
+class DayOffCorrectlyAssigned < ActiveModel::Validator
   def validate(day_off)
 
     staff = day_off.staff
@@ -32,15 +32,6 @@ class CorrectlyAssigned < ActiveModel::Validator
 end
 
 
-class CorrectDay < ActiveModel::Validator
-  def validate(staff)
-
-    # Implementar un validador para el dia.
-  end
-end
-
-
-
 class DayOff < ApplicationRecord
 
   self.table_name = "days_off"
@@ -50,8 +41,6 @@ class DayOff < ApplicationRecord
 
   validates_presence_of :day
 
-  validates_with CorrectlyAssigned
-  validates_with CorrectDay
-
+  validates_with DayOffCorrectlyAssigned
 
 end
