@@ -6,6 +6,9 @@ class BranchOffice < ApplicationRecord
   auto_strip_attributes :address, :squish => true
   validates_length_of :address, :minimum => 1
 
+  has_many :duration_estimations
+  has_many :attention_types, :through => :duration_estimations
+
 
   def full_address
     comuna = self.comuna

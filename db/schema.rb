@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171001204957) do
+ActiveRecord::Schema.define(version: 20171001235857) do
 
   create_table "attention_types", force: :cascade do |t|
     t.string "name", null: false
@@ -34,9 +34,13 @@ ActiveRecord::Schema.define(version: 20171001204957) do
     t.index ["region_id"], name: "index_comunas_on_region_id"
   end
 
-  create_table "reasons", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "duration_estimations", force: :cascade do |t|
+    t.integer "duration"
+    t.integer "branch_office_id"
+    t.integer "attention_type_id"
+    t.index ["attention_type_id"], name: "index_duration_estimations_on_attention_type_id"
+    t.index ["branch_office_id", "attention_type_id"], name: "index_branch_attention", unique: true
+    t.index ["branch_office_id"], name: "index_duration_estimations_on_branch_office_id"
   end
 
   create_table "regions", force: :cascade do |t|
