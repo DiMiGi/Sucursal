@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171002022333) do
+ActiveRecord::Schema.define(version: 20171002200344) do
 
   create_table "attention_types", force: :cascade do |t|
     t.string "name", null: false
@@ -32,6 +32,16 @@ ActiveRecord::Schema.define(version: 20171002022333) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["region_id"], name: "index_comunas_on_region_id"
+  end
+
+  create_table "days_off", force: :cascade do |t|
+    t.integer "branch_office_id"
+    t.integer "staff_id"
+    t.date "day", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["branch_office_id"], name: "index_days_off_on_branch_office_id"
+    t.index ["staff_id"], name: "index_days_off_on_staff_id"
   end
 
   create_table "duration_estimations", id: false, force: :cascade do |t|
