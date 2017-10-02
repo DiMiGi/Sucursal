@@ -21,7 +21,7 @@ RSpec.describe StaffController, type: :controller do
         ]
 
         schedule2 = [
-          { weekday: 0, hour: 9, minutes: 45 },
+          { weekday: 5, hour: 9, minutes: 45 },
           { weekday: 0, hour: 10, minutes: 0 },
           { weekday: 2, hour: 11, minutes: 15 },
           { weekday: 2, hour: 11, minutes: 30 },
