@@ -7,6 +7,7 @@ class StaffController < ApplicationController
     current_staff
   end
 
+
   def new
     authorize Staff
 
@@ -35,7 +36,10 @@ class StaffController < ApplicationController
 
   def update_time_blocks
 
-    authorize @staff
+    unless StaffPolicy.new(current_staff, @staff).update_time_blocks?
+      raise Pundit::NotAuthorizedError
+    end
+
 
     time_blocks = params[:time_blocks]
 

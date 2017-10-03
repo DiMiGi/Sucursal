@@ -64,6 +64,19 @@ RSpec.describe StaffController, type: :controller do
 
       end
 
+
+      it "valida la autorizacion correcta del usuario que esta tratando de cambiar los horarios de otro usuario" do
+        office = FactoryGirl.create(:branch_office)
+        sign_in FactoryGirl.create(:executive, branch_office: office)
+        executive = FactoryGirl.create(:executive, branch_office: office)
+        put :update_time_blocks, params: { :id => executive.id, :time_blocks => [{ weekday: 5, hour: 9, minutes: 45 }] }
+        expect(response).to have_http_status(:redirect)
+      end
+
+
+
+
+
     end
 
 
