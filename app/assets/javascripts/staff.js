@@ -7,6 +7,19 @@ $(document).ready(function(){
     officeSelector = new BranchOfficeSelector($("#office-selector"));
   });
 
+  $("#type").on("change", function(){
+
+    var value = $(this).val();
+    var office = $("#office-selector").closest(".form-group");
+
+    if(value == "Admin"){
+      office.hide();
+    } else {
+      office.show();
+    }
+
+  });
+
 
   btnSubmit.click(function(ev){
 
