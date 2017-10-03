@@ -7,33 +7,57 @@ RSpec.describe Appointment, type: :model do
     expect(FactoryGirl.build(:appointment, :time => nil)).to_not be_valid
   end
 
+  it "permite buscar por dia correctamente" do
+    Appointment.destroy_all
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 1, 13, 41, 05))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 1, 13, 41, 05))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 2, 13, 41, 05))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 0, 0, 0))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 13, 41, 05))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 23, 59, 59))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 4, 0, 0, 0))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 5, 0, 0, 0))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 5, 0, 0, 0))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 5, 23, 59, 59))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 6, 0, 0, 0))
+
+    expect(Appointment.find_by_day(Date.new(2017, 1, 1)).count).to eq 2
+    expect(Appointment.find_by_day(Date.new(2017, 1, 2)).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2017, 2, 3)).count).to eq 3
+    expect(Appointment.find_by_day(Date.new(2017, 2, 4)).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2017, 2, 5)).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2017, 5, 5)).count).to eq 2
+    expect(Appointment.find_by_day(Date.new(2017, 5, 6)).count).to eq 1
+
+  end
+
 
   it "los tiempos se discretizan correctamente" do
 
     discretizations = [5, 1, 3, 8, 10, 30, 20, 59, 2, 58]
     times = [
-      Time.new(2017, 1, 1, 13, 41, 05),
-      Time.new(2017, 1, 1, 12, 19, 07),
-      Time.new(2017, 1, 1, 10, 17, 30),
-      Time.new(2017, 1, 1, 19, 41, 31),
-      Time.new(2017, 1, 1, 18, 0, 05),
-      Time.new(2017, 1, 1, 15, 59, 59),
-      Time.new(2017, 1, 1, 11, 1, 02),
-      Time.new(2017, 1, 1,  8, 50, 40),
-      Time.new(2017, 1, 1,  9, 37, 01),
-      Time.new(2017, 1, 1, 15, 59, 59)
+      DateTime.new(2017, 1, 1, 13, 41, 05),
+      DateTime.new(2017, 1, 1, 12, 19, 07),
+      DateTime.new(2017, 1, 1, 10, 17, 30),
+      DateTime.new(2017, 1, 1, 19, 41, 31),
+      DateTime.new(2017, 1, 1, 18, 0, 05),
+      DateTime.new(2017, 1, 1, 15, 59, 59),
+      DateTime.new(2017, 1, 1, 11, 1, 02),
+      DateTime.new(2017, 1, 1,  8, 50, 40),
+      DateTime.new(2017, 1, 1,  9, 37, 01),
+      DateTime.new(2017, 1, 1, 15, 59, 59)
     ]
     results = [
-      Time.new(2017, 1, 1, 13, 40, 0),
-      Time.new(2017, 1, 1, 12, 19, 0),
-      Time.new(2017, 1, 1, 10, 15, 0),
-      Time.new(2017, 1, 1, 19, 40, 0),
-      Time.new(2017, 1, 1, 18, 0, 0),
-      Time.new(2017, 1, 1, 15, 30, 0),
-      Time.new(2017, 1, 1, 11, 0, 0),
-      Time.new(2017, 1, 1,  8, 0, 0),
-      Time.new(2017, 1, 1,  9, 36, 0),
-      Time.new(2017, 1, 1, 15, 58, 0)
+      DateTime.new(2017, 1, 1, 13, 40, 0),
+      DateTime.new(2017, 1, 1, 12, 19, 0),
+      DateTime.new(2017, 1, 1, 10, 15, 0),
+      DateTime.new(2017, 1, 1, 19, 40, 0),
+      DateTime.new(2017, 1, 1, 18, 0, 0),
+      DateTime.new(2017, 1, 1, 15, 30, 0),
+      DateTime.new(2017, 1, 1, 11, 0, 0),
+      DateTime.new(2017, 1, 1,  8, 0, 0),
+      DateTime.new(2017, 1, 1,  9, 36, 0),
+      DateTime.new(2017, 1, 1, 15, 58, 0)
     ]
 
     (0..8).each do |i|
@@ -42,6 +66,8 @@ RSpec.describe Appointment, type: :model do
       appointment1 = FactoryGirl.create(:appointment, executive: executive, time: times[i])
       appointment2 = FactoryGirl.create(:appointment, executive: executive, time: results[i])
       expect(appointment1.time).to eq appointment2.time
+      expect(appointment1).to be_valid
+      expect(appointment2).to be_valid
     end
   end
 

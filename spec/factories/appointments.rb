@@ -3,7 +3,7 @@ FactoryGirl.define do
 
     association :executive
 
-    time Time.new(2018, 05, 15, 13, 31, 6)
+    time DateTime.new(2018, 05, 15, 13, 31, 6)
 
   end
 end

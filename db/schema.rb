@@ -14,7 +14,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer "staff_id"
-    t.time "time", null: false
+    t.datetime "time", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["staff_id"], name: "index_appointments_on_staff_id"

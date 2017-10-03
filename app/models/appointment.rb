@@ -7,6 +7,12 @@ class Appointment < ApplicationRecord
   after_validation :discretization
 
 
+  # Pasar un argumento de tipo Date, y retorna los appointments (citas) que hayan
+  # en ese dia.
+  def self.find_by_day(day1)
+    where("? <= time AND time < ?", day1, day1.tomorrow)    
+  end
+
   private
 
   # Hace que el tiempo de la reunion quede redondeada a la manera como esta
