@@ -28,7 +28,5 @@ RSpec.describe DayOff, type: :model do
     expect(ExecutiveDayOff.where(:executive => executive2).count).to eq 1
 
   end
-
-
-
+  
 end
