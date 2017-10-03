@@ -3,6 +3,8 @@ FactoryGirl.define do
 
     address "Calle Beijing #789"
 
+    minute_discretization 5
+
     association :comuna
 
   end

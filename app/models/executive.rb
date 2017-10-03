@@ -4,4 +4,6 @@ class Executive < Staff
   belongs_to :attention_type, optional: true
   has_many :time_blocks
 
+  validates_presence_of :branch_office
+
 end

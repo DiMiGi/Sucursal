@@ -3,7 +3,7 @@ class CreateAppointments < ActiveRecord::Migration[5.1]
     create_table :appointments do |t|
 
       t.belongs_to :staff, index: true
-      t.date :day, null: false
+      t.time :time, null: false
 
       # Falta la asociacion con el cliente.
       # El modelo de BD tiene un "branch_office", pero eso se puede

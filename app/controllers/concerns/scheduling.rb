@@ -1,8 +1,6 @@
 module Scheduling
   extend ActiveSupport::Concern
 
-  included do
-  end
 
 
   # Esta funcion recibe el dia, sucursal, y tipo de atencion
@@ -11,7 +9,7 @@ module Scheduling
   def getFreeBlocks(day:, branch_office:, attention_type:)
 
 
-
+    return 1
 
   end
 

@@ -14,7 +14,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer "staff_id"
-    t.date "day", null: false
+    t.time "time", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["staff_id"], name: "index_appointments_on_staff_id"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
   create_table "branch_offices", force: :cascade do |t|
     t.string "address", limit: 60, null: false
     t.integer "comuna_id"
+    t.integer "minute_discretization", default: 5, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["comuna_id"], name: "index_branch_offices_on_comuna_id"
