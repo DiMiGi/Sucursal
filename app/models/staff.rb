@@ -1,43 +1,8 @@
-class BranchOfficeCorrectlyAssigned < ActiveModel::Validator
-  def validate(staff)
-
-    # Valida que un usuario administrador no tenga asignada una sucursal,
-    # y que el resto de los usuarios si tengan una.
-
-    if staff.admin? && staff.branch_office != nil
-      staff.errors[:branch_office] << 'El usuario administrador no puede tener asignada una sucursal'
-    end
-
-    if !staff.admin? && staff.branch_office == nil
-      staff.errors[:branch_office] << 'El usuario debe tener asignada una sucursal'
-    end
-  end
-end
-
-class AttentionTypeCorrectlyAssigned < ActiveModel::Validator
-  def validate(staff)
-
-    # Valida que solo los supervisores y ejecutivos tengan asignado un tipo de atencion
-
-    if (!(staff.executive? || staff.supervisor?)) && staff.attention_type != nil
-      staff.errors[:attention_type] << 'Solo supervisores y ejecutivos pueden tener un tipo de atencion asignado'
-    end
-
-  end
-end
-
 class Staff < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
-
-  enum position: [:executive, :supervisor, :manager, :admin]
-
-  belongs_to :branch_office, optional: true
-  belongs_to :attention_type, optional: true
-
-  has_many :time_blocks
 
   auto_strip_attributes :names, :squish => true
   auto_strip_attributes :first_surname, :squish => true
@@ -45,9 +10,7 @@ class Staff < ApplicationRecord
 
   validates_length_of :names, :minimum => 1
   validates_length_of :first_surname, :minimum => 1
-
-  validates_with BranchOfficeCorrectlyAssigned
-  validates_with AttentionTypeCorrectlyAssigned
+  validates_presence_of :type
 
   after_validation :capitalize_name
 
@@ -64,19 +27,19 @@ class Staff < ApplicationRecord
   end
 
   def executive?
-    position == :executive.to_s
+    type == "Executive"
   end
 
   def supervisor?
-    position == :supervisor.to_s
+    type == "Supervisor"
   end
 
   def manager?
-    position == :manager.to_s
+    type == "Manager"
   end
 
   def admin?
-    position == :admin.to_s
+    type == "Admin"
   end
 
   private

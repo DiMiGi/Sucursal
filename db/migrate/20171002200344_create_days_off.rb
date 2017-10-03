@@ -14,6 +14,8 @@ class CreateDaysOff < ActiveRecord::Migration[5.1]
 
       t.date :day, null: false
 
+      t.string :type, limit: 20
+
       t.timestamps
     end
   end

@@ -1,0 +1,4 @@
+class GlobalDayOff < DayOff
+
+
+end

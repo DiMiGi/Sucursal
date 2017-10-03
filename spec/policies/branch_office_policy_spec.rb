@@ -13,20 +13,20 @@ describe BranchOfficePolicy do
     end
 
     context 'siendo administrador' do
-      let(:staff) { FactoryGirl.create(:staff, :admin) }
+      let(:staff) { FactoryGirl.create(:admin) }
       let(:branch_office) { FactoryGirl.create(:branch_office) }
       it { is_expected.to permit_action(:update_attention_types_estimations) }
     end
 
     context 'siendo ejecutivo' do
-      let(:staff) { FactoryGirl.create(:staff, :executive) }
+      let(:staff) { FactoryGirl.create(:executive) }
       let(:branch_office) { FactoryGirl.create(:branch_office) }
       it { is_expected.to forbid_action(:update_attention_types_estimations) }
     end
 
     context 'siendo supervisor' do
       branch_office = FactoryGirl.create(:branch_office)
-      supervisor = FactoryGirl.create(:staff, :supervisor, :branch_office => branch_office)
+      supervisor = FactoryGirl.create(:supervisor, :branch_office => branch_office)
       let(:staff) { supervisor }
       let(:branch_office) { branch_office }
       it { is_expected.to permit_action(:update_attention_types_estimations) }
@@ -34,7 +34,7 @@ describe BranchOfficePolicy do
 
     context 'siendo jefe de sucursal' do
       branch_office = FactoryGirl.create(:branch_office)
-      manager = FactoryGirl.create(:staff, :manager, :branch_office => branch_office)
+      manager = FactoryGirl.create(:manager, :branch_office => branch_office)
       let(:staff) { manager }
       let(:branch_office) { branch_office }
       it { is_expected.to permit_action(:update_attention_types_estimations) }
@@ -44,7 +44,7 @@ describe BranchOfficePolicy do
       context 'siendo supervisor' do
         office1 = FactoryGirl.create(:branch_office)
         office2 = FactoryGirl.create(:branch_office)
-        supervisor = FactoryGirl.create(:staff, :manager, :branch_office => office1)
+        supervisor = FactoryGirl.create(:manager, :branch_office => office1)
         let(:staff) { supervisor }
         let(:branch_office) { office2 }
         it { is_expected.to forbid_action(:update_attention_types_estimations) }
@@ -52,7 +52,7 @@ describe BranchOfficePolicy do
       context 'siendo jefe de sucursal' do
         office1 = FactoryGirl.create(:branch_office)
         office2 = FactoryGirl.create(:branch_office)
-        manager = FactoryGirl.create(:staff, :manager, :branch_office => office1)
+        manager = FactoryGirl.create(:manager, :branch_office => office1)
         let(:staff) { manager }
         let(:branch_office) { office2 }
         it { is_expected.to forbid_action(:update_attention_types_estimations) }

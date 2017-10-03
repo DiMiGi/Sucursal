@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.integer "branch_office_id"
     t.integer "staff_id"
     t.date "day", null: false
+    t.string "type", limit: 20
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["branch_office_id"], name: "index_days_off_on_branch_office_id"
@@ -83,17 +84,17 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "type", limit: 16
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "position", default: 0
     t.string "names"
     t.string "first_surname"
     t.string "second_surname"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "branch_office_id"
     t.integer "attention_type_id"
     t.index ["attention_type_id"], name: "index_staff_on_attention_type_id"

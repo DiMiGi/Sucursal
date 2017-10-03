@@ -45,24 +45,6 @@ RSpec.describe Staff, type: :model do
     expect(staff).to_not be_valid
   end
 
-  it "usuario perteneciente a sucursal sin sucursal asignada es invalido" do
-    staff = FactoryGirl.build(:staff, :executive, :branch_office => nil)
-    expect(staff).to_not be_valid
-
-    staff = FactoryGirl.build(:staff, :supervisor, :branch_office => nil)
-    expect(staff).to_not be_valid
-
-    staff = FactoryGirl.build(:staff, :manager, :branch_office => nil)
-    expect(staff).to_not be_valid
-  end
-
-  it "usuario administrador es invalido cuando tiene asignada una sucursal" do
-    staff = FactoryGirl.build(:staff, :admin, :branch_office => FactoryGirl.create(:branch_office))
-    expect(staff).to_not be_valid
-    staff = FactoryGirl.build(:staff, :admin, :branch_office => nil)
-    expect(staff).to be_valid
-  end
-
   it "muestra correctamente el nombre corto (es decir, primer nombre y primer apellido)" do
     staff = FactoryGirl.create(:staff, names: " felipe   chris", first_surname: "  vilch")
     expect(staff.name_surname).to eq "Felipe Vilch"
@@ -71,14 +53,26 @@ RSpec.describe Staff, type: :model do
     expect(staff.name_surname).to eq "A Díaz De Valdés"
   end
 
+  it "las consultas find() sobre las subclases de usuario entregan solo esos usuarios" do
 
-  it "usuario que no atiende ni supervisa motivos de atencion es invalido si tiene asignado una" do
-    expect(FactoryGirl.build(:staff, :executive, :attention_type => FactoryGirl.create(:attention_type))).to be_valid
-    expect(FactoryGirl.build(:staff, :supervisor, :attention_type => FactoryGirl.create(:attention_type))).to be_valid
-    expect(FactoryGirl.build(:staff, :manager, :attention_type => FactoryGirl.create(:attention_type))).to_not be_valid
-    expect(FactoryGirl.build(:staff, :admin, :attention_type => FactoryGirl.create(:attention_type))).to_not be_valid
+    Staff.destroy_all
+    FactoryGirl.create(:supervisor)
+    FactoryGirl.create(:supervisor)
+    FactoryGirl.create(:supervisor)
+    FactoryGirl.create(:admin)
+    FactoryGirl.create(:admin)
+    FactoryGirl.create(:executive)
+    FactoryGirl.create(:manager)
+    FactoryGirl.create(:manager)
+    FactoryGirl.create(:manager)
+
+    expect(Admin.count).to eq 2
+    expect(Executive.count).to eq 1
+    expect(Manager.count).to eq 3
+    expect(Supervisor.count).to eq 3
 
   end
+
 
 
 end

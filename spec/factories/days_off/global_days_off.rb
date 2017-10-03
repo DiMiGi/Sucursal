@@ -1,9 +1,8 @@
 FactoryGirl.define do
-  factory :appointment do
-
-    association :executive
+  factory :global_day_off do
 
     day Date.new(2018, 05, 15)
+    type "GlobalDayOff"
 
   end
 end

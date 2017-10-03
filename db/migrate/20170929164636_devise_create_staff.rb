@@ -12,6 +12,8 @@ class DeviseCreateStaff < ActiveRecord::Migration[5.1]
       ## Rememberable
       t.datetime :remember_created_at
 
+      t.string :type, limit: 16
+
       ## Trackable
       t.integer  :sign_in_count, default: 0, null: false
       t.datetime :current_sign_in_at
@@ -30,12 +32,17 @@ class DeviseCreateStaff < ActiveRecord::Migration[5.1]
       # t.string   :unlock_token # Only if unlock strategy is :email or :both
       # t.datetime :locked_at
 
+      t.string :names
+      t.string :first_surname
+      t.string :second_surname
 
       t.timestamps null: false
     end
 
     add_index :staff, :email,                unique: true
     add_index :staff, :reset_password_token, unique: true
+    add_reference :staff, :branch_office, null: true, foreign_key: true
+    add_reference :staff, :attention_type, null: true, foreign_key: true
     # add_index :staff, :confirmation_token,   unique: true
     # add_index :staff, :unlock_token,         unique: true
   end

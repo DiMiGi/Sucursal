@@ -13,7 +13,7 @@ class StaffPolicy < ApplicationPolicy
       return false if user.branch_office_id.nil?
       return false if user.branch_office_id != record.branch_office_id
 
-      if record.position.to_sym == :supervisor || record.position.to_sym == :executive
+      if record.supervisor? || record.executive?
         return true
       end
     end

@@ -13,7 +13,7 @@ FactoryGirl.define do
     trait :saturday do weekday 5 end
     trait :sunday do weekday 6 end
 
-    association :staff, :factory => [:staff, :executive]
+    association :executive
 
   end
 end
