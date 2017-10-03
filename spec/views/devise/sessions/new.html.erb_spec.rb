@@ -11,7 +11,7 @@ describe 'devise/sessions/new.html.erb' do
   end
 
   it 'inicia sesion correctamente' do
-    FactoryGirl.create(:staff, :email => 'user@factorygirl.com', :password => 'factory')
+    FactoryGirl.create(:supervisor, :email => 'user@factorygirl.com', :password => 'factory')
     visit root_path
     within("#new_staff") do
       fill_in 'Email', :with => 'user@factorygirl.com'
@@ -30,5 +30,5 @@ describe 'devise/sessions/new.html.erb' do
     end
     expect(page).to have_text 'Iniciar sesión'
   end
-  
+
 end

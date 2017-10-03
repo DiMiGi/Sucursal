@@ -16,7 +16,7 @@ RSpec.describe BranchOfficesController, type: :controller do
 
       it "reemplaza la lista de estimaciones correctamente" do
 
-        staff = FactoryGirl.create(:staff, :supervisor)
+        staff = FactoryGirl.create(:supervisor)
         sign_in staff
 
         # Creo dos listas de estimaciones, con distinto largo, y una ID de atencion igual en ambas listas

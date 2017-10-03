@@ -40,7 +40,7 @@ class StaffController < ApplicationController
     time_blocks = params[:time_blocks]
 
     ActiveRecord::Base.transaction do
-      TimeBlock.where(staff_id: @staff.id).delete_all
+      TimeBlock.where(executive_id: @staff.id).delete_all
       time_blocks.each do |block|
         @staff.time_blocks << TimeBlock.new(
           :weekday => block[:weekday],

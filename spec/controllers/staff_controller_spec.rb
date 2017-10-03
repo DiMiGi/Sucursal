@@ -9,8 +9,8 @@ RSpec.describe StaffController, type: :controller do
         attention = FactoryGirl.create(:attention_type)
         office = FactoryGirl.create(:branch_office)
 
-        staff = FactoryGirl.create(:staff, :supervisor, attention_type: attention, branch_office: office)
-        executive = FactoryGirl.create(:staff, :executive, attention_type: attention, branch_office: office)
+        staff = FactoryGirl.create(:supervisor, attention_type: attention, branch_office: office)
+        executive = FactoryGirl.create(:executive, attention_type: attention, branch_office: office)
         sign_in staff
 
         schedule1 = [
@@ -41,7 +41,7 @@ RSpec.describe StaffController, type: :controller do
           expect(executive.time_blocks[n].weekday).to eq schedule1[n][:weekday]
           expect(executive.time_blocks[n].hour).to eq schedule1[n][:hour]
           expect(executive.time_blocks[n].minutes).to eq schedule1[n][:minutes]
-          expect(executive.time_blocks[n].staff_id).to eq executive.id
+          expect(executive.time_blocks[n].executive_id).to eq executive.id
         end
 
         expect(TimeBlock.count).to eq 4
@@ -55,12 +55,12 @@ RSpec.describe StaffController, type: :controller do
           expect(executive.time_blocks[n].weekday).to eq schedule2[n][:weekday]
           expect(executive.time_blocks[n].hour).to eq schedule2[n][:hour]
           expect(executive.time_blocks[n].minutes).to eq schedule2[n][:minutes]
-          expect(executive.time_blocks[n].staff_id).to eq executive.id
+          expect(executive.time_blocks[n].executive_id).to eq executive.id
         end
         expect(TimeBlock.count).to eq 5
 
         # No queda ninguna con ID null (prevenir fallas de integridad)
-        expect(TimeBlock.where(:staff_id => nil).count).to eq 0
+        expect(TimeBlock.where(:executive_id => nil).count).to eq 0
 
       end
 

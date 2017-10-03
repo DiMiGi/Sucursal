@@ -27,19 +27,19 @@ class Staff < ApplicationRecord
   end
 
   def executive?
-    type == "Executive"
+    self.is_a? Executive
   end
 
   def supervisor?
-    type == "Supervisor"
+    self.is_a? Supervisor
   end
 
   def manager?
-    type == "Manager"
+    self.is_a? Manager
   end
 
   def admin?
-    type == "Admin"
+    self.is_a? Admin
   end
 
   private

@@ -29,16 +29,16 @@ RSpec.describe TimeBlock, type: :model do
   end
 
   it "valida que el personal sea un ejecutivo" do
-    expect(FactoryGirl.build(:time_block, staff: FactoryGirl.create(:staff, :manager))).to_not be_valid
-    expect(FactoryGirl.build(:time_block, staff: FactoryGirl.create(:staff, :admin))).to_not be_valid
-    expect(FactoryGirl.build(:time_block, staff: FactoryGirl.create(:staff, :supervisor))).to_not be_valid
-    expect(FactoryGirl.build(:time_block, staff: FactoryGirl.create(:staff, :executive))).to be_valid
+    expect{FactoryGirl.build(:time_block, executive: FactoryGirl.create(:manager))}.to raise_error ActiveRecord::AssociationTypeMismatch
+    expect{FactoryGirl.build(:time_block, executive: FactoryGirl.create(:admin))}.to raise_error ActiveRecord::AssociationTypeMismatch
+    expect{FactoryGirl.build(:time_block, executive: FactoryGirl.create(:supervisor))}.to raise_error ActiveRecord::AssociationTypeMismatch
+    expect{FactoryGirl.build(:time_block, executive: FactoryGirl.create(:executive))}.to_not raise_error
   end
 
   context 'ejecutivo que tiene horarios' do
 
     before(:example) do
-      @executive = FactoryGirl.create(:staff, :executive)
+      @executive = FactoryGirl.create(:executive)
     end
 
     it "puede agregar horarios a su lista" do

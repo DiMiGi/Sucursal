@@ -107,11 +107,11 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.integer "weekday"
     t.integer "hour"
     t.integer "minutes"
-    t.integer "staff_id"
+    t.integer "executive_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["staff_id", "weekday", "hour", "minutes"], name: "index_unique_time_block", unique: true
-    t.index ["staff_id"], name: "index_time_blocks_on_staff_id"
+    t.index ["executive_id", "weekday", "hour", "minutes"], name: "index_unique_time_block", unique: true
+    t.index ["executive_id"], name: "index_time_blocks_on_executive_id"
   end
 
 end

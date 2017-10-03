@@ -4,11 +4,11 @@ class CreateTimeBlocks < ActiveRecord::Migration[5.1]
       t.integer :weekday
       t.integer :hour
       t.integer :minutes
-      t.belongs_to :staff, index: true
+      t.belongs_to :executive, index: true
       t.timestamps
     end
 
-    add_index :time_blocks, [:staff_id, :weekday, :hour, :minutes], name: "index_unique_time_block", unique: true
+    add_index :time_blocks, [:executive_id, :weekday, :hour, :minutes], name: "index_unique_time_block", unique: true
 
   end
 end
