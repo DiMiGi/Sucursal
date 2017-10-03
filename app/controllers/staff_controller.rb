@@ -20,11 +20,19 @@ class StaffController < ApplicationController
   def create
 
     attributes = staff_params
-    attributes['password'] = params[:password]
-    attributes['password_confirmation'] = params[:password_confirmation]
+    attributes[:password] = params[:staff][:password]
+    attributes[:password_confirmation] = params[:staff][:password_confirmation]
+
+    # Para que la ID de la sucursal sea la misma que el jefe de sucursal que esta creando el usuario
+    if current_staff.manager?
+      attributes[:branch_office_id] = current_staff.branch_office_id
+    end
 
     newStaff = Staff.new(attributes)
-    authorize newStaff
+
+    unless StaffPolicy.new(current_staff, newStaff).create?
+      raise Pundit::NotAuthorizedError
+    end
 
     if newStaff.save
       render json: newStaff, status: :created
@@ -63,7 +71,7 @@ class StaffController < ApplicationController
   end
 
   def staff_params
-    params.fetch(:staff).permit(:names, :first_surname, :second_surname, :branch_office_id, :position, :email)
+    params.fetch(:staff).permit(:names, :first_surname, :second_surname, :branch_office_id, :type, :email)
   end
 
 end

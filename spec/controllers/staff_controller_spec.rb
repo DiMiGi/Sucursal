@@ -2,6 +2,64 @@ require 'rails_helper'
 
 RSpec.describe StaffController, type: :controller do
 
+  describe "creacion de usuarios" do
+    it "valida la autorizacion" do
+      sign_in FactoryGirl.create :executive
+      post :create, params: { staff: FactoryGirl.attributes_for(:executive) }
+      expect(response).to have_http_status(:redirect)
+    end
+
+    it "el usuario creado tiene la misma sucursal que el creador en caso que este ultimo sea un jefe de sucursal" do
+      manager = FactoryGirl.create(:manager)
+      sign_in manager
+
+      expect {
+        executive = FactoryGirl.build(:executive, :names => "alfredito elmo", :branch_office => nil)
+        attributes = executive.attributes
+        attributes[:password] = '789789456'
+        attributes[:password_confirmation] = '789789456'
+        post :create, params: { staff: attributes }
+        expect(response).to have_http_status(:created)
+      }.to change(Executive, :count).by(1)
+
+      expect(Executive.last.names).to eq "Alfredito Elmo"
+      expect(Executive.last.branch_office_id).to eq manager.branch_office_id
+    end
+
+    it "el usuario creado tiene otra sucursal, pero se cambia automaticamente a la del jefe de sucursal" do
+      manager = FactoryGirl.create(:manager)
+      sign_in manager
+      expect {
+        executive = FactoryGirl.build(:executive, :names => "alfredito elmo")
+        expect(executive.branch_office_id).to_not eq manager.branch_office_id
+        attributes = executive.attributes
+        attributes[:password] = '789789456'
+        attributes[:password_confirmation] = '789789456'
+        post :create, params: { staff: attributes }
+        expect(response).to have_http_status(:created)
+      }.to change(Executive, :count).by(1)
+      expect(Executive.last.names).to eq "Alfredito Elmo"
+      expect(Executive.last.branch_office_id).to eq manager.branch_office_id
+    end
+
+    it "el administrador crea un usuario con cualquier sucursal" do
+      admin = FactoryGirl.create(:admin)
+      office = FactoryGirl.create(:branch_office)
+      sign_in admin
+      expect {
+        manager = FactoryGirl.build(:manager, :names => "ramon  julieta", :branch_office => office)
+        attributes = manager.attributes
+        attributes[:password] = '789789456'
+        attributes[:password_confirmation] = '789789456'
+        post :create, params: { staff: attributes }
+        expect(response).to have_http_status(:created)
+      }.to change(Manager, :count).by(1)
+      expect(Manager.last.names).to eq "Ramon Julieta"
+      expect(Manager.last.branch_office_id).to eq office.id
+    end
+  end
+
+
   describe "modificar bloques horarios de un usuario" do
 
       it "reemplaza la lista de horarios correctamente" do
@@ -73,13 +131,6 @@ RSpec.describe StaffController, type: :controller do
         expect(response).to have_http_status(:redirect)
       end
 
-
-
-
-
     end
-
-
-
 
 end

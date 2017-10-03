@@ -1,4 +1,23 @@
 /*
+* Esta funcion deberia mostrar los errores, ya sea que vienen anidados en un arreglo,
+* o viene solo un mensaje de error en total.
+*
+*/
+
+function notifyError(err){
+  if(err.hasOwnProperty('error')){
+    $.notify(err.error);
+    return;
+  }
+  for(i in err){
+    for(msg in err[i]){
+      $.notify(i + ": " + err[i][msg]);
+    }
+  }
+}
+
+
+/*
 *
 * Configuracion global para todas las llamadas AJAX de la aplicacion.
 * Se pueden sobreescribir en llamadas individuales.
@@ -23,11 +42,7 @@ $.ajaxSetup({
       return;
     }
 
-    var errors = res.responseJSON;
-
-    for(i in errors){
-      $.notify(errors[i], "error");
-    }
+    notifyError(res.responseJSON)
 
   }
 });

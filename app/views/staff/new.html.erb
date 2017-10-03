@@ -13,55 +13,55 @@
           <div class="form-group" title="Todos los nombres de la persona (sin incluir apellidos)" rel="tooltip">
             <label for="names" class="col-2 col-form-label">Nombres</label>
             <div class="col-10">
-              <input class="form-control" type="text" name="names" placeholder="Juan Pedro">
+              <input class="form-control" type="text" name="names" id="names" placeholder="Juan Pedro">
             </div>
           </div>
 
           <div class="form-group">
             <label for="first-surname" class="col-2 col-form-label">Primer apellido</label>
             <div class="col-10">
-              <input class="form-control" type="text" name="first-surname" placeholder="Apellido paterno">
+              <input class="form-control" type="text" name="first-surname" id="first-surname" placeholder="Apellido paterno">
             </div>
           </div>
 
           <div class="form-group">
             <label for="second-surname" class="col-2 col-form-label">Segundo apellido</label>
             <div class="col-10">
-              <input class="form-control" type="text" name="second-surname" placeholder="Apellido materno (campo opcional)">
+              <input class="form-control" type="text" name="second-surname" id="second-surname" placeholder="Apellido materno (campo opcional)">
             </div>
           </div>
 
           <div class="form-group">
             <label for="email" class="col-2 col-form-label">E-mail</label>
             <div class="col-10">
-              <input class="form-control" type="email" name="email" placeholder="Correo del usuario">
+              <input class="form-control" type="email" name="email" id="email" placeholder="Correo del usuario">
             </div>
           </div>
 
           <div class="form-group">
             <label for="password" class="col-2 col-form-label">Contraseña</label>
             <div class="col-10">
-              <input class="form-control" type="password" name="password" placeholder="Contraseña del usuario">
+              <input class="form-control" type="password" name="password" id="password" placeholder="Contraseña del usuario">
             </div>
           </div>
 
           <div class="form-group">
             <label for="password-confirmation" class="col-2 col-form-label">Confirmar contraseña</label>
             <div class="col-10">
-              <input class="form-control" type="password" name="password-confirmation" placeholder="Confirmar contraseña del usuario">
+              <input class="form-control" type="password" name="password-confirmation" id="password-confirmation" placeholder="Confirmar contraseña del usuario">
             </div>
           </div>
 
           <div class="form-group">
             <label class="col-2 col-form-label">Tipo de personal</label>
-            <select class="form-control" name="position">
+            <select class="form-control" name="type">
 
-              <option value="executive">Ejecutivo</option>
-              <option value="supervisor">Supervisor</option>
+              <option value="Executive">Ejecutivo</option>
+              <option value="Supervisor">Supervisor</option>
 
               <% if current_staff.admin? %>
-                <option value="manager">Jefe de sucursal</option>
-                <option value="admin">Administrador</option>
+                <option value="Manager">Jefe de sucursal</option>
+                <option value="Admin">Administrador</option>
               <% end %>
             </select>
           </div>
@@ -91,7 +91,7 @@
   </div>
 
   <div class="col-md-12">
-    <button class="btn btn-primary" id="save-user">Crear usuario</button> <span style="display: none;" class="glyphicon glyphicon-refresh spinning"></span>
+    <button type="submit" class="btn btn-primary" id="save-user">Crear usuario</button> <span style="display: none;" class="glyphicon glyphicon-refresh spinning"></span>
   </div>
 
 </form>

@@ -15,10 +15,11 @@ $(document).ready(function(){
     var branchOfficeId = null;
     var form = $("#new-user-form");
 
-    var position = form.find("[name=position]").val();
+    var type = form.find("[name=type]").val();
 
-    if(position != "admin"){
-      branchOfficeId = officeSelector.getBranchOffice().id;
+    if(type != "Admin"){
+      if(officeSelector != null)
+        branchOfficeId = officeSelector.getBranchOffice().id;
     }
 
     var data = {
@@ -26,7 +27,7 @@ $(document).ready(function(){
       first_surname: form.find("[name=first-surname]").val(),
       second_surname: form.find("[name=second-surname]").val(),
       branch_office_id: branchOfficeId,
-      position: position,
+      type: type,
       password: form.find("[name=password]").val(),
       password_confirmation: form.find("[name=password-confirmation]").val(),
       email: form.find("[name=email]").val()
@@ -36,7 +37,7 @@ $(document).ready(function(){
 
     $.ajax({
       url: '/staff',
-      data: JSON.stringify(data),
+      data: JSON.stringify({ staff: data }),
       method: 'POST',
       success: function(res){
         $.notify("Usuario fue creado correctamente.", "success");
@@ -50,11 +51,7 @@ $(document).ready(function(){
       error: function(err){
         btnSubmit.prop('disabled', false);
         err = err.responseJSON;
-        for(i in err){
-          for(msg in err[i]){
-            $.notify(i + ": " + err[i][msg]);
-          }
-        }
+        notifyError(err);
       }
     });
   });
