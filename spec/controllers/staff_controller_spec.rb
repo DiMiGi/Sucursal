@@ -56,6 +56,11 @@ RSpec.describe StaffController, type: :controller do
       }.to change(Manager, :count).by(1)
       expect(Manager.last.names).to eq "Ramon Julieta"
       expect(Manager.last.branch_office_id).to eq office.id
+
+      office.reload
+      expect(office.staff.count).to eq 1
+      expect(office.staff[0].names).to eq "Ramon Julieta"
+
     end
   end
 
