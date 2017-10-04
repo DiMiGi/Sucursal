@@ -108,7 +108,7 @@ module Scheduling
       return false
     end
     return [] if times.empty?
-    return [[times[0], times[0]+length]] if times.length == 1
+    return [[floor(times[0], length), ceil(times[0]+length, length)]] if times.length == 1
     a = times[0]
     pairs = []
     i = 1
@@ -136,8 +136,7 @@ module Scheduling
 
     # Discretizar los valores
     pairs.each do |pa|
-      a = pa[0]/length
-      pa[0] = a * length
+      pa[0] = floor(pa[0], length)
       pa[1] = ceil(pa[1], length)
     end
 
@@ -211,8 +210,8 @@ module Scheduling
   end
 
   def floor(n, interval)
-    div = n/length
-    n = div * length
+    div = n/interval
+    n = div * interval
     return n
   end
 
