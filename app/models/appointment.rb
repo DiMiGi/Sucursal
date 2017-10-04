@@ -37,17 +37,9 @@ class Appointment < ApplicationRecord
     # Hacer que los segundos queden en 0
     self.time = self.time.beginning_of_minute
 
-    a = 0
     min = self.time.min
-
-    while a <= 60 do
-      b = a + discretization
-      if a <= min && min < b
-        self.time = self.time.change(:min => a)
-        break
-      end
-      a = a + discretization
-    end
+    min = discretization * (min/discretization)
+    self.time = self.time.change(:min => min)
 
   end
 
