@@ -103,27 +103,39 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(controller.compress(times: [802, 809, 817, 829], length: 6)).to eq [[798, 840]]
       expect(controller.compress(times: [0, 6, 6, 12], length: 6)).to eq [[0, 18]]
       expect(controller.compress(times: [0, 6, 6, 13], length: 6)).to eq [[0, 24]]
+      expect(controller.compress(times: [490, 510, 510, 530], length: 10)).to eq [[490, 500], [510, 520], [530, 540]]
     end
 
     it "determina los rangos de horarios que el ejecutivo tiene libre" do
 
       # Tiene los bloques 8:00, 8:15, 8:30 y una hora a las 8:15 de 15 minutos
-      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 525]], appointments: [495, 510])).to eq [[480, 495], [510, 525]]
+      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 525]], appointments: [[495, 510]])).to eq [[480, 495], [510, 525]]
 
       # Tiene los bloques 8:00, 8:15, 8:30 y una hora a las 8:15 de 5 minutos
-      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 525]], appointments: [495, 500])).to eq [[480, 495], [500, 525]]
+      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 525]], appointments: [[495, 500]])).to eq [[480, 495], [500, 525]]
 
       # Tiene los bloques 8:00, 8:15, 8:45 y una hora a las 8:10 de 40 minutos (esto no deberia pasar en la practica
       # ya que eso implica tener una cita en donde no tiene horarios disponibles)
-      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 510], [525, 540]], appointments: [490, 530])).to eq [[480, 490], [530, 540]]
+      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 510], [525, 540]], appointments: [[490, 530]])).to eq [[480, 490], [530, 540]]
 
       # Lo mismo que lo anterior, pero ahora la duracion de la atencion es mas larga, y ninguno
       # de los bloques resultantes es lo suficientemente largo como para que haya una reunion ahi.
-      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 510], [525, 540]], appointments: [490, 530])).to eq []
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 510], [525, 540]], appointments: [[490, 530]])).to eq []
 
       # Lo mismo que lo anterior, pero ahora existe un bloque donde puede haber una
       # reunion ya que tiene otro bloque disponible.
-      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 510], [525, 555]], appointments: [490, 530])).to eq [[530, 555]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 510], [525, 555]], appointments: [[490, 530]])).to eq [[530, 555]]
+
+      # Tiene todos los bloques desde las 8:00 hasta las 15:00 (el 915 se debe a 15*60 + los 15 minutos que dura el bloque).
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[490, 530], [530, 530]])).to eq [[530, 915]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[490, 530], [530, 600]])).to eq [[600, 915]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[490, 530], [580, 600]])).to eq [[530, 580], [600, 915]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[900, 915]])).to eq [[480, 900]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[900, 1000]])).to eq [[480, 900]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[480, 500]])).to eq [[500, 915]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[200, 480]])).to eq [[480, 915]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[200, 490]])).to eq [[490, 915]]
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 915]], appointments: [[500, 510], [600, 610], [620, 630], [700, 710]])).to eq [[480, 500], [510, 600], [630, 700], [710, 915]]
 
     end
 
