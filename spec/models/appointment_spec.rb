@@ -71,7 +71,7 @@ RSpec.describe Appointment, type: :model do
 
 
 
-  it "los tiempos se discretizan correctamente" do
+  it "los tiempos se discretizan correctamente, siendo redondeados hacia abajo" do
 
     discretizations = [5, 1, 3, 8, 10, 30, 20, 59, 2, 58, 7, 8, 8]
     times = [
@@ -104,7 +104,7 @@ RSpec.describe Appointment, type: :model do
       DateTime.new(2017, 1, 1, 15, 13, 49),
       DateTime.new(2017, 1, 1, 15, 13, 48),
       DateTime.new(2017, 1, 1, 15, 13, 40),
-      DateTime.new(2017, 1, 1, 15, 13, 40)      
+      DateTime.new(2017, 1, 1, 15, 13, 40)
     ]
 
     (0..8).each do |i|

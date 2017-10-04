@@ -41,20 +41,16 @@ RSpec.describe AppointmentsController, type: :controller do
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 0)
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 16, minutes: 0)
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
-
-
-
-
       e1.save
       e2.save
       e3.save
       e4.save
 
       @app1 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 13, 31, 0))
-      @app2 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 14, 45, 0))
-      @app3 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 0, 0))
-      @app4 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 15, 10, 0))
-      @app5 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 48, 0))
+      @app2 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 14, 46, 0))
+      @app3 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 1, 0))
+      @app4 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 15, 11, 0))
+      @app5 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 49, 0))
     end
 
     it "prueba la funcion para redondear hacia arriba" do
@@ -66,6 +62,40 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(controller.ceil 10, 7).to eq 14
       expect(controller.ceil 14, 7).to eq 14
       expect(controller.ceil 15, 7).to eq 21
+    end
+
+    it "obtiene el indice del dia sin errores" do
+      expect(controller.day_index Date.new(2017, 9, 30)).to eq 5
+      expect(controller.day_index Date.new(2017, 10, 1)).to eq 6
+      expect(controller.day_index Date.new(2017, 10, 2)).to eq 0
+      expect(controller.day_index Date.new(2017, 10, 3)).to eq 1
+      expect(controller.day_index Date.new(2017, 10, 4)).to eq 2
+      expect(controller.day_index Date.new(2017, 10, 5)).to eq 3
+      expect(controller.day_index Date.new(2017, 10, 6)).to eq 4
+      expect(controller.day_index Date.new(2017, 10, 7)).to eq 5
+      expect(controller.day_index Date.new(2017, 10, 8)).to eq 6
+      expect(controller.day_index Date.new(2017, 10, 9)).to eq 0
+    end
+
+    it "comprime bloques horarios disponibles y los retorna como rangos" do
+      expect(controller.compress(times: [800, 900, 915, 930, 945, 960, 975, 990, 1005], length: 15)).to eq [[800, 815], [900, 1020]]
+      expect(controller.compress(times: [800, 900], length: 15)).to eq [[800, 815], [900, 915]]
+      expect(controller.compress(times: [800, 815, 830], length: 15)).to eq [[800, 845]]
+      expect(controller.compress(times: [800], length: 15)).to eq [[800, 815]]
+      expect(controller.compress(times: [800, 815], length: 15)).to eq [[800, 830]]
+      expect(controller.compress(times: [800, 830, 845], length: 15)).to eq [[800, 815], [830, 860]]
+      expect(controller.compress(times: [800, 815, 830, 845, 860, 875, 890], length: 15)).to eq [[800, 905]]
+    end
+
+    it "comprime los horarios de las citas y lo retorna como rangos" do
+      # para que estos tests funcionen, hay que hacer que los tiempos partan en un multiplo de 60
+      # onda no puede ser 800.
+      #expect(controller.compress(times: [800, 900, 915, 930], length: 3)).to eq [[800, 803], [900, 903], [915, 918], [930, 933]]
+      #expect(controller.compress(times: [800, 803, 806, 812], length: 3)).to eq [[800, 809], [812, 815]]
+      expect(controller.compress(times: [840, 850, 875], length: 20)).to eq [[840, 900]]
+      #expect(controller.compress(times: [800, 801, 805, 807], length: 10)).to eq [[800, 820]]
+      #expect(controller.compress(times: [800, 801, 805, 807], length: 5)).to eq [[800, 810]]
+      #expect(controller.compress(times: [800, 807, 817, 818], length: 5)).to eq [[800, 805], [805, 810], [815]]
     end
 
     describe "algoritmo que entrega un mapa con todos los datos necesarios para poder ejecutar algoritmos de planificacion" do
@@ -89,7 +119,17 @@ RSpec.describe AppointmentsController, type: :controller do
 
       it "entrega las citas del/los ejecutivos en una lista ordenada por fecha" do
         result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
-        expect(result[:executives][2002][:appointments]).to eq [@app3.time, @app5.time, @app4.time]
+        a3 = (14 * 60) + 0
+        a5 = (14 * 60) + 45
+        a4 = (15 * 60) + 10
+        expect(result[:executives][2002][:appointments]).to eq [a3, a5, a4]
+      end
+
+      it "entrega los bloques disponibles del/los ejecutivos en una lista ordenada" do
+        result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        list = [(13*60)+15, (13*60)+45, (17*60)+30, 15*60, 14*60, 16*60, (14*60)+45]
+        list.sort!
+        expect(result[:executives][2002][:time_blocks]).to eq list
       end
 
       it "retorna vacio cuando hay un feriado a nivel global" do

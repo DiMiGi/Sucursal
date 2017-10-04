@@ -4,7 +4,7 @@ class Appointment < ApplicationRecord
   validates_presence_of :executive
   validates_presence_of :time
 
-  after_validation :discretization
+  after_validation :auto_discretization
 
 
   # Pasar un argumento de tipo Date, y retorna los appointments (citas) que hayan
@@ -13,6 +13,19 @@ class Appointment < ApplicationRecord
   def self.find_by_day(day1)
     where("? <= time AND time < ?", day1, day1.tomorrow)
   end
+
+
+  def self.discretize(time, value)
+    return time if value.nil?
+    return time if time.nil?
+    # Hacer que los segundos queden en 0
+    time = time.beginning_of_minute
+    min = time.min
+    min = value * (min/value)
+    time = time.change(min: min)
+    return time
+  end
+
 
   private
 
@@ -28,19 +41,12 @@ class Appointment < ApplicationRecord
   # Esto es solo para validar la hora a guardar en la BD, y mantener la integridad y coherencia.
   # En la practica, las horas deberian venir redondeadas desde antes por parte de
   # los controladores, front-end, etc.
-  def discretization
+  def auto_discretization
     return if executive.nil?
     return if time.nil?
-
-    discretization = self.executive.branch_office.minute_discretization
-
-    # Hacer que los segundos queden en 0
-    self.time = self.time.beginning_of_minute
-
-    min = self.time.min
-    min = discretization * (min/discretization)
-    self.time = self.time.change(:min => min)
-
+    value = self.executive.branch_office.minute_discretization
+    time = self.class.discretize(self.time, value)
+    self.time = self.time.change(min: time.min)
   end
 
 end

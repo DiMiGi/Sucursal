@@ -10,19 +10,21 @@ module Scheduling
   # pero la sucursal discretiza las horas usando intervalos de 10 minutos, entonces la duracion sera tomada
   # como que son 20 minutos.
   #
-  # Los bloques horarios vienen ordenados lexicograficamente (primero por hora, y luego por minuto, de menor a mayor).
+  # Los bloques horarios vienen ordenados.
   #
   # Las citas (appointment) tambien es una lista en donde las fechas estan ordenadas de menor a mayor.
   #
+  # Tanto las horas de las citas como los bloques disponibles vienen en formato (hh*60) + mm, esto significa
+  # que corresponde a la cantidad de minutos desde las 00:00AM. Por ejemplo una hora a las 8:15AM viene dado por
+  # (8*60)+15 = 495
+  #
   # El resultado de este metodo es un hash con todos los datos anidados. Ejemplo de retorno:
-  # {
-  #   :executives=>
-  #   {2001=>{:appointments=>[Mon, 02 Oct 2017 13:30:00 UTC +00:00,Mon, 02 Oct 2017 14:45:00 UTC +00:00],
-  #     :time_blocks=>[{:hh=>13, :mm=>0},{:hh=>13, :mm=>30},{:hh=>14, :mm=>0},{:hh=>14, :mm=>30},{:hh=>14, :mm=>45}]},
-  #   2002=>{:appointments=>[Mon, 02 Oct 2017 14:00:00 UTC +00:00,Mon, 02 Oct 2017 14:45:00 UTC +00:00],
-  #     :time_blocks=>[{:hh=>13, :mm=>15},{:hh=>13, :mm=>45},{:hh=>14, :mm=>0}]}},
-  #   :discretization=>5,
-  #   :attention_duration=>20
+  # {:executives=>
+  #   {2002=>
+  #     {:appointments=>[840, 885, 910],
+  #      :time_blocks=>[795, 825, 840, 885, 900, 960, 1050]}},
+  #  :discretization=>5,
+  #  :attention_duration=>20
   # }
   def get_data(day:, branch_office_id:, attention_type_id:)
 
@@ -59,28 +61,21 @@ module Scheduling
     end
 
     appointments.each do |app|
-      result[:executives][app.staff_id][:appointments] << app.time
+      # Volver a redondearlo en caso que este valor haya cambiado desde
+      # que se tomo la hora.
+      app.time = Appointment.discretize(app.time, discretization)
+      minutes = (app.time.hour * 60) + app.time.min
+      result[:executives][app.staff_id][:appointments] << minutes
     end
 
     time_blocks.each do |block|
-      result[:executives][block.executive_id][:time_blocks] << {
-        :hh => block.hour,
-        :mm => block.minutes
-      }
+      minutes = (block.hour * 60) + block.minutes
+      result[:executives][block.executive_id][:time_blocks] << minutes
     end
 
     result[:executives].each do |key, executive|
-
       executive[:appointments].sort!
-
-      executive[:time_blocks].sort! { |a, b|
-        if a[:hh] == b[:hh]
-          a[:mm] - b[:mm]
-        else
-          a[:hh] - b[:hh]
-        end
-      }
-
+      executive[:time_blocks].sort!
       if executive[:time_blocks].empty?
         result[:executives].delete(key)
       end
@@ -100,17 +95,88 @@ module Scheduling
 
 
 
+  # Esta funcion comprime listados de bloques disponibles. Considerar que
+  # cada bloque tiene un valor fijo de 15 minutos. Eso significa que si se tiene
+  # los bloques que comienzan en los minutos 800 y 815, el rango total de minutos disponibles es
+  # de 800-815 (primer bloque) y desde 815-830 (segundo bloque), por lo tanto el rango total
+  # sera desde 800 hasta 830. Ver los tests para comprender la descripcion del comportamiento
+  # de esta funcion. Tambien se puede usar para comprimir citas (appointments) y utilizar
+  # otro valor como largo del bloque.
+  def compress(times:, length:)
+    def successor?(a, b, length)
+      return true if a + length == b
+      return false
+    end
+    return [] if times.empty?
+    return [[times[0], times[0]+length]] if times.length == 1
+    a = times[0]
+    pairs = []
+    i = 1
+    while i < times.length do
+      b = times[i]
+      if !successor?(times[i-1], b, length) && b != times[i-1]
+        pairs << [a, times[i-1]]
+        pairs.last[1] = pairs.last[1] + length
+        a = b
+      end
+      if i == times.length - 1
+        pairs << [a, times.last]
+        pairs.last[1] = pairs.last[1] + length
+      end
+      i = i + 1
+    end
+    return pairs
+  end
+
+
+
+
   # Recibe como parametro uno de los ejecutivos en el retorno de get_data.
   # Esto implica que necesita tener dos claves, un listado de citas (appointments),
   # y otro de bloques libres (time_blocks).
   #
   # Tambien es necesaria la duracion de la atencion, para que de esa forma no entregue
   # rangos que son muy pequenos para que se pueda atender una cita.
-  #
-  # El resultado es los rangos en los cuales este ejecutivo puede atender horas, para
-  def get_ranges(executive)
-
-    
+  def get_ranges(time_blocks:, appointments:, duration:)
+    time_blocks = compress(times: time_blocks, length: 15).flatten
+    appointments = compress(times: time_blocks, length: duration).flatten
+    i = 0
+    j = 0
+    result = []
+    set = nil
+    restriction_open = false
+    available_open = false
+    while j <= s.length
+      while i < r.length
+        if j < s.length && r[i] > s[j]
+          break
+        end
+        if available_open = (i % 2 == 0)
+          a = r[i]
+          b = r[i+1]
+          n = s[j]
+          between = (j == s.length) || (a < n && n < b)
+          set = [s[j+1]] if (restriction_open && between)
+          set = [r[i]] if !restriction_open
+        else
+          if !restriction_open
+            set << r[i]
+            result << set if set[0] != set[1]
+          end
+        end
+        i = i + 1
+      end
+      if restriction_open = (j % 2 == 0)
+        if available_open
+          set << s[j]
+          result << set if set[0] != set[1]
+        end
+      else
+        set = [s[j]] if available_open
+      end
+      j = j + 1
+    end
+    return result
   end
 
 
@@ -119,16 +185,12 @@ module Scheduling
   # Por ejemplo si el intervalo es 7, los numeros se redondean hacia arriba
   # quedando en 0, 7, 14, 21, etc.
   def ceil(n, interval)
-
     div = n/interval
     mod = n%interval
-
     value = div * interval
-
     if mod != 0
       value += interval
     end
-
     value
   end
 
