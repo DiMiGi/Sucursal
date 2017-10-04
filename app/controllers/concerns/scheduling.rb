@@ -100,7 +100,9 @@ module Scheduling
   # los bloques que comienzan en los minutos 800 y 815, el rango total de minutos disponibles es
   # de 800-815 (primer bloque) y desde 815-830 (segundo bloque), por lo tanto el rango total
   # sera desde 800 hasta 830. Ver los tests para comprender la descripcion del comportamiento
-  # de esta funcion. Tambien se puede usar para comprimir citas (appointments) y utilizar
+  # de esta funcion. Esta funcion tambien aprovecha de discretizar los valores para que se
+  # ajusten a la cuadricula que la sucursal configura (el valor de discretizacion en minutos).
+  # Tambien se puede usar para comprimir citas (appointments) y utilizar
   # otro valor como largo del bloque.
   def compress(times:, length:)
     def successor?(a, b, length)
@@ -115,7 +117,7 @@ module Scheduling
     while i < times.length do
       b = floor(times[i], length)
       if !successor?(times[i-1], b, length) && b != times[i-1]
-        if pairs.empty? || a > pairs.last[1]
+        if pairs.empty? || floor(a, length) > ceil(pairs.last[1], length)
           pairs << [a, times[i-1]]
         else
           pairs.last[1] = times[i-1] if !pairs.last.nil?
@@ -124,7 +126,7 @@ module Scheduling
         a = b
       end
       if i == times.length - 1
-        if pairs.empty? || a > pairs.last[1]
+        if pairs.empty? || floor(a, length) > ceil(pairs.last[1], length)
           pairs << [a, times.last]
         else
           pairs.last[1] = times.last
