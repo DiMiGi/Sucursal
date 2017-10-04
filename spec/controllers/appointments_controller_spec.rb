@@ -36,11 +36,14 @@ RSpec.describe AppointmentsController, type: :controller do
       e1.time_blocks << FactoryGirl.build(:time_block, :thursday, hour: 20, minutes: 30)
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 15)
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 45)
-      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 0)
-      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
-      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 15, minutes: 0)
-      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 16, minutes: 0)
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 17, minutes: 30)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 15, minutes: 0)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 0)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 16, minutes: 0)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
+
+
+
 
       e1.save
       e2.save
@@ -48,10 +51,10 @@ RSpec.describe AppointmentsController, type: :controller do
       e4.save
 
       @app1 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 13, 31, 0))
-      @app2 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 13, 31, 0))
+      @app2 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 14, 45, 0))
       @app3 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 0, 0))
-      @app4 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 48, 0))
-      @app5 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 15, 10, 0))
+      @app4 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 15, 10, 0))
+      @app5 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 48, 0))
     end
 
     it "prueba la funcion para redondear hacia arriba" do
@@ -81,8 +84,12 @@ RSpec.describe AppointmentsController, type: :controller do
         expect(result[:executives]).to_not have_key 2004 # Es borrado porque no tiene bloques horarios
         expect(result[:executives][2002]).to have_key :time_blocks
         expect(result[:executives][2002]).to have_key :appointments
-        expect(result[:executives][2002][:appointments]).to eq [@app3.time, @app4.time, @app5.time]
         expect(result[:executives][2002][:time_blocks].length).to eq 7
+      end
+
+      it "entrega las citas del/los ejecutivos en una lista ordenada por fecha" do
+        result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        expect(result[:executives][2002][:appointments]).to eq [@app3.time, @app5.time, @app4.time]
       end
 
       it "retorna vacio cuando hay un feriado a nivel global" do

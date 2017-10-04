@@ -3,6 +3,7 @@ FactoryGirl.define do
 
     address "Calle Beijing #789"
 
+    # Divisores de 60.
     minute_discretization 5
 
     association :comuna

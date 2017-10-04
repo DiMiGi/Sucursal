@@ -10,10 +10,14 @@ module Scheduling
   # pero la sucursal discretiza las horas usando intervalos de 10 minutos, entonces la duracion sera tomada
   # como que son 20 minutos.
   #
+  # Los bloques horarios vienen ordenados lexicograficamente (primero por hora, y luego por minuto, de menor a mayor).
+  #
+  # Las citas (appointment) tambien es una lista en donde las fechas estan ordenadas de menor a mayor.
+  #
   # El resultado de este metodo es un hash con todos los datos anidados. Ejemplo de retorno:
   # {
   #   :executives=>
-  #   {2001=>{:appointments=>[Mon, 02 Oct 2017 13:30:00 UTC +00:00,Mon, 02 Oct 2017 13:30:00 UTC +00:00],
+  #   {2001=>{:appointments=>[Mon, 02 Oct 2017 13:30:00 UTC +00:00,Mon, 02 Oct 2017 14:45:00 UTC +00:00],
   #     :time_blocks=>[{:hh=>13, :mm=>0},{:hh=>13, :mm=>30},{:hh=>14, :mm=>0},{:hh=>14, :mm=>30},{:hh=>14, :mm=>45}]},
   #   2002=>{:appointments=>[Mon, 02 Oct 2017 14:00:00 UTC +00:00,Mon, 02 Oct 2017 14:45:00 UTC +00:00],
   #     :time_blocks=>[{:hh=>13, :mm=>15},{:hh=>13, :mm=>45},{:hh=>14, :mm=>0}]}},
@@ -28,6 +32,8 @@ module Scheduling
       return {}
     end
 
+    # Estas consultas se pueden optimizar para que hayan menos consultas (haciendo JOINs varios)
+    # Recordar ejecutar los tests luego de cada modificacion $ rspec
     executives = Executive.where("branch_office_id = ? AND attention_type_id = ?", branch_office_id, attention_type_id)
 
     appointments = Appointment.find_by_day(day).where(executive: executives)
@@ -65,6 +71,8 @@ module Scheduling
 
     result[:executives].each do |key, executive|
 
+      executive[:appointments].sort!
+
       executive[:time_blocks].sort! { |a, b|
         if a[:hh] == b[:hh]
           a[:mm] - b[:mm]
@@ -88,6 +96,21 @@ module Scheduling
 
     return result
 
+  end
+
+
+
+  # Recibe como parametro uno de los ejecutivos en el retorno de get_data.
+  # Esto implica que necesita tener dos claves, un listado de citas (appointments),
+  # y otro de bloques libres (time_blocks).
+  #
+  # Tambien es necesaria la duracion de la atencion, para que de esa forma no entregue
+  # rangos que son muy pequenos para que se pueda atender una cita.
+  #
+  # El resultado es los rangos en los cuales este ejecutivo puede atender horas, para
+  def get_ranges(executive)
+
+    
   end
 
 
