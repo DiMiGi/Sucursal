@@ -113,7 +113,7 @@ module Scheduling
     pairs = []
     i = 1
     while i < times.length do
-      b = times[i]
+      b = floor(times[i], length)
       if !successor?(times[i-1], b, length) && b != times[i-1]
         if pairs.empty? || a > pairs.last[1]
           pairs << [a, times[i-1]]

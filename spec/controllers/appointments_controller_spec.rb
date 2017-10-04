@@ -96,14 +96,10 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(controller.compress(times: [800, 912, 924, 947], length: 3)).to eq [[798, 804], [912, 915], [924, 927], [945, 951]]
       expect(controller.compress(times: [810, 813, 816, 822], length: 3)).to eq [[810, 819], [822, 825]]
       expect(controller.compress(times: [850, 870], length: 20)).to eq [[840, 900]]
-
       expect(controller.compress(times: [850, 860, 885], length: 20)).to eq [[840, 920]]
-      # asi esta malo, los 880 deberian unirse:
-      #expect(controller.compress(times: [850, 860, 885], length: 20)).to eq [[840, 880], [880, 920]]
-
-      #expect(controller.compress(times: [810, 811, 815, 817], length: 10)).to eq [[810, 827]]
-      #expect(controller.compress(times: [800, 801, 805, 807], length: 5)).to eq [[800, 810]]
-      #expect(controller.compress(times: [800, 807, 817, 818], length: 5)).to eq [[800, 805], [805, 810], [815]]
+      expect(controller.compress(times: [810, 811, 815, 817], length: 10)).to eq [[810, 830]]
+      expect(controller.compress(times: [800, 801, 805, 807], length: 5)).to eq [[800, 815]]
+      expect(controller.compress(times: [800, 807, 817, 818], length: 5)).to eq [[800, 825]]
     end
 
     describe "algoritmo que entrega un mapa con todos los datos necesarios para poder ejecutar algoritmos de planificacion" do
