@@ -62,6 +62,7 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(controller.ceil 10, 7).to eq 14
       expect(controller.ceil 14, 7).to eq 14
       expect(controller.ceil 15, 7).to eq 21
+      expect(controller.ceil 1015, 15).to eq 1020
     end
 
     it "obtiene el indice del dia sin errores" do
@@ -78,22 +79,21 @@ RSpec.describe AppointmentsController, type: :controller do
     end
 
     it "comprime bloques horarios disponibles y los retorna como rangos" do
-      expect(controller.compress(times: [800, 900, 915, 930, 945, 960, 975, 990, 1005], length: 15)).to eq [[800, 815], [900, 1020]]
-      expect(controller.compress(times: [800, 900], length: 15)).to eq [[800, 815], [900, 915]]
-      expect(controller.compress(times: [800, 815, 830], length: 15)).to eq [[800, 845]]
-      expect(controller.compress(times: [800], length: 15)).to eq [[800, 815]]
-      expect(controller.compress(times: [800, 815], length: 15)).to eq [[800, 830]]
-      expect(controller.compress(times: [800, 830, 845], length: 15)).to eq [[800, 815], [830, 860]]
-      expect(controller.compress(times: [800, 815, 830, 845, 860, 875, 890], length: 15)).to eq [[800, 905]]
+      expect(controller.compress(times: [810, 910, 925, 940, 955, 970, 985, 1000, 1015], length: 15)).to eq [[810, 825], [900, 1035]]
+      expect(controller.compress(times: [810, 910], length: 15)).to eq [[810, 825], [900, 930]]
+      expect(controller.compress(times: [810, 825, 840], length: 15)).to eq [[810, 855]]
+      expect(controller.compress(times: [810], length: 15)).to eq [[810, 825]]
+      expect(controller.compress(times: [810, 825], length: 15)).to eq [[810, 840]]
+      expect(controller.compress(times: [810, 840, 855], length: 15)).to eq [[810, 825], [840, 870]]
+      expect(controller.compress(times: [810, 825, 840, 855, 870, 885, 1000], length: 15)).to eq [[810, 900], [990, 1020]]
+      expect(controller.compress(times: [800, 840, 855], length: 15)).to eq [[795, 825], [840, 870]]
     end
 
     it "comprime los horarios de las citas y lo retorna como rangos" do
-      # para que estos tests funcionen, hay que hacer que los tiempos partan en un multiplo de 60
-      # onda no puede ser 800.
-      #expect(controller.compress(times: [800, 900, 915, 930], length: 3)).to eq [[800, 803], [900, 903], [915, 918], [930, 933]]
-      #expect(controller.compress(times: [800, 803, 806, 812], length: 3)).to eq [[800, 809], [812, 815]]
-      expect(controller.compress(times: [840, 850, 875], length: 20)).to eq [[840, 900]]
-      #expect(controller.compress(times: [800, 801, 805, 807], length: 10)).to eq [[800, 820]]
+      expect(controller.compress(times: [800, 912, 924, 947], length: 3)).to eq [[798, 804], [912, 915], [924, 927], [945, 951]]
+      expect(controller.compress(times: [810, 813, 816, 822], length: 3)).to eq [[810, 819], [822, 825]]
+      expect(controller.compress(times: [850, 860, 885], length: 20)).to eq [[840, 920]]
+      #expect(controller.compress(times: [810, 811, 815, 817], length: 10)).to eq [[810, 827]]
       #expect(controller.compress(times: [800, 801, 805, 807], length: 5)).to eq [[800, 810]]
       #expect(controller.compress(times: [800, 807, 817, 818], length: 5)).to eq [[800, 805], [805, 810], [815]]
     end

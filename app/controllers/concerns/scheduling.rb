@@ -115,16 +115,32 @@ module Scheduling
     while i < times.length do
       b = times[i]
       if !successor?(times[i-1], b, length) && b != times[i-1]
-        pairs << [a, times[i-1]]
+        if pairs.empty? || a > pairs.last[1]
+          pairs << [a, times[i-1]]
+        else
+          pairs.last[1] = times[i-1] if !pairs.last.nil?
+        end
         pairs.last[1] = pairs.last[1] + length
         a = b
       end
       if i == times.length - 1
-        pairs << [a, times.last]
+        if pairs.empty? || a > pairs.last[1]
+          pairs << [a, times.last]
+        else
+          pairs.last[1] = times.last
+        end
         pairs.last[1] = pairs.last[1] + length
       end
       i = i + 1
     end
+
+    # Discretizar los valores
+    pairs.each do |pa|
+      a = pa[0]/length
+      pa[0] = a * length
+      pa[1] = ceil(pa[1], length)
+    end
+
     return pairs
   end
 
@@ -192,6 +208,12 @@ module Scheduling
       value += interval
     end
     value
+  end
+
+  def floor(n, interval)
+    div = n/length
+    n = div * length
+    return n
   end
 
 
