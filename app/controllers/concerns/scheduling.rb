@@ -120,7 +120,7 @@ module Scheduling
         if pairs.empty? || floor(a, length) > ceil(pairs.last[1], length)
           pairs << [a, times[i-1]]
         else
-          pairs.last[1] = times[i-1] if !pairs.last.nil?
+          pairs.last[1] = times[i-1]
         end
         pairs.last[1] = pairs.last[1] + length
         a = b
@@ -148,15 +148,19 @@ module Scheduling
 
 
 
-  # Recibe como parametro uno de los ejecutivos en el retorno de get_data.
-  # Esto implica que necesita tener dos claves, un listado de citas (appointments),
-  # y otro de bloques libres (time_blocks).
+  # Recibe los bloques disponibles de un ejecutivo, y ademas sus citas,
+  # y retorna los rangos de tiempo en donde tiene libre. Esta funcion
+  # ejecuta una diferencia de conjuntos, ademas redondeando los valores
+  # haciendolos cuadrar con la manera que la sucursal discretiza sus bloques.
   #
-  # Tambien es necesaria la duracion de la atencion, para que de esa forma no entregue
-  # rangos que son muy pequenos para que se pueda atender una cita.
+  # Solo retorna los bloques en los que hay suficiente tiempo para realizar una
+  # atencion con la duracion indicada.
+  #
+  # Tanto la duracion como las citas y bloques disponibles deben ser previamente
+  # discretizados. Esta funcion no realiza ningun redondeo ni verificacion.
   def get_ranges(time_blocks:, appointments:, duration:)
-    time_blocks = compress(times: time_blocks, length: 15).flatten
-    appointments = compress(times: time_blocks, length: duration).flatten
+    r = time_blocks.flatten
+    s = appointments.flatten
     i = 0
     j = 0
     result = []
@@ -193,7 +197,15 @@ module Scheduling
       end
       j = j + 1
     end
-    return result
+
+    filtered = []
+    result.each do |r|
+      if r[1] - r[0] >= duration
+        filtered << r
+      end
+    end
+
+    return filtered
   end
 
 

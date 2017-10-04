@@ -100,7 +100,34 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(controller.compress(times: [810, 811, 815, 817], length: 10)).to eq [[810, 830]]
       expect(controller.compress(times: [800, 801, 805, 807], length: 5)).to eq [[800, 815]]
       expect(controller.compress(times: [800, 807, 817, 818], length: 5)).to eq [[800, 825]]
+      expect(controller.compress(times: [802, 809, 817, 829], length: 6)).to eq [[798, 840]]
+      expect(controller.compress(times: [0, 6, 6, 12], length: 6)).to eq [[0, 18]]
+      expect(controller.compress(times: [0, 6, 6, 13], length: 6)).to eq [[0, 24]]
     end
+
+    it "determina los rangos de horarios que el ejecutivo tiene libre" do
+
+      # Tiene los bloques 8:00, 8:15, 8:30 y una hora a las 8:15 de 15 minutos
+      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 525]], appointments: [495, 510])).to eq [[480, 495], [510, 525]]
+
+      # Tiene los bloques 8:00, 8:15, 8:30 y una hora a las 8:15 de 5 minutos
+      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 525]], appointments: [495, 500])).to eq [[480, 495], [500, 525]]
+
+      # Tiene los bloques 8:00, 8:15, 8:45 y una hora a las 8:10 de 40 minutos (esto no deberia pasar en la practica
+      # ya que eso implica tener una cita en donde no tiene horarios disponibles)
+      expect(controller.get_ranges(duration: 5, time_blocks: [[480, 510], [525, 540]], appointments: [490, 530])).to eq [[480, 490], [530, 540]]
+
+      # Lo mismo que lo anterior, pero ahora la duracion de la atencion es mas larga, y ninguno
+      # de los bloques resultantes es lo suficientemente largo como para que haya una reunion ahi.
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 510], [525, 540]], appointments: [490, 530])).to eq []
+
+      # Lo mismo que lo anterior, pero ahora existe un bloque donde puede haber una
+      # reunion ya que tiene otro bloque disponible.
+      expect(controller.get_ranges(duration: 15, time_blocks: [[480, 510], [525, 555]], appointments: [490, 530])).to eq [[530, 555]]
+
+    end
+
+
 
     describe "algoritmo que entrega un mapa con todos los datos necesarios para poder ejecutar algoritmos de planificacion" do
 
