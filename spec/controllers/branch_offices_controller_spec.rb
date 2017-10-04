@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe BranchOfficesController, type: :controller do
 
-  before(:each) do
+  before(:all) do
     FactoryGirl.create(:attention_type)
     FactoryGirl.create(:attention_type)
     FactoryGirl.create(:attention_type)
@@ -28,6 +28,8 @@ RSpec.describe BranchOfficesController, type: :controller do
         branch_office = BranchOffice.find(staff.branch_office_id)
         expect(branch_office.duration_estimations.length).to eq 0
 
+        duration_estimation_count = DurationEstimation.count
+
         # Hacer la primera actualizacion
         put :update_attention_types_estimations, params: { :id => branch_office.id, :duration_estimations => est1 }
         expect(response).to have_http_status(:ok)
@@ -39,7 +41,7 @@ RSpec.describe BranchOfficesController, type: :controller do
         expect(branch_office.duration_estimations[0].branch_office_id).to eq branch_office.id
         expect(branch_office.duration_estimations[1].branch_office_id).to eq branch_office.id
         expect(branch_office.duration_estimations[2].branch_office_id).to eq branch_office.id
-        expect(DurationEstimation.count).to eq 3
+        expect(DurationEstimation.count).to eq(duration_estimation_count+3)
 
         # Hacer la segunda actualizacion
         put :update_attention_types_estimations, params: { :id => branch_office.id, :duration_estimations => est2 }
@@ -54,7 +56,7 @@ RSpec.describe BranchOfficesController, type: :controller do
         expect(branch_office.duration_estimations[1].branch_office_id).to eq branch_office.id
 
         # Se borran las 3 anteriores y solo quedan 2
-        expect(DurationEstimation.count).to eq 2
+        expect(DurationEstimation.count).to eq(duration_estimation_count + 2)
 
         # No queda ninguna con ID null (prevenir fallas de integridad)
         expect(DurationEstimation.where(:branch_office_id => nil).count).to eq 0

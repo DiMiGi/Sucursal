@@ -8,26 +8,26 @@ RSpec.describe Appointment, type: :model do
   end
 
   it "permite buscar por dia correctamente" do
-    Appointment.destroy_all
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 1, 13, 41, 05))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 1, 13, 41, 05))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 2, 13, 41, 05))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 0, 0, 0))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 13, 41, 05))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 23, 59, 59))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 4, 0, 0, 0))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 5, 0, 0, 0))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 5, 0, 0, 0))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 5, 23, 59, 59))
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 6, 0, 0, 0))
 
-    expect(Appointment.find_by_day(Date.new(2017, 1, 1)).count).to eq 2
-    expect(Appointment.find_by_day(Date.new(2017, 1, 2)).count).to eq 1
-    expect(Appointment.find_by_day(Date.new(2017, 2, 3)).count).to eq 3
-    expect(Appointment.find_by_day(Date.new(2017, 2, 4)).count).to eq 1
-    expect(Appointment.find_by_day(Date.new(2017, 2, 5)).count).to eq 1
-    expect(Appointment.find_by_day(Date.new(2017, 5, 5)).count).to eq 2
-    expect(Appointment.find_by_day(Date.new(2017, 5, 6)).count).to eq 1
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 1, 1, 13, 41, 05))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 1, 1, 13, 41, 05))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 1, 2, 13, 41, 05))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 3, 0, 0, 0))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 3, 13, 41, 05))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 3, 23, 59, 59))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 4, 0, 0, 0))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 5, 0, 0, 0))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 5, 5, 0, 0, 0))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 5, 5, 23, 59, 59))
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 5, 6, 0, 0, 0))
+
+    expect(Appointment.find_by_day(Date.new(2018, 1, 1)).count).to eq 2
+    expect(Appointment.find_by_day(Date.new(2018, 1, 2)).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2018, 2, 3)).count).to eq 3
+    expect(Appointment.find_by_day(Date.new(2018, 2, 4)).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2018, 2, 5)).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2018, 5, 5)).count).to eq 2
+    expect(Appointment.find_by_day(Date.new(2018, 5, 6)).count).to eq 1
 
   end
 
@@ -36,32 +36,32 @@ RSpec.describe Appointment, type: :model do
     ex2 = FactoryGirl.create(:executive)
     ex3 = FactoryGirl.create(:executive)
     ex4 = FactoryGirl.create(:executive)
-    Appointment.destroy_all
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 1, 13, 41, 05), :executive => ex1)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 1, 13, 41, 05), :executive => ex2)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 1, 2, 13, 41, 05), :executive => ex2)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 0, 0, 0), :executive => ex1)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 13, 1, 13), :executive => ex1)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 23, 2, 47), :executive => ex1)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 13, 41, 05), :executive => ex2)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 3, 23, 59, 59), :executive => ex3)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 4, 0, 0, 0), :executive => ex4)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 2, 5, 0, 0, 0), :executive => ex4)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 5, 0, 0, 0), :executive => ex3)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 5, 23, 59, 59), :executive => ex4)
-    FactoryGirl.create(:appointment, :time => DateTime.new(2017, 5, 6, 0, 0, 0), :executive => ex3)
 
-    expect(Appointment.find_by_day(Date.new(2017, 1, 1)).where(:executive => ex1).count).to eq 1
-    expect(Appointment.find_by_day(Date.new(2017, 1, 2)).where(:executive => ex1).count).to eq 0
-    expect(Appointment.find_by_day(Date.new(2017, 1, 2)).where(:executive => ex2).count).to eq 1
-    expect(Appointment.find_by_day(Date.new(2017, 2, 3)).where(:executive => ex2).count).to eq 1
-    expect(Appointment.find_by_day(Date.new(2017, 2, 3)).where(:executive => ex1).count).to eq 3
-    expect(Appointment.find_by_day(Date.new(2017, 2, 1)).where(:executive => ex1).count).to eq 0
-    expect(Appointment.find_by_day(Date.new(2017, 5, 5)).where(:executive => ex1).count).to eq 0
-    expect(Appointment.find_by_day(Date.new(2017, 5, 5)).where(:executive => ex2).count).to eq 0
-    expect(Appointment.find_by_day(Date.new(2017, 5, 5)).where(:executive => ex3).count).to eq 1
-    expect(Appointment.find_by_day(Date.new(2017, 5, 5)).where(:executive => ex4).count).to eq 1
-    expect(Appointment.find_by_day(Date.new(2017, 5, 6)).where(:executive => ex3).count).to eq 1
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 1, 1, 13, 41, 05), :executive => ex1)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 1, 1, 13, 41, 05), :executive => ex2)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 1, 2, 13, 41, 05), :executive => ex2)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 3, 0, 0, 0), :executive => ex1)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 3, 13, 1, 13), :executive => ex1)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 3, 23, 2, 47), :executive => ex1)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 3, 13, 41, 05), :executive => ex2)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 3, 23, 59, 59), :executive => ex3)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 4, 0, 0, 0), :executive => ex4)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 2, 5, 0, 0, 0), :executive => ex4)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 5, 5, 0, 0, 0), :executive => ex3)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 5, 5, 23, 59, 59), :executive => ex4)
+    FactoryGirl.create(:appointment, :time => DateTime.new(2018, 5, 6, 0, 0, 0), :executive => ex3)
+
+    expect(Appointment.find_by_day(Date.new(2018, 1, 1)).where(:executive => ex1).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2018, 1, 2)).where(:executive => ex1).count).to eq 0
+    expect(Appointment.find_by_day(Date.new(2018, 1, 2)).where(:executive => ex2).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2018, 2, 3)).where(:executive => ex2).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2018, 2, 3)).where(:executive => ex1).count).to eq 3
+    expect(Appointment.find_by_day(Date.new(2018, 2, 1)).where(:executive => ex1).count).to eq 0
+    expect(Appointment.find_by_day(Date.new(2018, 5, 5)).where(:executive => ex1).count).to eq 0
+    expect(Appointment.find_by_day(Date.new(2018, 5, 5)).where(:executive => ex2).count).to eq 0
+    expect(Appointment.find_by_day(Date.new(2018, 5, 5)).where(:executive => ex3).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2018, 5, 5)).where(:executive => ex4).count).to eq 1
+    expect(Appointment.find_by_day(Date.new(2018, 5, 6)).where(:executive => ex3).count).to eq 1
 
   end
 

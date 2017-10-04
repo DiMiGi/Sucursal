@@ -8,9 +8,10 @@ class Appointment < ApplicationRecord
 
 
   # Pasar un argumento de tipo Date, y retorna los appointments (citas) que hayan
-  # en ese dia.
+  # en ese dia. Luego se le puede colocar mas where() para filtrar mas (crea solo una consulta).
+  # Por ejemplo Appointment.find_by_day(Date.new(2017, 1, 1)).where(:executive => un_ejecutivo_123)
   def self.find_by_day(day1)
-    where("? <= time AND time < ?", day1, day1.tomorrow)    
+    where("? <= time AND time < ?", day1, day1.tomorrow)
   end
 
   private
@@ -24,6 +25,9 @@ class Appointment < ApplicationRecord
   # El bloque de discretizacion comienza al inicio de la hora, lo que quiere decir que
   # si el valor es 7, entonces los valores a los cuales se redondea son
   # hh:00:ss, hh:07:ss, hh:14:ss, hh:21:ss, etc.
+  # Esto es solo para validar la hora a guardar en la BD, y mantener la integridad y coherencia.
+  # En la practica, las horas deberian venir redondeadas desde antes por parte de
+  # los controladores, front-end, etc.
   def discretization
     return if executive.nil?
     return if time.nil?

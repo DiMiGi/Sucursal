@@ -55,7 +55,11 @@ RSpec.describe Staff, type: :model do
 
   it "las consultas find() sobre las subclases de usuario entregan solo esos usuarios" do
 
-    Staff.destroy_all
+    executive_count = Executive.count
+    supervisor_count = Supervisor.count
+    manager_count = Manager.count
+    admin_count = Admin.count
+
     FactoryGirl.create(:supervisor)
     FactoryGirl.create(:supervisor)
     FactoryGirl.create(:supervisor)
@@ -66,10 +70,10 @@ RSpec.describe Staff, type: :model do
     FactoryGirl.create(:manager)
     FactoryGirl.create(:manager)
 
-    expect(Admin.count).to eq 2
-    expect(Executive.count).to eq 1
-    expect(Manager.count).to eq 3
-    expect(Supervisor.count).to eq 3
+    expect(Admin.count).to eq(admin_count + 2)
+    expect(Executive.count).to eq(executive_count + 1)
+    expect(Manager.count).to eq(manager_count + 3)
+    expect(Supervisor.count).to eq(supervisor_count + 3)
 
   end
 

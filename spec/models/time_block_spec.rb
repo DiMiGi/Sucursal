@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe TimeBlock, type: :model do
+
   it "valida valores posibles (correctos)" do
     expect(FactoryGirl.create(:time_block)).to be_valid
     expect(FactoryGirl.create(:time_block, :monday)).to be_valid

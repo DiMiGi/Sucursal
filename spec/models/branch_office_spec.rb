@@ -14,6 +14,13 @@ RSpec.describe BranchOffice, type: :model do
     expect(FactoryGirl.build(:branch_office, :address => "\ta\n\t")).to be_valid
   end
 
+  it "valida que el tiempo de discretizacion sea divisor de 60 (minutos)" do
+    expect(FactoryGirl.build(:branch_office, :minute_discretization => 7)).to_not be_valid
+    expect(FactoryGirl.build(:branch_office, :minute_discretization => 13)).to_not be_valid
+    expect(FactoryGirl.build(:branch_office, :minute_discretization => 14)).to_not be_valid
+    expect(FactoryGirl.build(:branch_office, :minute_discretization => 25)).to_not be_valid
+  end
+
   it "elimina espacios redundantes en la direccion" do
     office = FactoryGirl.create(:branch_office, :address => "\n\na \t  b c\n    \td  ")
     expect(office.address).to eq 'a b c d'

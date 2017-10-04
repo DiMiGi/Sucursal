@@ -91,9 +91,10 @@ RSpec.describe StaffController, type: :controller do
           { weekday: 3, hour: 11, minutes: 30 }
         ]
 
-        # Primero el ejecutivo tiene 0 bloques, y en total en la BD tambien hay 0
+        time_block_count = TimeBlock.count
+
+        # Primero el ejecutivo tiene 0 bloques
         expect(executive.time_blocks.length).to eq 0
-        expect(TimeBlock.count).to eq 0
 
         # Hacer la primera actualizacion
         put :update_time_blocks, params: { :id => executive.id, :time_blocks => schedule1 }
@@ -107,7 +108,7 @@ RSpec.describe StaffController, type: :controller do
           expect(executive.time_blocks[n].executive_id).to eq executive.id
         end
 
-        expect(TimeBlock.count).to eq 4
+        expect(TimeBlock.count).to eq(time_block_count + 4)
 
         # Hacer la segunda actualizacion
         put :update_time_blocks, params: { :id => executive.id, :time_blocks => schedule2 }
@@ -120,7 +121,7 @@ RSpec.describe StaffController, type: :controller do
           expect(executive.time_blocks[n].minutes).to eq schedule2[n][:minutes]
           expect(executive.time_blocks[n].executive_id).to eq executive.id
         end
-        expect(TimeBlock.count).to eq 5
+        expect(TimeBlock.count).to eq(time_block_count + 5)
 
         # No queda ninguna con ID null (prevenir fallas de integridad)
         expect(TimeBlock.where(:executive_id => nil).count).to eq 0
