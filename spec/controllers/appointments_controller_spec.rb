@@ -2,9 +2,57 @@ require 'rails_helper'
 
 RSpec.describe AppointmentsController, type: :controller do
 
-  describe "algoritmo para obtener horarios libres para una reunion" do
+  describe "algoritmos y sub algoritmos (sub rutinas) para planificacion" do
 
     let(:controller) { AppointmentsController.new }
+
+    # Preparar una base de datos de prueba
+    before(:all) do
+      @office = FactoryGirl.create(:branch_office, id: 1007, minute_discretization: 5)
+      @attention = FactoryGirl.create(:attention_type, id: 1007)
+
+      e1 = FactoryGirl.create(:executive, id: 2001, branch_office: @office, attention_type: @attention)
+      e2 = FactoryGirl.create(:executive, id: 2002, branch_office: @office, attention_type: @attention)
+      e3 = FactoryGirl.create(:executive, id: 2003, branch_office: @office, attention_type: @attention)
+      e4 = FactoryGirl.create(:executive, id: 2004, branch_office: @office, attention_type: @attention)
+
+      FactoryGirl.create(:global_day_off, day: Date.new(2017, 10, 1))
+      FactoryGirl.create(:global_day_off, day: Date.new(2017, 10, 3))
+      FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 2))
+      FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 3))
+      FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 4))
+      FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 1))
+      FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 3))
+      FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 5))
+      FactoryGirl.create(:branch_office_day_off, branch_office: @office, day: Date.new(2017, 10, 4))
+
+      @office.duration_estimations << DurationEstimation.new(duration: 17, attention_type: @attention)
+
+      e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 0)
+      e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 30)
+      e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 0)
+      e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 30)
+      e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
+      e1.time_blocks << FactoryGirl.build(:time_block, :thursday, hour: 20, minutes: 30)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 15)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 45)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 0)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 15, minutes: 0)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 16, minutes: 0)
+      e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 17, minutes: 30)
+
+      e1.save
+      e2.save
+      e3.save
+      e4.save
+
+      @app1 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 13, 31, 0))
+      @app2 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 13, 31, 0))
+      @app3 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 0, 0))
+      @app4 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 48, 0))
+      @app5 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 15, 10, 0))
+    end
 
     it "prueba la funcion para redondear hacia arriba" do
       expect(controller.ceil 0, 7).to eq 0
@@ -17,55 +65,7 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(controller.ceil 15, 7).to eq 21
     end
 
-    context "probando el metodo que recoge todos los datos necesarios (para planificar, etc) desde la base de datos" do
-
-      before(:all) do
-        @office = FactoryGirl.create(:branch_office, id: 1007, minute_discretization: 5)
-        @attention = FactoryGirl.create(:attention_type, id: 1007)
-
-        e1 = FactoryGirl.create(:executive, id: 2001, branch_office: @office, attention_type: @attention)
-        e2 = FactoryGirl.create(:executive, id: 2002, branch_office: @office, attention_type: @attention)
-        e3 = FactoryGirl.create(:executive, id: 2003, branch_office: @office, attention_type: @attention)
-        e4 = FactoryGirl.create(:executive, id: 2004, branch_office: @office, attention_type: @attention)
-
-        FactoryGirl.create(:global_day_off, day: Date.new(2017, 10, 1))
-        FactoryGirl.create(:global_day_off, day: Date.new(2017, 10, 3))
-        FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 2))
-        FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 3))
-        FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 4))
-        FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 1))
-        FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 3))
-        FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 5))
-        FactoryGirl.create(:branch_office_day_off, branch_office: @office, day: Date.new(2017, 10, 4))
-
-        @office.duration_estimations << DurationEstimation.new(duration: 17, attention_type: @attention)
-
-        e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 0)
-        e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 30)
-        e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 0)
-        e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 30)
-        e1.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
-        e1.time_blocks << FactoryGirl.build(:time_block, :thursday, hour: 20, minutes: 30)
-        e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 15)
-        e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 13, minutes: 45)
-        e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 0)
-        e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
-        e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 15, minutes: 0)
-        e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 16, minutes: 0)
-        e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 17, minutes: 30)
-
-        e1.save
-        e2.save
-        e3.save
-        e4.save
-
-        @app1 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 13, 31, 0))
-        @app2 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 13, 31, 0))
-        @app3 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 0, 0))
-        @app4 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 48, 0))
-        @app5 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 15, 10, 0))
-      end
-
+    describe "algoritmo que entrega un mapa con todos los datos necesarios para poder ejecutar algoritmos de planificacion" do
 
       it "entrega un mapa con todos los datos necesarios para poder ejecutar algoritmos de planificacion" do
         result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
