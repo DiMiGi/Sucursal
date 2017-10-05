@@ -41,6 +41,16 @@ RSpec.describe AppointmentsController, type: :controller do
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 0)
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 16, minutes: 0)
       e2.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
+      e3.time_blocks << FactoryGirl.build(:time_block, :monday, hour: 14, minutes: 45)
+      e3.time_blocks << FactoryGirl.build(:time_block, :tuesday, hour: 14, minutes: 45)
+      e3.time_blocks << FactoryGirl.build(:time_block, :wednesday, hour: 14, minutes: 45)
+      e3.time_blocks << FactoryGirl.build(:time_block, :thursday, hour: 14, minutes: 45)
+      e3.time_blocks << FactoryGirl.build(:time_block, :friday, hour: 14, minutes: 45)
+      e4.time_blocks << FactoryGirl.build(:time_block, :tuesday, hour: 14, minutes: 45)
+      e4.time_blocks << FactoryGirl.build(:time_block, :wednesday, hour: 14, minutes: 45)
+      e4.time_blocks << FactoryGirl.build(:time_block, :thursday, hour: 14, minutes: 45)
+      e4.time_blocks << FactoryGirl.build(:time_block, :friday, hour: 14, minutes: 45)
+      e4.time_blocks << FactoryGirl.build(:time_block, :saturday, hour: 14, minutes: 45)
       e1.save
       e2.save
       e3.save
@@ -79,7 +89,6 @@ RSpec.describe AppointmentsController, type: :controller do
         expect(result).to have_key :executives
         expect(result[:executives]).to_not have_key 2001 # Tiene un dia feriado (o dia libre, etc)
         expect(result[:executives]).to have_key 2002
-        expect(result[:executives]).to_not have_key 2003 # Es borrado porque no tiene bloques horarios
         expect(result[:executives]).to_not have_key 2004 # Es borrado porque no tiene bloques horarios
         expect(result[:executives][2002]).to have_key :time_blocks
         expect(result[:executives][2002]).to have_key :appointments
@@ -93,6 +102,30 @@ RSpec.describe AppointmentsController, type: :controller do
         a4 = (15 * 60) + 10
         expect(result[:executives][2002][:appointments]).to eq [a3, a5, a4]
       end
+
+      it "obtiene los ejecutivos que estan disponibles el dia escogido" do
+
+        result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        expect(result[:executives].keys).to eq [2002, 2003]
+
+        result = controller.get_data(day: Date.new(2017, 10, 3), branch_office_id: @office.id, attention_type_id: @attention.id)
+        expect(result).to eq({})
+
+        result = controller.get_data(day: Date.new(2017, 10, 3), branch_office_id: @office.id, attention_type_id: @attention.id)
+        expect(result).to eq({})
+
+        result = controller.get_data(day: Date.new(2017, 10, 5), branch_office_id: @office.id, attention_type_id: @attention.id)
+        expect(result[:executives].keys).to eq [2001, 2003, 2004]
+
+        result = controller.get_data(day: Date.new(2017, 10, 6), branch_office_id: @office.id, attention_type_id: @attention.id)
+        expect(result[:executives].keys).to eq [2003, 2004]
+
+        result = controller.get_data(day: Date.new(2017, 10, 7), branch_office_id: @office.id, attention_type_id: @attention.id)
+        expect(result[:executives].keys).to eq [2004]
+
+      end
+
+
 
       it "entrega los bloques disponibles del/los ejecutivos en una lista ordenada" do
         result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)

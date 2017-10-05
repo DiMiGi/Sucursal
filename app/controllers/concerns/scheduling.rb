@@ -37,7 +37,12 @@ module Scheduling
 
     # Estas consultas se pueden optimizar para que hayan menos consultas (haciendo JOINs varios)
     # Recordar ejecutar los tests luego de cada modificacion $ rspec
-    executives = Executive.where("branch_office_id = ? AND attention_type_id = ?", branch_office_id, attention_type_id)
+    raise "Dia (parametro day) no es de tipo Date" if day.class != Date
+
+    executives = Executive.joins("LEFT JOIN days_off as d ON d.staff_id = staff.id AND d.day = '#{day}'")
+    .where("d.id is NULL AND staff.branch_office_id = ? AND staff.attention_type_id = ?",
+      branch_office_id,
+      attention_type_id)
 
     appointments = Appointment.find_by_day(day).where(executive: executives)
 
@@ -46,8 +51,6 @@ module Scheduling
     discretization = BranchOffice.find(attention_type_id).minute_discretization
 
     time_blocks = TimeBlock.where(executive: executives, weekday: day_index(day))
-
-    days_off_per_executive = ExecutiveDayOff.where(day: day).where(executive: executives)
 
     result = {}
 
@@ -80,10 +83,6 @@ module Scheduling
       if executive[:time_blocks].empty?
         result[:executives].delete(key)
       end
-    end
-
-    days_off_per_executive.each do |off|
-      result[:executives].delete off.staff_id
     end
 
     if !result[:executives].keys.any?
