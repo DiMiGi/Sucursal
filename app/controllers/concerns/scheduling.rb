@@ -168,38 +168,31 @@ module Scheduling
 
         if i % 2 == 0
           open_ranges = open_ranges + 1
-          if open_ranges == 1
-            # Significa que se acaba de abrir un conjunto
-            set = [r[i], nil]
-          end
+          set = [r[i], nil] if open_ranges == 1
         else
-          open_ranges = open_ranges - 1
+          open_ranges -= 1
           if open_ranges == 0
             set[1] = r[i]
             result << set if result.empty? || set[0] != result.last[1]
             result.last[1] = set[1] unless set[0] != result.last[1]
           end
         end
-        i = i + 1
+        i += 1
       end
 
       if j % 2 == 0
-        open_ranges = open_ranges + 1
-        if open_ranges == 1
-          # Significa que se acaba de abrir un conjunto
-          set = [s[j], nil]
-        end
+        open_ranges += 1
+        set = [s[j], nil] if open_ranges == 1
       else
-        open_ranges = open_ranges - 1
+        open_ranges -= 1
         if open_ranges == 0
-          # Significa que se acaba de cerrar un conjunto
           set[1] = s[j]
           result << set if result.empty? || set[0] != result.last[1]
           result.last[1] = set[1] unless set[0] != result.last[1]
         end
       end
 
-      j = j + 1
+      j += 1
     end
     return result
   end
