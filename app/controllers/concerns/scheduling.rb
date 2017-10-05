@@ -39,18 +39,18 @@ module Scheduling
     # Recordar ejecutar los tests luego de cada modificacion $ rspec
     raise "Dia (parametro day) no es de tipo Date" if day.class != Date
 
-    executives = Executive.joins("LEFT JOIN days_off as d ON d.staff_id = staff.id AND d.day = '#{day}'")
-    .where("d.id is NULL AND staff.branch_office_id = ? AND staff.attention_type_id = ?",
-      branch_office_id,
-      attention_type_id)
+    executives = Executive.select("staff.id, t.weekday, t.hour, t.minutes").joins("left join days_off as d on staff.id = d.staff_id and d.day = '#{day}'")
+    .joins("left join time_blocks as t on staff.id = t.executive_id AND t.weekday = #{day_index(day)}")
+    .where("d.id is NULL AND staff.branch_office_id = ? AND staff.attention_type_id = ? AND t.weekday is not NULL",
+        branch_office_id,
+        attention_type_id)
 
-    appointments = Appointment.find_by_day(day).where(executive: executives)
+
+    appointments = Appointment.find_by_day(day).where(executive: executives.map{|e| e[:id]})
 
     duration = DurationEstimation.find_by(branch_office_id: branch_office_id, attention_type_id: attention_type_id).duration
 
     discretization = BranchOffice.find(attention_type_id).minute_discretization
-
-    time_blocks = TimeBlock.where(executive: executives, weekday: day_index(day))
 
     result = {}
 
@@ -64,17 +64,18 @@ module Scheduling
       result[:executives][exe.id][:time_blocks] = []
     end
 
+    executives.each do |exe|
+      minutes = (exe.hour * 60) + exe.minutes
+      result[:executives][exe.id][:time_blocks] << minutes
+    end
+
+
     appointments.each do |app|
       # Volver a redondearlo en caso que este valor haya cambiado desde
       # que se tomo la hora.
       app.time = Appointment.discretize(app.time, discretization)
       minutes = (app.time.hour * 60) + app.time.min
       result[:executives][app.staff_id][:appointments] << minutes
-    end
-
-    time_blocks.each do |block|
-      minutes = (block.hour * 60) + block.minutes
-      result[:executives][block.executive_id][:time_blocks] << minutes
     end
 
     result[:executives].each do |key, executive|
