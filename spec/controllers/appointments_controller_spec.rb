@@ -106,6 +106,27 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(controller.compress(times: [490, 510, 510, 530], length: 10)).to eq [[490, 500], [510, 520], [530, 540]]
     end
 
+    it "une conjuntos correctamente" do
+      expect(controller.union([[0, 5]], [[10, 20]])).to eq [[0, 5], [10, 20]]
+      expect(controller.union([[0, 5]], [[0, 20]])).to eq [[0, 20]]
+      expect(controller.union([[0, 5]], [[]])).to eq [[0, 5]]
+      expect(controller.union([[]], [[10, 20]])).to eq [[10, 20]]
+      expect(controller.union([[]], [[]])).to eq []
+      expect(controller.union([[0, 5], [5, 10]], [[]])).to eq [[0, 10]]
+      expect(controller.union([[0, 5], [5, 10]], [[4, 6]])).to eq [[0, 10]]
+      expect(controller.union([[10, 100], [200, 400], [500, 500]], [[110, 150]])).to eq [[10, 100], [110, 150], [200, 400], [500, 500]]
+      expect(controller.union([[10, 100], [200, 400], [500, 500]], [[500, 600]])).to eq [[10, 100], [200, 400], [500, 600]]
+      expect(controller.union([[10, 100], [200, 400], [500, 500]], [[480, 550]])).to eq [[10, 100], [200, 400], [480, 550]]
+      expect(controller.union([[0, 5], [6, 10], [15, 20]], [[4, 8], [9, 14]])).to eq [[0, 14], [15, 20]]
+      expect(controller.union([[0, 5], [6, 10], [15, 20]], [[4, 8], [1000, 1000]])).to eq [[0, 10], [15, 20], [1000, 1000]]
+      expect(controller.union([[1, 3], [7, 9], [15, 15]], [[4, 6], [10, 15]])).to eq [[1, 3], [4, 6], [7, 9], [10, 15]]
+      expect(controller.union([], [])).to eq []
+      expect(controller.union([[0, 0], [4, 4]], [])).to eq [[0, 0], [4, 4]]
+      expect(controller.union([], [[0, 0], [4, 4]])).to eq [[0, 0], [4, 4]]
+      expect(controller.union([[5, 7]], [4, 89])).to eq [[4, 89]]
+      expect(controller.union([[1, 3], [7, 9]], [3, 7])).to eq [[1, 9]]
+    end
+
     it "determina los rangos de horarios que el ejecutivo tiene libre" do
 
       # Tiene los bloques 8:00, 8:15, 8:30 y una hora a las 8:15 de 15 minutos

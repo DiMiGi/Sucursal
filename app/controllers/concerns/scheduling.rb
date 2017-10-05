@@ -146,6 +146,64 @@ module Scheduling
   end
 
 
+  # Une dos conjuntos.
+  # Ver los tests para comprender su comportamiento.
+  def union(r, s)
+
+    r = r.flatten
+    s = s.flatten
+
+    i = 0
+    j = 0
+
+    result = []
+    set = nil
+    open_ranges = 0
+
+    while j <= s.length
+      while i < r.length
+        if j < s.length && r[i] > s[j]
+          break
+        end
+
+        if i % 2 == 0
+          open_ranges = open_ranges + 1
+          if open_ranges == 1
+            # Significa que se acaba de abrir un conjunto
+            set = [r[i], nil]
+          end
+        else
+          open_ranges = open_ranges - 1
+          if open_ranges == 0
+            set[1] = r[i]
+            result << set if result.empty? || set[0] != result.last[1]
+            result.last[1] = set[1] unless set[0] != result.last[1]
+          end
+        end
+        i = i + 1
+      end
+
+      if j % 2 == 0
+        open_ranges = open_ranges + 1
+        if open_ranges == 1
+          # Significa que se acaba de abrir un conjunto
+          set = [s[j], nil]
+        end
+      else
+        open_ranges = open_ranges - 1
+        if open_ranges == 0
+          # Significa que se acaba de cerrar un conjunto
+          set[1] = s[j]
+          result << set if result.empty? || set[0] != result.last[1]
+          result.last[1] = set[1] unless set[0] != result.last[1]
+        end
+      end
+
+      j = j + 1
+    end
+    return result
+  end
+
 
 
   # Recibe los bloques disponibles de un ejecutivo, y ademas sus citas,
