@@ -92,6 +92,22 @@ module TimeRange
   end
 
 
+  def union_all(ranges)
+
+    return [] if ranges.empty?
+    return ranges[0] if ranges.length == 1
+    return union(ranges[0], ranges[1]) if ranges.length == 2
+
+    result = union(ranges[0], ranges[1])
+
+    (2..ranges.length-1).each do |i|
+      result = union(result, ranges[i])
+    end
+
+    return result
+  end
+
+
 
   # Recibe los bloques disponibles de un ejecutivo, y ademas sus citas,
   # y retorna los rangos de tiempo en donde tiene libre. Esta funcion

@@ -47,7 +47,6 @@ module Scheduling
 
     return {} if executives.empty?
 
-
     de = DurationEstimation.includes(:branch_office).find_by(branch_office: branch_office_id, attention_type_id: attention_type_id)
     discretization = de.branch_office.minute_discretization
     duration = de.duration
@@ -55,6 +54,10 @@ module Scheduling
     appointments = Appointment.find_by_day(day).where(executive: executives.map{|e| e[:id]})
 
     result = {}
+
+    # Todo el siguiente codigo de este metodo sirve solamente para reestructurar
+    # los resultados que se obtuvieron previamente, y encapsularlo en un solo
+    # objeto (hash).
 
     result[:executives] = {}
     result[:discretization] = discretization
@@ -88,11 +91,75 @@ module Scheduling
       end
     end
 
-    if !result[:executives].keys.any?
-      return {}
+    return {} if !result[:executives].keys.any?
+    return result
+
+  end
+
+
+  def get_available_appointments(day:, branch_office_id:, attention_type_id:)
+
+    # Obtener todos los datos necesarios desde la base de datos.
+    db_data = get_data(
+      day: day,
+      branch_office_id: branch_office_id,
+      attention_type_id: attention_type_id)
+
+    return [] if db_data.empty?
+
+    duration = db_data[:attention_duration]
+
+    return [] if duration == 0
+    return [] if db_data[:executives].nil? || db_data[:executives].empty?
+
+    # Crear una lista con todos los rangos en donde cada ejecutivo tiene
+    # tiempo libre.
+
+    executives = []
+
+    db_data[:executives].each do |id, executive|
+      time_blocks = executive[:time_blocks]
+      appointments = executive[:appointments]
+      time_blocks = compress(times: time_blocks, length: 15)
+      appointments = compress(times: appointments, length: duration)
+      executives << get_available_ranges(time_blocks: time_blocks, appointments: appointments, duration: duration)
     end
 
-    return result
+    ranges = union_all executives
+
+    # Se tienen todos los rangos, ahora es necesario saber en que puntos exactos se puede agendar
+    # una hora. Para esto la duracion de la cita ya se tiene.
+
+    puts ""
+    puts ""
+    puts ""
+    puts ""
+
+    times = []
+
+    ranges.each do |r|
+
+      a = r[0]
+      b = r[1]
+      length = b - a
+
+      puts "a #{a}, b #{b}, length #{length}"
+
+      # Estos errores no deberian ocurrir nunca.
+      #raise "Rango no es divisible por la duracion. Hubo un error." if length % duration != 0
+      #raise "La duracion del bloque es menor a la duracion de la atencion. Hubo un error." if length < duration
+
+      number_of_blocks = length/duration
+
+      (0..number_of_blocks-1).each do |n|
+        t = a + (n * duration)
+        puts "#{t} <= #{b-duration}"
+        times << t if t <= b - duration
+      end
+    end
+
+    return times
+
 
   end
 

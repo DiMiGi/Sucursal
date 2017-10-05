@@ -1,0 +1,130 @@
+{
+  "branch_offices": [5, 10, 15, 5, 20],
+
+  "attention_types": 4,
+
+  "executives": [
+    { "branch_office": 0, "attention_type": 0, "appointments": ["2017 10 2 13 31", "2017 10 2 14 46"] },
+    { "branch_office": 0, "attention_type": 1, "appointments": ["2017 10 2 14 1", "2017 10 2 15 11", "2017 10 2 14 49"] },
+    { "branch_office": 3, "attention_type": 0, "appointments": [] },
+    { "branch_office": 4, "attention_type": 2, "appointments": [] },
+    { "branch_office": 4, "attention_type": 3, "appointments": [] }
+  ],
+
+  "duration_estimations": [
+    { "branch_office": 0, "attention_type": 0, "duration": 7 },
+    { "branch_office": 0, "attention_type": 1, "duration": 17 },
+    { "branch_office": 0, "attention_type": 2, "duration": 9 },
+    { "branch_office": 1, "attention_type": 0, "duration": 7 },
+    { "branch_office": 1, "attention_type": 1, "duration": 8 },
+    { "branch_office": 1, "attention_type": 2, "duration": 11 },
+    { "branch_office": 2, "attention_type": 0, "duration": 2 },
+    { "branch_office": 2, "attention_type": 1, "duration": 1 },
+    { "branch_office": 2, "attention_type": 2, "duration": 8 },
+    { "branch_office": 3, "attention_type": 0, "duration": 7 },
+    { "branch_office": 3, "attention_type": 1, "duration": 9 },
+    { "branch_office": 3, "attention_type": 2, "duration": 15 },
+    { "branch_office": 4, "attention_type": 0, "duration": 21 },
+    { "branch_office": 4, "attention_type": 1, "duration": 30 },
+    { "branch_office": 4, "attention_type": 2, "duration": 7 },
+    { "branch_office": 4, "attention_type": 3, "duration": 1 }
+  ],
+
+  "global_days_off": [
+    { "yyyy": 2017, "mm": 10, "dd": 1 },
+    { "yyyy": 2017, "mm": 10, "dd": 3 }
+  ],
+
+  "executive_days_off": [
+    { "executive": 0, "yyyy": 2017, "mm": 10, "dd": 2 },
+    { "executive": 0, "yyyy": 2017, "mm": 10, "dd": 3 },
+    { "executive": 0, "yyyy": 2017, "mm": 10, "dd": 4 },
+    { "executive": 1, "yyyy": 2017, "mm": 10, "dd": 1 },
+    { "executive": 1, "yyyy": 2017, "mm": 10, "dd": 3 },
+    { "executive": 1, "yyyy": 2017, "mm": 10, "dd": 5 }
+  ],
+
+  "branch_office_days_off": [
+    { "branch_office": 0, "yyyy": 2017, "mm": 10, "dd": 4 }
+  ],
+
+  "time_blocks": [
+    { "executive": 0, "weekday": 0, "hour": 13, "minutes": 0 },
+    { "executive": 0, "weekday": 0, "hour": 13, "minutes": 30 },
+    { "executive": 0, "weekday": 0, "hour": 14, "minutes": 0 },
+    { "executive": 0, "weekday": 0, "hour": 14, "minutes": 30 },
+    { "executive": 0, "weekday": 0, "hour": 14, "minutes": 45 },
+    { "executive": 0, "weekday": 1, "hour": 20, "minutes": 0 },
+    { "executive": 0, "weekday": 1, "hour": 20, "minutes": 15 },
+    { "executive": 0, "weekday": 1, "hour": 20, "minutes": 30 },
+    { "executive": 0, "weekday": 2, "hour": 20, "minutes": 0 },
+    { "executive": 0, "weekday": 2, "hour": 20, "minutes": 15 },
+    { "executive": 0, "weekday": 2, "hour": 20, "minutes": 30 },
+    { "executive": 0, "weekday": 3, "hour": 20, "minutes": 30 },
+    { "executive": 1, "weekday": 0, "hour": 13, "minutes": 15 },
+    { "executive": 1, "weekday": 0, "hour": 13, "minutes": 45 },
+    { "executive": 1, "weekday": 0, "hour": 17, "minutes": 30 },
+    { "executive": 1, "weekday": 0, "hour": 15, "minutes": 0 },
+    { "executive": 1, "weekday": 0, "hour": 14, "minutes": 0 },
+    { "executive": 1, "weekday": 0, "hour": 16, "minutes": 0 },
+    { "executive": 1, "weekday": 0, "hour": 14, "minutes": 45 },
+    { "executive": 1, "weekday": 1, "hour": 15, "minutes": 0 },
+    { "executive": 1, "weekday": 1, "hour": 15, "minutes": 15 },
+    { "executive": 1, "weekday": 1, "hour": 15, "minutes": 30 },
+    { "executive": 1, "weekday": 2, "hour": 15, "minutes": 0 },
+    { "executive": 1, "weekday": 2, "hour": 15, "minutes": 15 },
+    { "executive": 1, "weekday": 2, "hour": 15, "minutes": 30 },
+    { "executive": 2, "weekday": 0, "hour": 14, "minutes": 45 },
+    { "executive": 2, "weekday": 1, "hour": 14, "minutes": 45 },
+    { "executive": 2, "weekday": 2, "hour": 14, "minutes": 45 },
+    { "executive": 2, "weekday": 2, "hour": 15, "minutes": 0 },
+    { "executive": 2, "weekday": 3, "hour": 14, "minutes": 45 },
+    { "executive": 2, "weekday": 4, "hour": 14, "minutes": 45 },
+    { "executive": 3, "weekday": 0, "hour": 14, "minutes": 45 },
+    { "executive": 3, "weekday": 1, "hour": 14, "minutes": 45 },
+    { "executive": 3, "weekday": 2, "hour": 14, "minutes": 45 },
+    { "executive": 3, "weekday": 3, "hour": 14, "minutes": 45 },
+    { "executive": 3, "weekday": 4, "hour": 14, "minutes": 45 },
+    { "executive": 4, "weekday": 4, "hour": 14, "minutes": 45 },
+    { "executive": 4, "weekday": 4, "hour": 15, "minutes": 0 },
+    { "executive": 4, "weekday": 4, "hour": 15, "minutes": 15 }
+  ],
+
+  "queries": [
+    { "type": "assert", "attention_type": 0, "branch_office": 1, "day": "2017 10 1", "result": [] },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885, 905] },
+    { "type": "change_discretization", "branch_office": 4, "value": 10 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885, 895, 905, 915] },
+    { "type": "change_discretization", "branch_office": 4, "value": 30 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885] },
+    { "type": "change_discretization", "branch_office": 4, "value": 5 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885, 890, 895, 900, 905, 910, 915, 920, 925] },
+    { "type": "change_estimation", "branch_office": 4, "attention_type": 3, "value": 6 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885, 895, 905, 915] },
+    { "type": "change_estimation", "branch_office": 4, "attention_type": 3, "value": 9 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885, 895, 905, 915] },
+    { "type": "change_estimation", "branch_office": 4, "attention_type": 3, "value": 11 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885, 900, 915] },
+    { "type": "change_estimation", "branch_office": 4, "attention_type": 3, "value": 40 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885] },
+    { "type": "change_estimation", "branch_office": 4, "attention_type": 3, "value": 45 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [885] },
+    { "type": "change_estimation", "branch_office": 4, "attention_type": 3, "value": 46 },
+    { "type": "assert", "attention_type": 3, "branch_office": 4, "day": "2017 10 13", "result": [] },
+
+    { "type": "assert", "attention_type": 0, "branch_office": 0, "day": "2017 10 3", "result": [] },
+    { "type": "assert", "attention_type": 1, "branch_office": 1, "day": "2017 10 3", "result": [] },
+    { "type": "assert", "attention_type": 2, "branch_office": 2, "day": "2017 10 3", "result": [] },
+    { "type": "assert", "attention_type": 3, "branch_office": 3, "day": "2017 10 3", "result": [] },
+    { "type": "assert", "attention_type": 1, "branch_office": 4, "day": "2017 10 3", "result": [] },
+
+    { "type": "assert", "attention_type": 0, "branch_office": 0, "day": "2017 10 4", "result": [] },
+    { "type": "assert", "attention_type": 1, "branch_office": 1, "day": "2017 10 4", "result": [] },
+    { "type": "assert", "attention_type": 2, "branch_office": 2, "day": "2017 10 4", "result": [] },
+    { "type": "assert", "attention_type": 3, "branch_office": 3, "day": "2017 10 4", "result": [] },
+    { "type": "assert", "attention_type": 1, "branch_office": 4, "day": "2017 10 4", "result": [] },
+
+    { "type": "assert", "attention_type": 0, "branch_office": 3, "day": "2017 10 4", "result": [885, 895, 905] }
+  ]
+
+}

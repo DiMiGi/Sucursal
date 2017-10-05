@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe AppointmentsController, type: :controller do
+RSpec.describe AppointmentsController, type: :ctrl do
 
   describe "algoritmos y sub algoritmos (sub rutinas) para planificacion" do
 
-    let(:controller) { AppointmentsController.new }
+    let(:ctrl) { AppointmentsController.new }
 
     # Preparar una base de datos de prueba
     before(:all) do
@@ -64,23 +64,129 @@ RSpec.describe AppointmentsController, type: :controller do
     end
 
     it "obtiene el indice del dia sin errores" do
-      expect(controller.day_index Date.new(2017, 9, 30)).to eq 5
-      expect(controller.day_index Date.new(2017, 10, 1)).to eq 6
-      expect(controller.day_index Date.new(2017, 10, 2)).to eq 0
-      expect(controller.day_index Date.new(2017, 10, 3)).to eq 1
-      expect(controller.day_index Date.new(2017, 10, 4)).to eq 2
-      expect(controller.day_index Date.new(2017, 10, 5)).to eq 3
-      expect(controller.day_index Date.new(2017, 10, 6)).to eq 4
-      expect(controller.day_index Date.new(2017, 10, 7)).to eq 5
-      expect(controller.day_index Date.new(2017, 10, 8)).to eq 6
-      expect(controller.day_index Date.new(2017, 10, 9)).to eq 0
+      expect(ctrl.day_index Date.new(2017, 9, 30)).to eq 5
+      expect(ctrl.day_index Date.new(2017, 10, 1)).to eq 6
+      expect(ctrl.day_index Date.new(2017, 10, 2)).to eq 0
+      expect(ctrl.day_index Date.new(2017, 10, 3)).to eq 1
+      expect(ctrl.day_index Date.new(2017, 10, 4)).to eq 2
+      expect(ctrl.day_index Date.new(2017, 10, 5)).to eq 3
+      expect(ctrl.day_index Date.new(2017, 10, 6)).to eq 4
+      expect(ctrl.day_index Date.new(2017, 10, 7)).to eq 5
+      expect(ctrl.day_index Date.new(2017, 10, 8)).to eq 6
+      expect(ctrl.day_index Date.new(2017, 10, 9)).to eq 0
+    end
+
+
+    describe "algoritmo que entrega todos los puntos del tiempo donde se puede agendar una hora (pruebas de caja negra)" do
+
+      it "obtiene las horas correctamente" do
+
+        Dir.foreach(Rails.root.join("spec", "test_data", "scheduling")) do |filename|
+          GlobalDayOff.destroy_all
+          if filename.end_with?(".json")
+
+            json_file = File.read(Rails.root.join("spec", "test_data", "scheduling", filename))
+            data = ActiveSupport::JSON.decode(json_file)
+
+            attention_types = []
+            branch_offices = []
+            executives = []
+            data["branch_offices"].each do |discretization|
+              branch_offices << FactoryGirl.create(:branch_office, minute_discretization: discretization)
+            end
+
+            data["attention_types"].times { attention_types << FactoryGirl.create(:attention_type) }
+
+            data["executives"].each do |executive|
+              o = executive["branch_office"]
+              a = executive["attention_type"]
+              new_executive = FactoryGirl.create(:executive, branch_office: branch_offices[o], attention_type: attention_types[a])
+              executives << new_executive
+
+              executive["appointments"].each do |appointment|
+                split = appointment.split ' '
+                yyyy = split[0].to_i
+                mm = split[1].to_i
+                dd = split[2].to_i
+                hh = split[3].to_i
+                min = split[4].to_i
+                FactoryGirl.create(:appointment, executive: new_executive, time: DateTime.new(yyyy, mm, dd, hh, min))
+              end
+            end
+
+            data["duration_estimations"].each do |estimation|
+              b = estimation["branch_office"]
+              a = estimation["attention_type"]
+              d = estimation["duration"]
+              FactoryGirl.create(:duration_estimation, duration: d, branch_office: branch_offices[b], attention_type: attention_types[a])
+            end
+
+            data["global_days_off"].each do |day|
+              FactoryGirl.create(:global_day_off, day: Date.new(day["yyyy"], day["mm"], day["dd"]))
+            end
+
+            data["executive_days_off"].each do |day|
+              executive = executives[day["executive"]]
+              date = Date.new(day["yyyy"], day["mm"], day["dd"])
+              FactoryGirl.create(:executive_day_off, executive: executive, day: date)
+            end
+
+            data["branch_office_days_off"].each do |day|
+              branch_office = branch_offices[day["branch_office"]]
+              date = Date.new(day["yyyy"], day["mm"], day["dd"])
+              FactoryGirl.create(:branch_office_day_off, branch_office: branch_office, day: date)
+            end
+
+            data["time_blocks"].each do |time_block|
+              executive = executives[time_block["executive"]]
+              weekday = time_block["weekday"]
+              hour = time_block["hour"]
+              minutes = time_block["minutes"]
+              executive.time_blocks << FactoryGirl.build(:time_block, weekday: weekday, hour: hour, minutes: minutes)
+            end
+
+            data["queries"].each do |query|
+              type = query["type"]
+              if type == "assert"
+                attention_type_id = attention_types[query["attention_type"]].id
+                branch_office_id = branch_offices[query["branch_office"]].id
+                correct_result = query["result"]
+                split = query["day"].split ' '
+                day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
+                result = ctrl.get_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
+                expect(result).to eq correct_result
+              end
+
+              if type == "change_discretization"
+                value = query["value"]
+                b = query["branch_office"]
+                branch_offices[b].minute_discretization = value
+                branch_offices[b].save!
+              end
+
+              if type == "change_estimation"
+                value = query["value"]
+                b = query["branch_office"]
+                a = query["attention_type"]
+                # No supe como hacer esta consulta con ORM
+                ActiveRecord::Base.connection.execute("update duration_estimations SET duration = #{value} where branch_office_id = #{branch_offices[b].id} AND attention_type_id = #{attention_types[a].id}")
+
+              end
+            end
+
+
+
+
+          end
+        end
+      end
     end
 
 
     describe "algoritmo que entrega un mapa con todos los datos necesarios para poder ejecutar algoritmos de planificacion" do
 
       it "entrega un mapa con todos los datos necesarios para poder ejecutar algoritmos de planificacion" do
-        result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result.class).to eq Hash
         expect(result).to have_key :discretization
         expect(result[:discretization]).to eq 5
@@ -96,7 +202,7 @@ RSpec.describe AppointmentsController, type: :controller do
       end
 
       it "entrega las citas del/los ejecutivos en una lista ordenada por fecha" do
-        result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
         a3 = (14 * 60) + 0
         a5 = (14 * 60) + 45
         a4 = (15 * 60) + 10
@@ -105,22 +211,22 @@ RSpec.describe AppointmentsController, type: :controller do
 
       it "obtiene los ejecutivos que estan disponibles el dia escogido" do
 
-        result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives].keys).to eq [2002, 2003]
 
-        result = controller.get_data(day: Date.new(2017, 10, 3), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 3), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result).to eq({})
 
-        result = controller.get_data(day: Date.new(2017, 10, 3), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 3), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result).to eq({})
 
-        result = controller.get_data(day: Date.new(2017, 10, 5), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 5), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives].keys).to eq [2001, 2003, 2004]
 
-        result = controller.get_data(day: Date.new(2017, 10, 6), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 6), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives].keys).to eq [2003, 2004]
 
-        result = controller.get_data(day: Date.new(2017, 10, 7), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 7), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives].keys).to eq [2004]
 
       end
@@ -128,24 +234,24 @@ RSpec.describe AppointmentsController, type: :controller do
 
 
       it "entrega los bloques disponibles del/los ejecutivos en una lista ordenada" do
-        result = controller.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
         list = [(13*60)+15, (13*60)+45, (17*60)+30, 15*60, 14*60, 16*60, (14*60)+45]
         list.sort!
         expect(result[:executives][2002][:time_blocks]).to eq list
       end
 
       it "retorna vacio cuando hay un feriado a nivel global" do
-        result = controller.get_data(day: Date.new(2017, 10, 1), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 1), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result).to eq({})
       end
 
       it "retorna vacio cuando hay un feriado a nivel de sucursal" do
-        result = controller.get_data(day: Date.new(2017, 10, 4), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 4), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result).to eq({})
       end
 
       it "retorna los valores correctos probando con otro dia" do
-        result = controller.get_data(day: Date.new(2017, 10, 5), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 5), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives]).to have_key 2001
         expect(result[:executives][2001]).to have_key :time_blocks
         expect(result[:executives][2001]).to have_key :appointments
@@ -154,7 +260,7 @@ RSpec.describe AppointmentsController, type: :controller do
       end
 
       it "retorna vacio si no hay ningun ejecutivo disponible (incluso si no hay ningun feriado)" do
-        result = controller.get_data(day: Date.new(2017, 10, 8), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Date.new(2017, 10, 8), branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result).to eq({})
       end
 
