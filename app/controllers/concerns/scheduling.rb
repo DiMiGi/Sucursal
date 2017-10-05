@@ -45,12 +45,14 @@ module Scheduling
         branch_office_id,
         attention_type_id)
 
+    return {} if executives.empty?
+
+
+    de = DurationEstimation.includes(:branch_office).find_by(branch_office: branch_office_id, attention_type_id: attention_type_id)
+    discretization = de.branch_office.minute_discretization
+    duration = de.duration
 
     appointments = Appointment.find_by_day(day).where(executive: executives.map{|e| e[:id]})
-
-    duration = DurationEstimation.find_by(branch_office_id: branch_office_id, attention_type_id: attention_type_id).duration
-
-    discretization = BranchOffice.find(attention_type_id).minute_discretization
 
     result = {}
 
@@ -58,15 +60,15 @@ module Scheduling
     result[:discretization] = discretization
     result[:attention_duration] = ceil(duration, discretization)
 
-    executives.each do |exe|
-      result[:executives][exe.id] = {}
-      result[:executives][exe.id][:appointments] = []
-      result[:executives][exe.id][:time_blocks] = []
+    executives.each do |e|
+      result[:executives][e.id] = {}
+      result[:executives][e.id][:appointments] = []
+      result[:executives][e.id][:time_blocks] = []
     end
 
-    executives.each do |exe|
-      minutes = (exe.hour * 60) + exe.minutes
-      result[:executives][exe.id][:time_blocks] << minutes
+    executives.each do |e|
+      minutes = (e.hour * 60) + e.minutes
+      result[:executives][e.id][:time_blocks] << minutes
     end
 
 
@@ -93,12 +95,6 @@ module Scheduling
     return result
 
   end
-
-
-
-
-
-
 
 
 
