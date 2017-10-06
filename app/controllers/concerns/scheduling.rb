@@ -109,11 +109,9 @@ module Scheduling
     times = []
 
     ranges.each do |r|
-
       a = r[0]
       b = r[1] - duration
       length = b - a
-
       n = 0
       while true
         t = a + (n * duration)
@@ -136,10 +134,9 @@ module Scheduling
       branch_office_id: branch_office_id,
       attention_type_id: attention_type_id)
 
-    return [] if db_data.empty?
-
     duration = db_data[:attention_duration]
 
+    return [] if db_data.empty?
     return [] if duration == 0
     return [] if db_data[:executives].nil? || db_data[:executives].empty?
 

@@ -181,9 +181,13 @@ RSpec.describe AppointmentsController, type: :ctrl do
                 expect(result).to eq correct_result
               end
 
-              #  result = ctrl.get_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
-              #  expect(result).to eq correct_result
-              #end
+
+              if type == "add_appointment"
+                executive = executives[query["executive"]]
+                split = query["time"].split ' '
+                time = DateTime.new(split[0].to_i, split[1].to_i, split[2].to_i, split[3].to_i, split[4].to_i)
+                FactoryGirl.create(:appointment, executive: executive, time: time)
+              end
 
               if type == "change_discretization"
                 value = query["value"]

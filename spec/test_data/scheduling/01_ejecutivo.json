@@ -44,7 +44,16 @@
     { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 500, 520, 555, 575] },
 
     { "type": "change_discretization", "branch_office": 0, "value": 3 },
-    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 492, 504, 516, 528, 555, 567, 579] }
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 492, 504, 516, 528, 555, 567, 579] },
+
+    { "type": "add_time_block", "executive": 0, "weekday": 0, "hour": 14, "minutes": 30 },
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 492, 504, 516, 528, 555, 567, 579, 870] },
+
+    { "type": "change_discretization", "branch_office": 0, "value": 10 },
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 500, 520, 555, 575] },
+
+    { "type": "add_time_block", "executive": 0, "weekday": 0, "hour": 14, "minutes": 45 },
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 500, 520, 555, 575, 870] }
 
   ]
 
