@@ -79,6 +79,8 @@ RSpec.describe AppointmentsController, type: :ctrl do
       sets << [[50, 100], [400, 500]]
       sets << [[40, 60], [300, 350], [550, 570]]
       sets << [[1, 100]]
+      sets << [[480, 540], [555, 600]]
+      sets << [[510, 525], [540, 555]]
 
       expect(ctrl.union_all []).to eq []
       expect(ctrl.union_all [sets[0]]).to eq [[1, 3], [4, 6], [100, 200]]
@@ -88,6 +90,7 @@ RSpec.describe AppointmentsController, type: :ctrl do
       expect(ctrl.union_all [sets[1], sets[2]]).to eq [[5, 8], [10, 15]]
       expect(ctrl.union_all [sets[3], sets[4]]).to eq [[40, 100], [300, 350], [400, 500], [550, 570]]
       expect(ctrl.union_all [sets[5]]).to eq [[1, 100]]
+      expect(ctrl.union_all [sets[6], sets[7]]).to eq [[480, 600]]
 
     end
 
@@ -126,7 +129,8 @@ RSpec.describe AppointmentsController, type: :ctrl do
       # Duracion muy larga y hace que ningun bloque resultante sea suficiente para una atencion, por lo tanto retorna vacio.
       expect(ctrl.get_available_ranges(time_blocks: [[795, 810], [825, 855], [885, 915], [960, 975], [1050, 1065]], appointments: [[840, 860], [880, 940]], duration: 20)).to eq []
 
-
+      expect(ctrl.get_available_ranges(time_blocks: [[480, 540], [555, 600]], appointments: [], duration: 50)).to eq [[480, 540]]
+      expect(ctrl.get_available_ranges(time_blocks: [[510, 525], [540, 555]], appointments: [], duration: 50)).to eq []
     end
 
 

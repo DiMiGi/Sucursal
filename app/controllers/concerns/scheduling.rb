@@ -97,7 +97,13 @@ module Scheduling
   end
 
 
-  def get_available_appointments(day:, branch_office_id:, attention_type_id:)
+  def get_executive_available_appointments(time_blocks:, appointments:, duration:)
+
+
+  end
+
+
+  def get_all_available_appointments(day:, branch_office_id:, attention_type_id:)
 
     # Obtener todos los datos necesarios desde la base de datos.
     db_data = get_data(
@@ -125,36 +131,26 @@ module Scheduling
       executives << get_available_ranges(time_blocks: time_blocks, appointments: appointments, duration: duration)
     end
 
+
     ranges = union_all executives
 
     # Se tienen todos los rangos, ahora es necesario saber en que puntos exactos se puede agendar
     # una hora. Para esto la duracion de la cita ya se tiene.
-
-    puts ""
-    puts ""
-    puts ""
-    puts ""
 
     times = []
 
     ranges.each do |r|
 
       a = r[0]
-      b = r[1]
+      b = r[1] - duration
       length = b - a
 
-      puts "a #{a}, b #{b}, length #{length}"
-
-      # Estos errores no deberian ocurrir nunca.
-      #raise "Rango no es divisible por la duracion. Hubo un error." if length % duration != 0
-      #raise "La duracion del bloque es menor a la duracion de la atencion. Hubo un error." if length < duration
-
-      number_of_blocks = length/duration
-
-      (0..number_of_blocks-1).each do |n|
+      n = 0
+      while true
         t = a + (n * duration)
-        puts "#{t} <= #{b-duration}"
-        times << t if t <= b - duration
+        break if t > b
+        times << t
+        n += 1
       end
     end
 

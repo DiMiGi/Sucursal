@@ -85,6 +85,8 @@ RSpec.describe AppointmentsController, type: :ctrl do
           GlobalDayOff.destroy_all
           if filename.end_with?(".json")
 
+            puts "Usando el archivo #{filename}"
+
             json_file = File.read(Rails.root.join("spec", "test_data", "scheduling", filename))
             data = ActiveSupport::JSON.decode(json_file)
 
@@ -143,6 +145,7 @@ RSpec.describe AppointmentsController, type: :ctrl do
               hour = time_block["hour"]
               minutes = time_block["minutes"]
               executive.time_blocks << FactoryGirl.build(:time_block, weekday: weekday, hour: hour, minutes: minutes)
+              executive.save!
             end
 
             data["queries"].each do |query|
@@ -168,9 +171,16 @@ RSpec.describe AppointmentsController, type: :ctrl do
                 value = query["value"]
                 b = query["branch_office"]
                 a = query["attention_type"]
-                # No supe como hacer esta consulta con ORM
+                # Por ahora no supe como hacer esta consulta con ORM y/o FactoryGirl
                 ActiveRecord::Base.connection.execute("update duration_estimations SET duration = #{value} where branch_office_id = #{branch_offices[b].id} AND attention_type_id = #{attention_types[a].id}")
+              end
 
+              if type == "add_time_block"
+                weekday = query["weekday"]
+                hour = query["hour"]
+                minutes = query["minutes"]
+                e = query["executive"]
+                executives[e].time_blocks << FactoryGirl.build(:time_block, weekday: weekday, hour: hour, minutes: minutes)
               end
             end
 
