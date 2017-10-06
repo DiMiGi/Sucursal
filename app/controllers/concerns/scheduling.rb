@@ -135,6 +135,7 @@ module Scheduling
       branch_office_id: branch_office_id,
       attention_type_id: attention_type_id)
 
+
     duration = db_data[:attention_duration]
 
     return {} if db_data.empty?

@@ -46,6 +46,7 @@ RSpec.describe AppointmentsController, type: :ctrl do
       expect(ctrl.compress(times: [0, 6, 6, 12], length: 6)).to eq [[0, 18]]
       expect(ctrl.compress(times: [0, 6, 6, 13], length: 6)).to eq [[0, 24]]
       expect(ctrl.compress(times: [490, 510, 510, 530], length: 10)).to eq [[490, 500], [510, 520], [530, 540]]
+      expect(ctrl.compress(times: [535], length: 25)).to eq [[525, 575]]
     end
 
     it "une dos conjuntos correctamente" do
@@ -72,7 +73,7 @@ RSpec.describe AppointmentsController, type: :ctrl do
       expect(ctrl.union([[1, 5], [6, 8]], [[8, 10], [11, 15]])).to eq [[1, 5], [6, 10], [11, 15]]
     end
 
-    it "unde todos los conjuntos correctamente" do
+    it "une todos los conjuntos correctamente" do
 
       sets = []
       sets << [[1, 3], [4, 6], [100, 200]]
@@ -133,6 +134,8 @@ RSpec.describe AppointmentsController, type: :ctrl do
 
       expect(ctrl.get_available_ranges(time_blocks: [[480, 540], [555, 600]], appointments: [], duration: 50)).to eq [[480, 540]]
       expect(ctrl.get_available_ranges(time_blocks: [[510, 525], [540, 555]], appointments: [], duration: 50)).to eq []
+      expect(ctrl.get_available_ranges(time_blocks: [[0, 20], [30, 50]], appointments: [[15, 35]], duration: 5)).to eq [[0, 15], [35, 50]]
+      expect(ctrl.get_available_ranges(time_blocks: [[480, 540], [555, 600]], appointments: [[535, 560]], duration: 25)).to eq [[480, 535], [560, 600]]
     end
 
 
