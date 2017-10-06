@@ -1,0 +1,28 @@
+{
+  "branch_offices": [5],
+
+  "attention_types": 1,
+
+  "executives": [
+    { "branch_office": 0, "attention_type": 0, "appointments": [] }
+  ],
+
+  "duration_estimations": [
+    { "branch_office": 0, "attention_type": 0, "duration": 15 }
+  ],
+
+  "global_days_off": [],
+  "executive_days_off": [],
+  "branch_office_days_off": [],
+  "time_blocks": [
+    { "executive": 0, "weekday": 0, "hour": 8, "minutes": 0 }
+  ],
+
+  "queries": [
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [{ "time": 480, "ids": [0]}] },
+    { "type": "change_estimation", "branch_office": 0, "attention_type": 0, "value": null },
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [] }
+
+  ]
+
+}

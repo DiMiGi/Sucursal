@@ -38,8 +38,36 @@
 
     { "type": "change_estimation", "branch_office": 0, "attention_type": 0, "value": 28 },
 
-    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 510, 540, 570] }
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 510, 540, 570] },
 
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 25" },
+
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [540, 570] },
+
+    { "type": "change_estimation", "branch_office": 0, "attention_type": 0, "value": 8 },
+
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [480, 490, 520, 530, 540, 550, 560, 570, 580, 590, 720, 730, 750, 760, 770] },
+
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 0" },
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 5" },
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 18" },
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 22" },
+
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [520, 530, 540, 550, 560, 570, 580, 590, 720, 730, 750, 760, 770] },
+
+
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 30" },
+
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [520, 530, 540, 550, 560, 570, 580, 590, 720, 730, 750, 760, 770] },
+
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 40" },
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 9 0" },
+
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [530, 550, 560, 570, 580, 590, 720, 730, 750, 760, 770] },
+
+    { "type": "change_estimation", "branch_office": 0, "attention_type": 0, "value": 11 },
+
+    { "type": "assert_executive", "executive": 0, "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [555, 570, 585, 720, 765] }
 
   ]
 

@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe AppointmentsController, type: :ctrl do
 
+  pending "La union de conjuntos ya no es parte de los algoritmos, hay que remover sus pruebas unitarias"
+
   describe "concern time_range (operaciones de conjuntos y rangos de tiempo)" do
 
     let(:ctrl) { AppointmentsController.new }

@@ -1,0 +1,55 @@
+{
+  "branch_offices": [5],
+
+  "attention_types": 6,
+
+  "executives": [
+    { "branch_office": 0, "attention_type": 0, "appointments": [] },
+    { "branch_office": 0, "attention_type": 1, "appointments": [] }
+  ],
+
+  "duration_estimations": [
+    { "branch_office": 0, "attention_type": 0, "duration": 15 },
+    { "branch_office": 0, "attention_type": 1, "duration": 10 }
+  ],
+
+  "global_days_off": [],
+  "executive_days_off": [],
+  "branch_office_days_off": [],
+  "time_blocks": [
+    { "executive": 0, "weekday": 0, "hour": 8, "minutes": 0 },
+    { "executive": 1, "weekday": 0, "hour": 9, "minutes": 0 },
+    { "executive": 1, "weekday": 0, "hour": 9, "minutes": 15 }
+  ],
+
+  "queries": [
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [{ "time": 480, "ids": [0]}] },
+    { "type": "change_estimation", "branch_office": 0, "attention_type": 0, "value": null },
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [] },
+
+    { "type": "assert_all", "attention_type": 1, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": 540, "ids": [1] }, { "time": 550, "ids": [1] }, { "time": 560, "ids": [1] }]
+    },
+    { "type": "add_appointment", "executive": 1, "time": "2017 10 2 9 11" },
+
+    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540, 560]},
+    { "type": "add_appointment", "executive": 1, "time": "2017 10 2 9 14" },
+    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540, 560]},
+    { "type": "add_appointment", "executive": 1, "time": "2017 10 2 9 15" },
+    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540]},
+    { "type": "assert_all", "attention_type": 1, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": 540, "ids": [1] }]
+    },
+
+
+    { "type": "assert_all", "attention_type": 2, "branch_office": 0, "day": "2017 10 2", "result": [] },
+    { "type": "assert_all", "attention_type": 3, "branch_office": 0, "day": "2017 10 2", "result": [] },
+    { "type": "assert_all", "attention_type": 4, "branch_office": 0, "day": "2017 10 2", "result": [] },
+    { "type": "assert_all", "attention_type": 5, "branch_office": 0, "day": "2017 10 2", "result": [] },
+
+    { "type": "change_estimation", "branch_office": 0, "attention_type": 1, "value": null },
+    { "type": "assert_all", "attention_type": 1, "branch_office": 0, "day": "2017 10 2", "result": [] }
+
+  ]
+
+}

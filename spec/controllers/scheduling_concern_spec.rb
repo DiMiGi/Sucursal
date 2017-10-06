@@ -85,8 +85,6 @@ RSpec.describe AppointmentsController, type: :ctrl do
           GlobalDayOff.destroy_all
           if filename.end_with?(".json")
 
-            puts "Usando el archivo #{filename}"
-
             json_file = File.read(Rails.root.join("spec", "test_data", "scheduling", filename))
             data = ActiveSupport::JSON.decode(json_file)
 
@@ -150,20 +148,37 @@ RSpec.describe AppointmentsController, type: :ctrl do
 
             data["queries"].each do |query|
               type = query["type"]
-              #if type == "assert_all"
-              #  attention_type_id = attention_types[query["attention_type"]].id
-              #  branch_office_id = branch_offices[query["branch_office"]].id
-              #  correct_result = query["result"]
-              #  split = query["day"].split ' '
-              #  day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
-              #  result = ctrl.get_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
-              #  expect(result).to eq correct_result
-              #end
 
-              if type == "assert_executive"
+              # Hay que hacer todo este codigo porque el retorno de la funcion en el concern
+              # tiene un formato distinto al que tiene el JSON de prueba. No se pueden hacer iguales porque
+              # en el JSON desconozco cuales son las IDs de lo que retorna la funcion. Por esa razon transformo
+              # las IDs para que sean las que realmente estan en la base de datos. Ademas se comprueban
+              # que los bloques de tiempo sean los mismos.
+              #
+              # En caso de existir problemas entendiendo esto, realmente lo que importa es entender el formato
+              # de los JSON de prueba. Este codigo solo sirve para comprobar que el resultado sea igual a lo que
+              # arroja la funcion.
+              if type == "assert_all"
                 attention_type_id = attention_types[query["attention_type"]].id
                 branch_office_id = branch_offices[query["branch_office"]].id
+                correct_result = query["result"]
+                split = query["day"].split ' '
+                day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
+                result = ctrl.get_all_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
+                expect(result.keys.length).to eq correct_result.length
+                correct_result.each do |t|
+                  expect(result).to have_key t["time"].to_i
+                  t["ids"].each_with_index do |item, i|
+                    t["ids"][i] = executives[t["ids"][i]].id
+                  end
+                  expect(t["ids"]).to eq result[t["time"].to_i]
+                end
+              end
+
+              if type == "assert_executive"
+                branch_office_id = branch_offices[query["branch_office"]].id
                 executive_id = executives[query["executive"]].id
+                attention_type_id = executives[query["executive"]].attention_type_id
                 correct_result = query["result"]
                 split = query["day"].split ' '
                 day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
@@ -201,7 +216,11 @@ RSpec.describe AppointmentsController, type: :ctrl do
                 b = query["branch_office"]
                 a = query["attention_type"]
                 # Por ahora no supe como hacer esta consulta con ORM y/o FactoryGirl
-                ActiveRecord::Base.connection.execute("update duration_estimations SET duration = #{value} where branch_office_id = #{branch_offices[b].id} AND attention_type_id = #{attention_types[a].id}")
+                if !value.nil?
+                  ActiveRecord::Base.connection.execute("update duration_estimations set duration = #{value} where branch_office_id = #{branch_offices[b].id} AND attention_type_id = #{attention_types[a].id}")
+                else
+                  ActiveRecord::Base.connection.execute("delete from duration_estimations where branch_office_id = #{branch_offices[b].id} AND attention_type_id = #{attention_types[a].id}")
+                end
               end
 
               if type == "add_time_block"

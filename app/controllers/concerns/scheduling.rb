@@ -48,6 +48,7 @@ module Scheduling
     return {} if executives.empty?
 
     de = DurationEstimation.includes(:branch_office).find_by(branch_office: branch_office_id, attention_type_id: attention_type_id)
+    return {} if de.nil? || de.branch_office.nil? || de.branch_office.minute_discretization.nil?
     discretization = de.branch_office.minute_discretization
     duration = de.duration
 
@@ -136,19 +137,25 @@ module Scheduling
 
     duration = db_data[:attention_duration]
 
-    return [] if db_data.empty?
-    return [] if duration == 0
-    return [] if db_data[:executives].nil? || db_data[:executives].empty?
+    return {} if db_data.empty?
+    return {} if duration == 0
+    return {} if db_data[:executives].nil? || db_data[:executives].empty?
 
-    result = []
+    result = Hash.new
 
     db_data[:executives].each do |id, executive|
       appointments = executive[:appointments]
       time_blocks = executive[:time_blocks]
       times = get_executive_available_appointments(time_blocks: time_blocks, appointments: appointments, duration: duration)
-      result |= times
-      # Podria optimizarse con Two Pointers en caso que Ruby no lo haga por defecto.
-      # Tambien se puede optimizar usando un Hash o Set en vez de arreglos.
+
+      times.each do |t|
+        result[t] = [] if !result.has_key? t
+        result[t] << id
+      end
+    end
+
+    result.each do |key, value|
+      result[key].sort! # Es necesario ordenarlo, o ya esta ordenado?
     end
 
     return result
