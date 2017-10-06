@@ -23,7 +23,7 @@
   ],
 
   "queries": [
-    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [{ "time": 480, "ids": [0]}] },
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [{ "time": 480, "ids": [0] }] },
     { "type": "change_estimation", "branch_office": 0, "attention_type": 0, "value": null },
     { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [] },
 
@@ -32,11 +32,11 @@
     },
     { "type": "add_appointment", "executive": 1, "time": "2017 10 2 9 11" },
 
-    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540, 560]},
+    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540, 560] },
     { "type": "add_appointment", "executive": 1, "time": "2017 10 2 9 14" },
-    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540, 560]},
+    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540, 560] },
     { "type": "add_appointment", "executive": 1, "time": "2017 10 2 9 15" },
-    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540]},
+    { "type": "assert_executive", "executive": 1, "branch_office": 0, "day": "2017 10 2", "result": [540] },
     { "type": "assert_all", "attention_type": 1, "branch_office": 0, "day": "2017 10 2", "result": [
       { "time": 540, "ids": [1] }]
     },

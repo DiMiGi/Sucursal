@@ -86,6 +86,7 @@ RSpec.describe AppointmentsController, type: :ctrl do
           if filename.end_with?(".json")
 
             json_file = File.read(Rails.root.join("spec", "test_data", "scheduling", filename))
+
             data = ActiveSupport::JSON.decode(json_file)
 
             attention_types = []
