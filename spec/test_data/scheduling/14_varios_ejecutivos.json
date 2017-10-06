@@ -1,0 +1,142 @@
+{
+  "branch_offices": [5],
+
+  "attention_types": 2,
+
+  "executives": [
+    { "branch_office": 0, "attention_type": 0, "appointments": [] },
+    { "branch_office": 0, "attention_type": 0, "appointments": [] },
+    { "branch_office": 0, "attention_type": 0, "appointments": [] },
+    { "branch_office": 0, "attention_type": 0, "appointments": [] },
+    { "branch_office": 0, "attention_type": 0, "appointments": [] }
+  ],
+
+  "duration_estimations": [
+    { "branch_office": 0, "attention_type": 0, "duration": 10 },
+    { "branch_office": 0, "attention_type": 1, "duration": 30 }
+  ],
+
+  "global_days_off": [],
+  "executive_days_off": [],
+  "branch_office_days_off": [],
+  "time_blocks": [
+    { "executive": 0, "weekday": 0, "hour": 8, "minutes": 0 },
+    { "executive": 0, "weekday": 0, "hour": 8, "minutes": 15 },
+    { "executive": 0, "weekday": 0, "hour": 8, "minutes": 30 },
+    { "executive": 0, "weekday": 0, "hour": 8, "minutes": 45 },
+
+    { "executive": 1, "weekday": 0, "hour": 8, "minutes": 0 },
+    { "executive": 1, "weekday": 0, "hour": 8, "minutes": 15 },
+    { "executive": 1, "weekday": 0, "hour": 8, "minutes": 30 },
+    { "executive": 1, "weekday": 0, "hour": 8, "minutes": 45 },
+    { "executive": 1, "weekday": 0, "hour": 15, "minutes": 0 },
+
+    { "executive": 2, "weekday": 0, "hour": 8, "minutes": 30 },
+    { "executive": 2, "weekday": 0, "hour": 15, "minutes": 0 },
+    { "executive": 2, "weekday": 0, "hour": 16, "minutes": 15 },
+    { "executive": 2, "weekday": 0, "hour": 16, "minutes": 30 },
+    { "executive": 2, "weekday": 0, "hour": 17, "minutes": 30 },
+
+    { "executive": 3, "weekday": 0, "hour": 9, "minutes": 30 },
+    { "executive": 3, "weekday": 0, "hour": 12, "minutes": 0 },
+    { "executive": 3, "weekday": 0, "hour": 12, "minutes": 15 },
+    { "executive": 3, "weekday": 0, "hour": 12, "minutes": 45 },
+    { "executive": 3, "weekday": 0, "hour": 13, "minutes": 30 }
+
+  ],
+
+  "queries": [
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:00", "ids": [0, 1] },
+      { "time": "8:10", "ids": [0, 1] },
+      { "time": "8:20", "ids": [0, 1] },
+      { "time": "8:30", "ids": [0, 1, 2] },
+      { "time": "8:40", "ids": [0, 1] },
+      { "time": "8:50", "ids": [0, 1] },
+      { "time": "9:30", "ids": [3] },
+      { "time": "12:00", "ids": [3] },
+      { "time": "12:10", "ids": [3] },
+      { "time": "12:20", "ids": [3] },
+      { "time": "12:45", "ids": [3] },
+      { "time": "13:30", "ids": [3] },
+      { "time": "15:00", "ids": [1, 2] },
+      { "time": "16:15", "ids": [2] },
+      { "time": "16:25", "ids": [2] },
+      { "time": "16:35", "ids": [2] },
+      { "time": "17:30", "ids": [2] }]},
+
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 30" },
+
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:00", "ids": [0, 1] },
+      { "time": "8:10", "ids": [0, 1] },
+      { "time": "8:20", "ids": [0, 1] },
+      { "time": "8:30", "ids": [1, 2] },
+      { "time": "8:40", "ids": [0, 1] },
+      { "time": "8:50", "ids": [0, 1] },
+      { "time": "9:30", "ids": [3] },
+      { "time": "12:00", "ids": [3] },
+      { "time": "12:10", "ids": [3] },
+      { "time": "12:20", "ids": [3] },
+      { "time": "12:45", "ids": [3] },
+      { "time": "13:30", "ids": [3] },
+      { "time": "15:00", "ids": [1, 2] },
+      { "time": "16:15", "ids": [2] },
+      { "time": "16:25", "ids": [2] },
+      { "time": "16:35", "ids": [2] },
+      { "time": "17:30", "ids": [2] }]},
+
+    { "type": "add_appointment", "executive": 1, "time": "2017 10 2 8 30" },
+
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:00", "ids": [0, 1] },
+      { "time": "8:10", "ids": [0, 1] },
+      { "time": "8:20", "ids": [0, 1] },
+      { "time": "8:30", "ids": [2] },
+      { "time": "8:40", "ids": [0, 1] },
+      { "time": "8:50", "ids": [0, 1] },
+      { "time": "9:30", "ids": [3] },
+      { "time": "12:00", "ids": [3] },
+      { "time": "12:10", "ids": [3] },
+      { "time": "12:20", "ids": [3] },
+      { "time": "12:45", "ids": [3] },
+      { "time": "13:30", "ids": [3] },
+      { "time": "15:00", "ids": [1, 2] },
+      { "time": "16:15", "ids": [2] },
+      { "time": "16:25", "ids": [2] },
+      { "time": "16:35", "ids": [2] },
+      { "time": "17:30", "ids": [2] }]},
+
+
+    { "type": "add_appointment", "executive": 2, "time": "2017 10 2 8 30" },
+
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:00", "ids": [0, 1] },
+      { "time": "8:10", "ids": [0, 1] },
+      { "time": "8:20", "ids": [0, 1] },
+      { "time": "8:40", "ids": [0, 1] },
+      { "time": "8:50", "ids": [0, 1] },
+      { "time": "9:30", "ids": [3] },
+      { "time": "12:00", "ids": [3] },
+      { "time": "12:10", "ids": [3] },
+      { "time": "12:20", "ids": [3] },
+      { "time": "12:45", "ids": [3] },
+      { "time": "13:30", "ids": [3] },
+      { "time": "15:00", "ids": [1, 2] },
+      { "time": "16:15", "ids": [2] },
+      { "time": "16:25", "ids": [2] },
+      { "time": "16:35", "ids": [2] },
+      { "time": "17:30", "ids": [2] }]},
+
+    { "type": "change_estimation", "branch_office": 0, "attention_type": 0, "value": 18 },
+
+
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:00", "ids": [0, 1] },
+      { "time": "12:00", "ids": [3] },
+      { "time": "16:15", "ids": [2] }
+    ]}
+
+  ]
+
+}

@@ -94,6 +94,11 @@ class ScheduleBuilder
       split = query["day"].split ' '
       day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
       result = ctrl.get_all_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
+
+      correct_result.each do |c|
+        c["time"] = get_time c["time"]
+      end
+
       expect(result.keys.length).to eq correct_result.length
       correct_result.each do |t|
         expect(result).to have_key t["time"].to_i
@@ -164,6 +169,16 @@ class ScheduleBuilder
       e = query["executive"]
       @executives[e].time_blocks << FactoryGirl.build(:time_block, weekday: weekday, hour: hour, minutes: minutes)
     end
+  end
+
+  private
+
+  def get_time(s)
+    return s if s.class == Integer
+    split = s.split ':'
+    h = split[0].to_i
+    m = split[1].to_i
+    return (h*60) + m
   end
 
 
