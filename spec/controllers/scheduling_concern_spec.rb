@@ -150,15 +150,40 @@ RSpec.describe AppointmentsController, type: :ctrl do
 
             data["queries"].each do |query|
               type = query["type"]
-              if type == "assert"
+              #if type == "assert_all"
+              #  attention_type_id = attention_types[query["attention_type"]].id
+              #  branch_office_id = branch_offices[query["branch_office"]].id
+              #  correct_result = query["result"]
+              #  split = query["day"].split ' '
+              #  day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
+              #  result = ctrl.get_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
+              #  expect(result).to eq correct_result
+              #end
+
+              if type == "assert_executive"
                 attention_type_id = attention_types[query["attention_type"]].id
                 branch_office_id = branch_offices[query["branch_office"]].id
+                executive_id = executives[query["executive"]].id
                 correct_result = query["result"]
                 split = query["day"].split ' '
                 day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
-                result = ctrl.get_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
+
+                data = ctrl.get_data(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
+
+                expect(correct_result).to eq [] if !data.has_key? :executives
+                expect(correct_result).to eq [] if !data[:executives].has_key? executive_id
+
+                time_blocks = data[:executives][executive_id][:time_blocks]
+                appointments = data[:executives][executive_id][:appointments]
+                duration = data[:attention_duration]
+
+                result = ctrl.get_executive_available_appointments(time_blocks: time_blocks, appointments: appointments, duration: duration)
                 expect(result).to eq correct_result
               end
+
+              #  result = ctrl.get_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
+              #  expect(result).to eq correct_result
+              #end
 
               if type == "change_discretization"
                 value = query["value"]

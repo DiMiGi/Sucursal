@@ -99,43 +99,12 @@ module Scheduling
 
   def get_executive_available_appointments(time_blocks:, appointments:, duration:)
 
+    return [] if time_blocks.empty? || duration == 0
 
-  end
+    time_blocks = compress(times: time_blocks, length: 15)
+    appointments = compress(times: appointments, length: duration)
 
-
-  def get_all_available_appointments(day:, branch_office_id:, attention_type_id:)
-
-    # Obtener todos los datos necesarios desde la base de datos.
-    db_data = get_data(
-      day: day,
-      branch_office_id: branch_office_id,
-      attention_type_id: attention_type_id)
-
-    return [] if db_data.empty?
-
-    duration = db_data[:attention_duration]
-
-    return [] if duration == 0
-    return [] if db_data[:executives].nil? || db_data[:executives].empty?
-
-    # Crear una lista con todos los rangos en donde cada ejecutivo tiene
-    # tiempo libre.
-
-    executives = []
-
-    db_data[:executives].each do |id, executive|
-      time_blocks = executive[:time_blocks]
-      appointments = executive[:appointments]
-      time_blocks = compress(times: time_blocks, length: 15)
-      appointments = compress(times: appointments, length: duration)
-      executives << get_available_ranges(time_blocks: time_blocks, appointments: appointments, duration: duration)
-    end
-
-
-    ranges = union_all executives
-
-    # Se tienen todos los rangos, ahora es necesario saber en que puntos exactos se puede agendar
-    # una hora. Para esto la duracion de la cita ya se tiene.
+    ranges = get_available_ranges(time_blocks: time_blocks, appointments: appointments, duration: duration)
 
     times = []
 
@@ -156,6 +125,36 @@ module Scheduling
 
     return times
 
+  end
+
+
+  def get_all_available_appointments(day:, branch_office_id:, attention_type_id:)
+
+    # Obtener todos los datos necesarios desde la base de datos.
+    db_data = get_data(
+      day: day,
+      branch_office_id: branch_office_id,
+      attention_type_id: attention_type_id)
+
+    return [] if db_data.empty?
+
+    duration = db_data[:attention_duration]
+
+    return [] if duration == 0
+    return [] if db_data[:executives].nil? || db_data[:executives].empty?
+
+    result = []
+
+    db_data[:executives].each do |id, executive|
+      appointments = executive[:appointments]
+      time_blocks = executive[:time_blocks]
+      times = get_executive_available_appointments(time_blocks: time_blocks, appointments: appointments, duration: duration)
+      result |= times
+      # Podria optimizarse con Two Pointers en caso que Ruby no lo haga por defecto.
+      # Tambien se puede optimizar usando un Hash o Set en vez de arreglos.
+    end
+
+    return result
 
   end
 
