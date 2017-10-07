@@ -3,10 +3,10 @@ class CreateDaysOff < ActiveRecord::Migration[5.1]
     create_table :days_off do |t|
 
       # Para que un dia feriado pueda pertenecer a una sucursal completa
-      t.belongs_to :branch_office, index: true
+      t.belongs_to :branch_office, index: true, on_delete: :cascade
 
       # Para que un personal (ejecutivo) pueda tener un dia ausente
-      t.belongs_to :staff, index: true
+      t.belongs_to :staff, index: true, on_delete: :cascade
 
       # Y ambas son opcionales (pueden ser NULL en la base de datos, para que
       # cuando ambas son NULL, significa que son dias ausentes globales, es decir,

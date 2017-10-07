@@ -160,11 +160,13 @@ class ScheduleBuilder
       value = query["value"]
       b = query["branch_office"]
       a = query["attention_type"]
-      # Por ahora no supe como hacer esta consulta con ORM y/o FactoryGirl
       if !value.nil?
-        ActiveRecord::Base.connection.execute("update duration_estimations set duration = #{value} where branch_office_id = #{@branch_offices[b].id} AND attention_type_id = #{@attention_types[a].id}")
+        de = DurationEstimation.where(branch_office_id: @branch_offices[b], attention_type_id: @attention_types[a]).first
+        de.duration = value
+        de.save!
       else
-        ActiveRecord::Base.connection.execute("delete from duration_estimations where branch_office_id = #{@branch_offices[b].id} AND attention_type_id = #{@attention_types[a].id}")
+        # Si se ha puesto el valor como null en el JSON, se elimina la estimacion.
+        DurationEstimation.where(branch_office_id: @branch_offices[b], attention_type_id: @attention_types[a]).delete_all
       end
     end
 

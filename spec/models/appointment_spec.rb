@@ -2,12 +2,47 @@ require 'rails_helper'
 
 RSpec.describe Appointment, type: :model do
 
-  pending "Validar que la hora que uno ingresa y la que se guarda tienen la misma zona horaria"
-
   it "validacion basica" do
     expect(FactoryGirl.build(:appointment)).to be_valid
     expect(FactoryGirl.build(:appointment, :executive => nil)).to_not be_valid
     expect(FactoryGirl.build(:appointment, :time => nil)).to_not be_valid
+  end
+
+  it "cuando se agregan o borran citas, se pueden obtener desde el atributo del ejecutivo las citas que tiene" do
+
+    executive = FactoryGirl.create(:executive)
+    expect(executive.appointments.length).to eq 0
+
+    FactoryGirl.create(:appointment, executive: executive, time: DateTime.new(2018, 1, 1, 13, 40, 7))
+    executive.reload
+    expect(executive.appointments.length).to eq 1
+
+    FactoryGirl.create(:appointment, executive: executive, time: DateTime.new(2018, 1, 1, 15, 20, 7))
+    executive.reload
+    expect(executive.appointments.length).to eq 2
+
+    Appointment.where(executive: executive, time: DateTime.new(2018, 1, 1, 15, 20, 0)).delete_all
+    executive.reload
+    expect(executive.appointments.length).to eq 1
+  end
+
+  it "cuando se agrega una hora, se mantiene coherencia con la zona horaria (la hora no se cambia en la base de datos)" do
+
+    executive = FactoryGirl.create(:executive)
+    FactoryGirl.create(:appointment, executive: executive, time: DateTime.new(2018, 1, 1, 13, 40, 7))
+
+    t = executive.appointments[0].time
+
+    expect(t.year).to eq 2018
+    expect(t.month).to eq 1
+    expect(t.day).to eq 1
+    expect(t.hour).to eq 13
+    expect(t.min).to eq 40
+    expect(t.sec).to eq 0
+
+    a = Appointment.find_by executive: executive, time: DateTime.new(2018, 1, 1, 13, 40, 0)
+    expect(a).to_not be_nil
+
   end
 
   it "permite buscar por dia correctamente" do

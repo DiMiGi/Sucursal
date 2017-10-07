@@ -3,8 +3,6 @@ require 'rails_helper'
 
 RSpec.describe AppointmentsController, type: :ctrl do
 
-  pending "Ver que ocurre al quitar la discretizacion al comprimir. Correr este test y ver cuantos se caen. Si se caen pocos, considerar quitarlo. Esto se debe a que el ejemplo 'caso_borde.json' redondea mucho y se pierde un bloque mas o menos grande"
-
   describe "algoritmos y sub algoritmos (sub rutinas) para planificacion" do
 
     let(:ctrl) { AppointmentsController.new }

@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.index ["staff_id"], name: "index_days_off_on_staff_id"
   end
 
-  create_table "duration_estimations", id: false, force: :cascade do |t|
+  create_table "duration_estimations", force: :cascade do |t|
     t.integer "duration"
     t.integer "branch_office_id"
     t.integer "attention_type_id"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.index ["reset_password_token"], name: "index_staff_on_reset_password_token", unique: true
   end
 
-  create_table "time_blocks", id: false, force: :cascade do |t|
+  create_table "time_blocks", force: :cascade do |t|
     t.integer "weekday"
     t.integer "hour"
     t.integer "minutes"
