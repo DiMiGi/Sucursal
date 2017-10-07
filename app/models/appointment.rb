@@ -3,6 +3,7 @@ class Appointment < ApplicationRecord
   belongs_to :executive, foreign_key: 'staff_id'
   validates_presence_of :executive
   validates_presence_of :time
+  validates_presence_of :client_id
 
   after_validation :auto_discretization
 
