@@ -33,7 +33,8 @@
     { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 56" },
     { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
       { "time": "8:00", "ids": [0] },
-      { "time": "9:35", "ids": [0] }
+      { "time": "8:25", "ids": [0] },
+      { "time": "9:20", "ids": [0] }
     ] }
 
   ]

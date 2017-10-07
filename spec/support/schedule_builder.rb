@@ -127,7 +127,14 @@ class ScheduleBuilder
       appointments = @data[:executives][executive_id][:appointments]
       duration = @data[:attention_duration]
 
-      result = ctrl.get_executive_available_appointments(time_blocks: time_blocks, appointments: appointments, duration: duration)
+      disc = @branch_offices[query["branch_office"]].minute_discretization
+
+      result = ctrl.get_executive_available_appointments(discretization: disc, time_blocks: time_blocks, appointments: appointments, duration: duration)
+
+      (0..correct_result.length-1).each do |i|
+        correct_result[i] = get_time correct_result[i]
+      end
+
       expect(result).to eq correct_result
     end
 

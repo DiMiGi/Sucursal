@@ -98,12 +98,12 @@ module Scheduling
   end
 
 
-  def get_executive_available_appointments(time_blocks:, appointments:, duration:)
+  def get_executive_available_appointments(time_blocks:, appointments:, duration:, discretization:)
 
     return [] if time_blocks.empty? || duration == 0
 
-    time_blocks = compress(times: time_blocks, length: 15)
-    appointments = compress(times: appointments, length: duration)
+    time_blocks = compress(discretization: 15, times: time_blocks, length: 15)
+    appointments = compress(discretization: discretization, times: appointments, length: duration)
 
     ranges = get_available_ranges(time_blocks: time_blocks, appointments: appointments, duration: duration)
 
@@ -137,6 +137,7 @@ module Scheduling
 
 
     duration = db_data[:attention_duration]
+    discretization = db_data[:discretization]
 
     return {} if db_data.empty?
     return {} if duration == 0
@@ -147,7 +148,7 @@ module Scheduling
     db_data[:executives].each do |id, executive|
       appointments = executive[:appointments]
       time_blocks = executive[:time_blocks]
-      times = get_executive_available_appointments(time_blocks: time_blocks, appointments: appointments, duration: duration)
+      times = get_executive_available_appointments(discretization: discretization, time_blocks: time_blocks, appointments: appointments, duration: duration)
 
       times.each do |t|
         result[t] = [] if !result.has_key? t

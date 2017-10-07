@@ -3,6 +3,8 @@ require 'rails_helper'
 
 RSpec.describe AppointmentsController, type: :ctrl do
 
+  pending "Ver que ocurre al quitar la discretizacion al comprimir. Correr este test y ver cuantos se caen. Si se caen pocos, considerar quitarlo. Esto se debe a que el ejemplo 'caso_borde.json' redondea mucho y se pierde un bloque mas o menos grande"
+
   describe "algoritmos y sub algoritmos (sub rutinas) para planificacion" do
 
     let(:ctrl) { AppointmentsController.new }
@@ -33,7 +35,7 @@ RSpec.describe AppointmentsController, type: :ctrl do
             # Lee el archivo y crea todas las filas que se describen
             # en el archivo JSON (ejecutivos, citas, bloques de tiempo, etc)
             test_case = ScheduleBuilder.new filename
-            test_case.data["queries"].each do |q|
+            test_case.data["queries"].each_with_index do |q, i|
               test_case.execute_query(q)
             end
           end

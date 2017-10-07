@@ -11,16 +11,17 @@ module TimeRange
   # ajusten a la cuadricula que la sucursal configura (el valor de discretizacion en minutos).
   # Tambien se puede usar para comprimir citas (appointments) y utilizar
   # otro valor como largo del bloque.
-  def compress(times:, length:)
+
+  def compress(times:, length:, discretization:)
     return [] if times.empty?
-    return [[floor(times[0], length), ceil(times[0]+length, length)]] if times.length == 1
+    return [[floor(times[0], discretization), ceil(times[0]+length, discretization)]] if times.length == 1
     a = times[0]
     pairs = []
     i = 1
     while i < times.length do
-      b = floor(times[i], length)
+      b = times[i]
       if times[i-1] + length != b && b != times[i-1]
-        if pairs.empty? || floor(a, length) > ceil(pairs.last[1], length)
+        if pairs.empty? || floor(a, discretization) > ceil(pairs.last[1], discretization)
           pairs << [a, times[i-1]]
         else
           pairs.last[1] = times[i-1]
@@ -29,7 +30,7 @@ module TimeRange
         a = b
       end
       if i == times.length - 1
-        if pairs.empty? || floor(a, length) > ceil(pairs.last[1], length)
+        if pairs.empty? || floor(a, discretization) > ceil(pairs.last[1], discretization)
           pairs << [a, times.last]
         else
           pairs.last[1] = times.last
@@ -41,71 +42,13 @@ module TimeRange
 
     # Discretizar los valores
     pairs.each do |pa|
-      pa[0] = floor(pa[0], length)
-      pa[1] = ceil(pa[1], length)
+      pa[0] = floor(pa[0], discretization)
+      pa[1] = ceil(pa[1], discretization)
     end
 
     return pairs
   end
 
-
-  # Une dos conjuntos.
-  # Ver los tests para comprender su comportamiento.
-  def union(r, s)
-
-    r = r.flatten
-    s = s.flatten
-
-    i = j = open_ranges = 0
-
-    result = []
-    set = nil
-
-    while j <= s.length
-      while i < r.length
-        break if j < s.length && r[i] > s[j]
-        if i.even?
-          set = [r[i], nil] if (open_ranges += 1) == 1
-        else
-          if (open_ranges -= 1) == 0
-            set[1] = r[i]
-            result << set if result.empty? || set[0] != result.last[1]
-            result.last[1] = set[1] unless set[0] != result.last[1]
-          end
-        end
-        i += 1
-      end
-
-      if j.even?
-        set = [s[j], nil] if (open_ranges += 1) == 1
-      else
-        if (open_ranges -= 1) == 0
-          set[1] = s[j]
-          result << set if result.empty? || set[0] != result.last[1]
-          result.last[1] = set[1] unless set[0] != result.last[1]
-        end
-      end
-
-      j += 1
-    end
-    return result
-  end
-
-
-  def union_all(ranges)
-
-    return [] if ranges.empty?
-    return ranges[0] if ranges.length == 1
-    return union(ranges[0], ranges[1]) if ranges.length == 2
-
-    result = union(ranges[0], ranges[1])
-
-    (2..ranges.length-1).each do |i|
-      result = union(result, ranges[i])
-    end
-
-    return result
-  end
 
 
 
