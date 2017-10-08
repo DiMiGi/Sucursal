@@ -40,34 +40,34 @@ RSpec.describe AppointmentsController, type: :controller do
         expect(response.body).to eq({ times: [] }.to_json)
         @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-08 23:59:59'))
         get :get_available_times, params: @params
-        expect(response).to have_http_status :bad_request
         expect(response.body).to eq({ error: @already_has_appointment_msg }.to_json)
+        expect(response).to have_http_status :bad_request
       end
 
       it "si la hora que tiene agendada esta en el mismo dia de hoy, tambien se arroja el error de que no se puede pedir hora si tiene una agendada" do
         @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-05 23:59:59'))
         get :get_available_times, params: @params
-        expect(response).to have_http_status :bad_request
         expect(response.body).to eq({ error: @already_has_appointment_msg }.to_json)
+        expect(response).to have_http_status :bad_request
       end
 
       it "entrega el listado de horas disponibles en caso que la ultima hora del cliente sea inferior al dia actual (lo cual hace que automaticamente se consideren expiradas)" do
         @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-04 23:59:59'))
         get :get_available_times, params: @params
-        expect(response).to have_http_status :ok
         expect(response.body).to eq({ times: [] }.to_json)
+        expect(response).to have_http_status :ok
       end
 
       it "toma la hora con mayor tiempo (mas lejana en el futuro) como la hora a considerar para saber si tiene hora agendada o no" do
         @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-04 23:59:59'))
         get :get_available_times, params: @params
-        expect(response).to have_http_status :ok
         expect(response.body).to eq({ times: [] }.to_json)
+        expect(response).to have_http_status :ok
 
         @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-06 23:59:59'))
         get :get_available_times, params: @params
-        expect(response).to have_http_status :bad_request
         expect(response.body).to eq({ error: @already_has_appointment_msg }.to_json)
+        expect(response).to have_http_status :bad_request
         # Si tomara las horas alreves, estaria tomando la primera que puse, la cual
         # no emite error por ya tener hora agendada.
       end
