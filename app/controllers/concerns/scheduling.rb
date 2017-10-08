@@ -140,7 +140,7 @@ module Scheduling
     return {} if db_data.empty?
     return {} if !db_data.has_key?(:attention_duration)
     return {} if !db_data.has_key?(:discretization)
-    
+
     duration = db_data[:attention_duration]
     discretization = db_data[:discretization]
 

@@ -37,6 +37,7 @@ class AppointmentsController < ApplicationController
     end
 
 
+
     # Verificar que la fecha sea mayor al limite inferior, el cual
     # corresponde al dia de manana (la hora es el inicio de ese dia 00:00:00).
     # Lo mismo con el dia que comienza en una semana (limite superior).
@@ -46,6 +47,21 @@ class AppointmentsController < ApplicationController
 
     next_week = today
     range_days.times { next_week = next_week.next_day }
+
+    latest_appointment = Appointment.where(client_id: client_id).order("time DESC").first
+
+    if !latest_appointment.nil?
+
+      time = latest_appointment.time.beginning_of_day
+
+      if today <= time
+        msg = "No se puede consultar el servicio de agendas porque ya tiene una hora agendada"
+        render :json => { :error => msg }, :status => :bad_request
+        return
+      end
+    end
+
+
 
     if day.beginning_of_day < tomorrow
       msg = "Solo se puede pedir citas comenzando desde el día de mañana"
@@ -83,7 +99,6 @@ class AppointmentsController < ApplicationController
 
     only_times = times.keys
     times.keys.sort!
-
 
     render :json => { times: only_times }, :status => :ok
 
