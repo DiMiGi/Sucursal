@@ -55,46 +55,34 @@ module Scheduling
 
     appointments = Appointment.find_by_day(day).where(executive: executives.map{|e| e[:id]})
 
-    result = {}
+    result = {
+      :executives => {},
+      :discretization => discretization,
+      :attention_duration => ceil(duration, discretization)
+    }
 
 
     # Todo el siguiente codigo de este metodo sirve solamente para reestructurar
     # los resultados que se obtuvieron previamente, y encapsularlo en un solo
     # objeto (hash).
 
-    result[:executives] = {}
-    result[:discretization] = discretization
-    result[:attention_duration] = ceil(duration, discretization)
-
     executives.each do |e|
-      result[:executives][e.id] = {}
-      result[:executives][e.id][:appointments] = []
-      result[:executives][e.id][:time_blocks] = []
+      result[:executives][e.id] ||= {}
+      result[:executives][e.id][:appointments] ||= []
+      result[:executives][e.id][:time_blocks] ||= []
+      result[:executives][e.id][:time_blocks] << (e.hour * 60) + e.minutes
     end
 
-    executives.each do |e|
-      minutes = (e.hour * 60) + e.minutes
-      result[:executives][e.id][:time_blocks] << minutes
-    end
-
-
-    appointments.each do |app|
-      # Volver a redondearlo en caso que este valor haya cambiado desde
-      # que se tomo la hora.
-      app.time = Appointment.discretize(app.time, discretization)
-      minutes = (app.time.hour * 60) + app.time.min
-      result[:executives][app.staff_id][:appointments] << minutes
+    appointments.each do |a|
+      minutes = (a.time.hour * 60) + a.time.min
+      result[:executives][a.staff_id][:appointments] << minutes
     end
 
     result[:executives].each do |key, executive|
       executive[:appointments].sort!
       executive[:time_blocks].sort!
-      if executive[:time_blocks].empty?
-        result[:executives].delete(key)
-      end
     end
 
-    return {} if !result[:executives].keys.any?
     return result
 
   end
@@ -114,7 +102,6 @@ module Scheduling
     ranges.each do |r|
       a = r[0]
       b = r[1] - duration
-      length = b - a
       n = 0
       while true
         t = a + (n * duration)
@@ -155,13 +142,9 @@ module Scheduling
       times = get_executive_available_appointments(discretization: discretization, time_blocks: time_blocks, appointments: appointments, duration: duration)
 
       times.each do |t|
-        result[t] = [] if !result.has_key? t
+        result[t] ||= []
         result[t] << id
       end
-    end
-
-    result.each do |key, value|
-      result[key].sort! # Es necesario ordenarlo, o ya esta ordenado?
     end
 
     return result

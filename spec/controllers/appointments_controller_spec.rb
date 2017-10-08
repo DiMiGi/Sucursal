@@ -8,6 +8,8 @@ RSpec.describe AppointmentsController, type: :controller do
 
   pending "al realizar servicios de agendamiento (pedir listado de horas disponibles, etc), la variable client_id o ID de cliente debe ser no nula"
 
+  pending "verificar que si el cliente cancela su hora, ahora puede volver a pedir nuevas horas"
+
 
   describe "controlador para agendar horas" do
 

@@ -36,7 +36,7 @@ RSpec.describe TimeBlock, type: :model do
     expect{FactoryGirl.build(:time_block, executive: FactoryGirl.create(:executive))}.to_not raise_error
   end
 
-  context 'ejecutivo que tiene horarios' do
+  context "ejecutivo que tiene horarios" do
 
     before(:example) do
       @executive = FactoryGirl.create(:executive)

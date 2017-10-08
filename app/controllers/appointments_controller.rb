@@ -45,23 +45,14 @@ class AppointmentsController < ApplicationController
     today = Time.now.beginning_of_day
     tomorrow = today.tomorrow
 
-    next_week = today
-    range_days.times { next_week = next_week.next_day }
+    max_day = today
+    range_days.times { max_day = max_day.next_day }
 
-    latest_appointment = Appointment.where(client_id: client_id).order("time DESC").first
-
-    if !latest_appointment.nil?
-
-      time = latest_appointment.time.beginning_of_day
-
-      if today <= time
-        msg = "No se puede consultar el servicio de agendas porque ya tiene una hora agendada"
-        render :json => { :error => msg }, :status => :bad_request
-        return
-      end
+    if already_has_appointment? client_id
+      msg = "No se puede consultar el servicio de agendas porque ya tiene una hora agendada"
+      render :json => { :error => msg }, :status => :bad_request
+      return
     end
-
-
 
     if day.beginning_of_day < tomorrow
       msg = "Solo se puede pedir citas comenzando desde el día de mañana"
@@ -69,7 +60,7 @@ class AppointmentsController < ApplicationController
       return
     end
 
-    if next_week < day.beginning_of_day
+    if max_day < day.beginning_of_day
       msg = "Solo se puede pedir citas hasta #{range_days} días después comenzando desde el día de mañana"
       render :json => { :error => msg }, :status => :bad_request
       return
@@ -102,6 +93,16 @@ class AppointmentsController < ApplicationController
 
     render :json => { times: only_times }, :status => :ok
 
+  end
+
+  private
+
+  def already_has_appointment?(client_id)
+    latest_appointment = Appointment.where(client_id: client_id).order("time DESC").first
+    return false if latest_appointment.nil?
+    today = Time.now.beginning_of_day
+    time = latest_appointment.time.beginning_of_day
+    return today <= time
   end
 
 
