@@ -39,10 +39,22 @@ class AppointmentsController < ApplicationController
 
     # Verificar que la fecha sea mayor al limite inferior, el cual
     # corresponde al dia de manana (la hora es el inicio de ese dia 00:00:00).
-    tomorrow = Time.now.beginning_of_day.tomorrow
+    # Lo mismo con el dia que comienza en una semana (limite superior).
+    range_days = 7
+    today = Time.now.beginning_of_day
+    tomorrow = today.tomorrow
+
+    next_week = today
+    range_days.times { next_week = next_week.next_day }
 
     if day.beginning_of_day < tomorrow
       msg = "Solo se puede pedir citas comenzando desde el día de mañana"
+      render :json => { :error => msg }, :status => :bad_request
+      return
+    end
+
+    if next_week < day.beginning_of_day
+      msg = "Solo se puede pedir citas hasta #{range_days} días después comenzando desde el día de mañana"
       render :json => { :error => msg }, :status => :bad_request
       return
     end
