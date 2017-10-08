@@ -8,10 +8,6 @@ RSpec.describe AppointmentsController, type: :controller do
 
   pending "el cliente no puede realizar ningun servicio de agendamiento si ya tiene una hora agendada"
 
-  pending "se obtiene un conjunto vacio de horas si el dia pedido es inferior al minimo permitido"
-
-  pending "se obtiene un conjunto vacio de horas si el dia pedido es inferior al maximo permitido"
-
   pending "validar que una peticion que no tiene credenciales de autorizacion (cliente movistar) no puede acceder a ninguno de los servicios de agendamiento"
 
   pending "al realizar servicios de agendamiento (pedir listado de horas disponibles, etc), la variable client_id o ID de cliente debe ser no nula"
@@ -24,8 +20,7 @@ RSpec.describe AppointmentsController, type: :controller do
         client_id: 12,
         branch_office_id: 12,
         attention_type_id: 55,
-        yyyy: 2017,
-        mm: 10
+        yyyy: 2017
       }
     end
 
@@ -33,6 +28,7 @@ RSpec.describe AppointmentsController, type: :controller do
     it "no permite pedir citas dentro del mismo dia, o antes" do
 
       allow(Time).to receive(:now).and_return(Time.zone.parse('2017-10-05 23:59:59'))
+      @params[:mm] = 10
 
       [1, 2, 3, 4, 5].each do |d|
         @params[:dd] = d
@@ -55,6 +51,7 @@ RSpec.describe AppointmentsController, type: :controller do
 
       correct_days = [6, 7, 8, 9, 10, 11, 12]
       wrong_days = [13, 14, 15]
+      @params[:mm] = 10
 
       correct_days.each do |d|
         @params[:dd] = d
@@ -94,6 +91,17 @@ RSpec.describe AppointmentsController, type: :controller do
         expect(response.body).to eq({ error: "Solo se puede pedir citas hasta 7 días después comenzando desde el día de mañana" }.to_json)
         expect(response).to have_http_status :bad_request
       end
+    end
+
+
+    it "obtiene un conjunto vacio si la sucursal no existe" do
+      allow(Time).to receive(:now).and_return(Time.zone.parse('2017-10-28 23:59:59'))
+      @params[:dd] = 30
+      @params[:mm] = 10
+      @params[:branch_office_id] = 100000
+      get :get_available_times, params: @params
+      expect(response).to have_http_status :ok
+      expect(response.body).to eq({ times: [] }.to_json)
     end
 
   end

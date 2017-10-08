@@ -45,6 +45,7 @@ module Scheduling
         branch_office_id,
         attention_type_id)
 
+
     return {} if executives.empty?
 
     de = DurationEstimation.includes(:branch_office).find_by(branch_office: branch_office_id, attention_type_id: attention_type_id)
@@ -55,6 +56,7 @@ module Scheduling
     appointments = Appointment.find_by_day(day).where(executive: executives.map{|e| e[:id]})
 
     result = {}
+
 
     # Todo el siguiente codigo de este metodo sirve solamente para reestructurar
     # los resultados que se obtuvieron previamente, y encapsularlo en un solo
@@ -135,11 +137,13 @@ module Scheduling
       branch_office_id: branch_office_id,
       attention_type_id: attention_type_id)
 
-
+    return {} if db_data.empty?
+    return {} if !db_data.has_key?(:attention_duration)
+    return {} if !db_data.has_key?(:discretization)
+    
     duration = db_data[:attention_duration]
     discretization = db_data[:discretization]
 
-    return {} if db_data.empty?
     return {} if duration == 0
     return {} if db_data[:executives].nil? || db_data[:executives].empty?
 
