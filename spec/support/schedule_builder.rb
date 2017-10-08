@@ -38,7 +38,8 @@ class ScheduleBuilder
         dd = split[2].to_i
         hh = split[3].to_i
         min = split[4].to_i
-        FactoryGirl.create(:appointment, executive: new_executive, time: DateTime.new(yyyy, mm, dd, hh, min))
+        #FactoryGirl.create(:appointment, executive: new_executive, time: DateTime.new(yyyy, mm, dd, hh, min))
+        FactoryGirl.create(:appointment, :time => Time.zone.parse("#{yyyy}-#{mm}-#{dd} #{hh}:#{mm}:00"))
       end
     end
 
@@ -50,18 +51,19 @@ class ScheduleBuilder
     end
 
     @data["global_days_off"].each do |day|
-      FactoryGirl.create(:global_day_off, day: Date.new(day["yyyy"], day["mm"], day["dd"]))
+      #FactoryGirl.create(:global_day_off, day: Date.new(day["yyyy"], day["mm"], day["dd"]))
+      FactoryGirl.create(:global_day_off, day: Time.zone.parse("#{day["yyyy"]}-#{day["mm"]}-#{day["dd"]}"))
     end
 
     @data["executive_days_off"].each do |day|
       executive = @executives[day["executive"]]
-      date = Date.new(day["yyyy"], day["mm"], day["dd"])
+      date = Time.zone.parse("#{day["yyyy"]}-#{day["mm"]}-#{day["dd"]}")#Date.new(day["yyyy"], day["mm"], day["dd"])
       FactoryGirl.create(:executive_day_off, executive: executive, day: date)
     end
 
     @data["branch_office_days_off"].each do |day|
       branch_office = @branch_offices[day["branch_office"]]
-      date = Date.new(day["yyyy"], day["mm"], day["dd"])
+      date = Time.zone.parse("#{day["yyyy"]}-#{day["mm"]}-#{day["dd"]}")#Date.new(day["yyyy"], day["mm"], day["dd"])
       FactoryGirl.create(:branch_office_day_off, branch_office: branch_office, day: date)
     end
 
@@ -92,7 +94,8 @@ class ScheduleBuilder
       branch_office_id = @branch_offices[query["branch_office"]].id
       correct_result = query["result"]
       split = query["day"].split ' '
-      day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
+      day = Time.zone.parse("#{split[0].to_i}-#{split[1].to_i}-#{split[2].to_i}").to_date
+      #day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
       result = ctrl.get_all_available_appointments(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
 
       correct_result.each do |c|
@@ -116,7 +119,8 @@ class ScheduleBuilder
       attention_type_id = @executives[query["executive"]].attention_type_id
       correct_result = query["result"]
       split = query["day"].split ' '
-      day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
+      day = Time.zone.parse("#{split[0].to_i}-#{split[1].to_i}-#{split[2].to_i}").to_date
+      #day = Date.new(split[0].to_i, split[1].to_i, split[2].to_i)
 
       @data = ctrl.get_data(day: day, branch_office_id: branch_office_id, attention_type_id: attention_type_id)
 
@@ -142,7 +146,8 @@ class ScheduleBuilder
     if type == "add_appointment"
       executive = @executives[query["executive"]]
       split = query["time"].split ' '
-      time = DateTime.new(split[0].to_i, split[1].to_i, split[2].to_i, split[3].to_i, split[4].to_i)
+      #time = DateTime.new(split[0].to_i, split[1].to_i, split[2].to_i, split[3].to_i, split[4].to_i)
+      time = Time.zone.parse("#{split[0].to_i}-#{split[1].to_i}-#{split[2].to_i} #{split[3].to_i}:#{split[4].to_i}")
       FactoryGirl.create(:appointment, executive: executive, time: time)
     end
 

@@ -54,15 +54,15 @@ RSpec.describe AppointmentsController, type: :ctrl do
         e3 = FactoryGirl.create(:executive, id: 2003, branch_office: @office, attention_type: @attention)
         e4 = FactoryGirl.create(:executive, id: 2004, branch_office: @office, attention_type: @attention)
 
-        FactoryGirl.create(:global_day_off, day: Date.new(2017, 10, 1))
-        FactoryGirl.create(:global_day_off, day: Date.new(2017, 10, 3))
-        FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 2))
-        FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 3))
-        FactoryGirl.create(:executive_day_off, executive: e1, day: Date.new(2017, 10, 4))
-        FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 1))
-        FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 3))
-        FactoryGirl.create(:executive_day_off, executive: e2, day: Date.new(2017, 10, 5))
-        FactoryGirl.create(:branch_office_day_off, branch_office: @office, day: Date.new(2017, 10, 4))
+        FactoryGirl.create(:global_day_off, day: Time.zone.parse("2017-10-1").to_date)
+        FactoryGirl.create(:global_day_off, day: Time.zone.parse("2017-10-3").to_date)
+        FactoryGirl.create(:executive_day_off, executive: e1, day: Time.zone.parse("2017-10-2").to_date)
+        FactoryGirl.create(:executive_day_off, executive: e1, day: Time.zone.parse("2017-10-3").to_date)
+        FactoryGirl.create(:executive_day_off, executive: e1, day: Time.zone.parse("2017-10-4").to_date)
+        FactoryGirl.create(:executive_day_off, executive: e2, day: Time.zone.parse("2017-10-1").to_date)
+        FactoryGirl.create(:executive_day_off, executive: e2, day: Time.zone.parse("2017-10-3").to_date)
+        FactoryGirl.create(:executive_day_off, executive: e2, day: Time.zone.parse("2017-10-5").to_date)
+        FactoryGirl.create(:branch_office_day_off, branch_office: @office, day: Time.zone.parse("2017-10-4").to_date)
 
         @office.duration_estimations << DurationEstimation.new(duration: 17, attention_type: @attention)
 
@@ -94,18 +94,18 @@ RSpec.describe AppointmentsController, type: :ctrl do
         e3.save
         e4.save
 
-        @app1 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 13, 31, 0))
-        @app2 = FactoryGirl.create(:appointment, executive: e1, time: DateTime.new(2017, 10, 2, 14, 46, 0))
-        @app3 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 1, 0))
-        @app4 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 15, 11, 0))
-        @app5 = FactoryGirl.create(:appointment, executive: e2, time: DateTime.new(2017, 10, 2, 14, 49, 0))
+        @app1 = FactoryGirl.create(:appointment, executive: e1, time: Time.zone.parse('2017-10-2 13:31:00'))
+        @app2 = FactoryGirl.create(:appointment, executive: e1, time: Time.zone.parse('2017-10-2 14:46:00'))
+        @app3 = FactoryGirl.create(:appointment, executive: e2, time: Time.zone.parse('2017-10-2 14:01:00'))
+        @app4 = FactoryGirl.create(:appointment, executive: e2, time: Time.zone.parse('2017-10-2 15:11:00'))
+        @app5 = FactoryGirl.create(:appointment, executive: e2, time: Time.zone.parse('2017-10-2 14:49:00'))
       end
 
 
 
 
       it "entrega un mapa con todos los datos necesarios para poder ejecutar algoritmos de planificacion" do
-        result = ctrl.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Time.zone.parse("2017-10-2").to_date, branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result.class).to eq Hash
         expect(result).to have_key :discretization
         expect(result[:discretization]).to eq 5
@@ -121,7 +121,7 @@ RSpec.describe AppointmentsController, type: :ctrl do
       end
 
       it "entrega las citas del/los ejecutivos en una lista ordenada por fecha" do
-        result = ctrl.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Time.zone.parse("2017-10-2").to_date, branch_office_id: @office.id, attention_type_id: @attention.id)
         a3 = (14 * 60) + 0
         a5 = (14 * 60) + 45
         a4 = (15 * 60) + 10
@@ -130,22 +130,22 @@ RSpec.describe AppointmentsController, type: :ctrl do
 
       it "obtiene los ejecutivos que estan disponibles el dia escogido" do
 
-        result = ctrl.get_data(day: Date.new(2017, 10, 2), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Time.zone.parse("2017-10-2").to_date, branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives].keys).to eq [2002, 2003]
 
-        result = ctrl.get_data(day: Date.new(2017, 10, 3), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Time.zone.parse("2017-10-3").to_date, branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result).to eq({})
 
-        result = ctrl.get_data(day: Date.new(2017, 10, 3), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Time.zone.parse("2017-10-3").to_date, branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result).to eq({})
 
-        result = ctrl.get_data(day: Date.new(2017, 10, 5), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Time.zone.parse("2017-10-5").to_date, branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives].keys).to eq [2001, 2003, 2004]
 
-        result = ctrl.get_data(day: Date.new(2017, 10, 6), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Time.zone.parse("2017-10-6").to_date, branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives].keys).to eq [2003, 2004]
 
-        result = ctrl.get_data(day: Date.new(2017, 10, 7), branch_office_id: @office.id, attention_type_id: @attention.id)
+        result = ctrl.get_data(day: Time.zone.parse("2017-10-7").to_date, branch_office_id: @office.id, attention_type_id: @attention.id)
         expect(result[:executives].keys).to eq [2004]
 
       end
