@@ -4,8 +4,27 @@ RSpec.describe Appointment, type: :model do
 
   it "validacion basica" do
     expect(FactoryGirl.build(:appointment)).to be_valid
+    expect(FactoryGirl.build(:appointment, :status => :normal)).to be_valid
+    expect(FactoryGirl.build(:appointment, :status => :cancelled)).to be_valid
+    expect(FactoryGirl.build(:appointment, :status => 0)).to be_valid
+    expect(FactoryGirl.build(:appointment, :status => 1)).to be_valid
+
+    expect{FactoryGirl.build(:appointment, :status => 2)}.to raise_error ArgumentError
+    expect{FactoryGirl.build(:appointment, :status => :invalid_qwerty)}.to raise_error ArgumentError
+
     expect(FactoryGirl.build(:appointment, :executive => nil)).to_not be_valid
     expect(FactoryGirl.build(:appointment, :time => nil)).to_not be_valid
+
+  end
+
+  it "crea una cita en status normal por defecto" do
+    e = FactoryGirl.create(:executive)
+    a = Appointment.new
+    a.executive = e
+    a.time = Time.current
+    a.client_id = 10000
+    a.save!
+    expect(a.status.to_sym).to eq :normal
   end
 
   it "cuando se agregan o borran citas, se pueden obtener desde el atributo del ejecutivo las citas que tiene" do

@@ -5,6 +5,8 @@ class Appointment < ApplicationRecord
   validates_presence_of :time
   validates_presence_of :client_id
 
+  enum status: [ :normal, :cancelled ]
+
   after_validation :auto_discretization
 
 

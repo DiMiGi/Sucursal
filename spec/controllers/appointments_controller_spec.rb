@@ -76,6 +76,48 @@ RSpec.describe AppointmentsController, type: :controller do
         # no emite error por ya tener hora agendada.
       end
 
+    end
+
+    describe "metodo para obtener la hora agendada actual y activa del cliente" do
+
+      before(:each) do
+        allow(Time).to receive(:current).and_return(Time.zone.parse('2017-10-05 23:59:59'))
+        @ctrl = AppointmentsController.new
+      end
+
+      it "obtiene la mas reciente" do
+        FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-06 15:00:00'))
+        FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-06 16:00:00'))
+        FactoryGirl.create(:appointment, client_id: 4, time: Time.zone.parse('2017-10-06 18:00:00'))
+        appointment = @ctrl.send(:get_client_appointment, 3)
+        expect(appointment.time).to eq(Time.zone.parse '2017-10-06 16:00:00')
+      end
+
+      it "obtiene nil si hay solo canceladas" do
+        FactoryGirl.create(:appointment, client_id: 3, status: :cancelled, time: Time.zone.parse('2017-10-06 15:00:00'))
+        FactoryGirl.create(:appointment, client_id: 3, status: :cancelled, time: Time.zone.parse('2017-10-06 16:00:00'))
+        appointment = @ctrl.send(:get_client_appointment, 3)
+        expect(appointment).to be_nil
+      end
+
+      it "obtiene solo la mas reciente activa" do
+        FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-07 15:00:00'))
+        FactoryGirl.create(:appointment, client_id: 3, status: :cancelled,time: Time.zone.parse('2017-10-07 16:00:00'))
+        appointment = @ctrl.send(:get_client_appointment, 3)
+        expect(appointment.time).to eq Time.zone.parse('2017-10-07 15:00:00')
+      end
+
+      it "obtiene solo las que estan despues o igual a hoy" do
+        FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-04 15:00:00'))
+        FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-05 00:00:00'))
+        appointment = @ctrl.send(:get_client_appointment, 3)
+        expect(appointment.time).to eq Time.zone.parse('2017-10-05 00:00:00')
+        FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-05 11:00:00'))
+        appointment = @ctrl.send(:get_client_appointment, 3)
+        expect(appointment.time).to eq Time.zone.parse('2017-10-05 11:00:00')
+      end
+
+
 
     end
 

@@ -13,6 +13,7 @@
 ActiveRecord::Schema.define(version: 20171002213522) do
 
   create_table "appointments", force: :cascade do |t|
+    t.integer "status", default: 0, null: false
     t.integer "staff_id"
     t.datetime "time", null: false
     t.integer "client_id"

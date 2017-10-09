@@ -106,7 +106,7 @@ class AppointmentsController < ApplicationController
     max_day = today
     range_days.times { max_day = max_day.next_day }
 
-    if already_has_appointment? client_id
+    if !(get_client_appointment(client_id).nil?)
       msg = "No se puede consultar el servicio de agendas porque ya tiene una hora agendada"
       return { :error => msg }
     end
@@ -131,14 +131,18 @@ class AppointmentsController < ApplicationController
   end
 
 
+  def get_client_appointment(client_id)
+    latest_appointment = Appointment
+    .where(client_id: client_id, status: Appointment.statuses[:normal])
+    .order("time DESC").first
 
+    return nil if latest_appointment.nil?
 
-  def already_has_appointment?(client_id)
-    latest_appointment = Appointment.where(client_id: client_id).order("time DESC").first
-    return false if latest_appointment.nil?
     today = Time.current.beginning_of_day
     time = latest_appointment.time.beginning_of_day
-    return today <= time
+
+    return latest_appointment if today <= time
+    return nil
   end
 
 

@@ -2,6 +2,7 @@ class CreateAppointments < ActiveRecord::Migration[5.1]
   def change
     create_table :appointments do |t|
 
+      t.integer :status, null: false, default: 0
       t.belongs_to :staff, index: true
       t.datetime :time, null: false
 

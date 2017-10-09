@@ -5,6 +5,8 @@ FactoryGirl.define do
 
     client_id 5
 
+    status :normal
+
     time DateTime.new(2018, 05, 15, 13, 31, 6)
 
   end
