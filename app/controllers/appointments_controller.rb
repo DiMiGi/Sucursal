@@ -21,8 +21,15 @@ class AppointmentsController < ApplicationController
       dd = params[:dd].to_i
       hour = params[:hour].to_i
       minutes = params[:minutes].to_i
+      client_id = params[:client_id].to_i
 
-      min = (hh * 60) + mm
+      if client_id.nil? || !(client_id.is_a? Integer) || client_id < 0
+        msg = "El cliente a efectuar el agendamiento no existe"
+        render :json => { :error => msg }, :status => :bad_request
+        return
+      end
+
+      min = (hour * 60) + minutes
 
       # Si el tiempo seleccionado no pertenece al conjunto de tiempos
       # disponibles, o si el conjunto de ejecutivos para ese tiempo es vacio
@@ -35,14 +42,11 @@ class AppointmentsController < ApplicationController
 
       executive_id = times[min].shuffle.first
 
-      Appointment.new(executive_id: executive_id,
-        attention_type_id: attention_type_id,
+      Appointment.new(staff_id: executive_id,
         time: Time.zone.parse("#{yyyy}-#{mm}-#{dd} #{hour}:#{minutes}:00"),
-        client_id: params[:client_id].to_i)
+        client_id: client_id)
 
-      render :json => { msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes}" }, :status => :ok
-      return
-
+      render :json => { msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes.to_s.rjust(2, "0")}" }, :status => :ok
     end
 
   end

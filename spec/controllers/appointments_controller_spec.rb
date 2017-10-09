@@ -2,8 +2,6 @@ require 'rails_helper'
 
 RSpec.describe AppointmentsController, type: :controller do
 
-  pending "verificar el correcto funcionamiento de appointments#schedule_appointment"
-
   pending "el cliente no puede realizar ningun servicio de agendamiento si ya tiene una hora agendada"
 
   pending "validar que una peticion que no tiene credenciales de autorizacion (cliente movistar) no puede acceder a ninguno de los servicios de agendamiento"
@@ -12,7 +10,7 @@ RSpec.describe AppointmentsController, type: :controller do
 
   pending "verificar que si el cliente cancela su hora, ahora puede volver a pedir nuevas horas"
 
-
+  pending "cuando se agenda una hora, el mensaje que se le entrega de vuelta al usuario esta formateado hh:mm y no h:m"
 
 
   describe "controlador para agendar horas" do
@@ -25,6 +23,80 @@ RSpec.describe AppointmentsController, type: :controller do
         yyyy: 2017
       }
     end
+
+
+
+    describe "accion del controlador para efectuar la toma de hora" do
+
+      before(:each) do
+        allow(Time).to receive(:current).and_return(Time.zone.parse('2017-10-05 23:59:59'))
+        @executive = FactoryGirl.create(:executive)
+        @attention_type_id = @executive.attention_type_id
+        @branch_office_id = @executive.branch_office_id
+        FactoryGirl.create(:duration_estimation,
+          duration: 15,
+          attention_type_id: @attention_type_id,
+          branch_office_id: @branch_office_id)
+        @params = {
+          yyyy: 2017,
+          mm: 10,
+          dd: 9,
+          hour: 14,
+          minutes: 15,
+          client_id: 1,
+          attention_type_id: @attention_type_id,
+          branch_office_id: @branch_office_id
+        }
+      end
+
+      it "acepta solo fechas validas" do
+        @params[:dd] = 32
+        get :schedule_appointment, params: @params
+        expect(response).to have_http_status :bad_request
+        expect(response.body).to eq({ error: "La fecha es incorrecta" }.to_json)
+      end
+
+      it "no acepta IDs negativas de clientes" do
+        @params[:client_id] = -1
+        get :schedule_appointment, params: @params
+        expect(response).to have_http_status :bad_request
+        expect(response.body).to eq({ error: "El cliente a efectuar el agendamiento no existe" }.to_json)
+      end
+
+      it "arroja error indicando que el bloque seleccionado no se encuentra disponible" do
+        FactoryGirl.create(:time_block, executive: @executive, hour: 14, minutes: 0, weekday: 0)
+        get :schedule_appointment, params: @params
+        expect(response).to have_http_status :bad_request
+        expect(response.body).to eq({ error: "La hora seleccionada no se encuentra disponible" }.to_json)
+      end
+
+      it "agenda la hora correctamente" do
+        FactoryGirl.create(:time_block, executive: @executive, hour: 14, minutes: 15, weekday: 0)
+        get :schedule_appointment, params: @params
+        expect(response.body).to eq({ msg: "La hora ha sido correctamente agendada a las 14:15" }.to_json)
+        expect(response).to have_http_status :ok
+      end
+
+      it "agenda la hora correctamente" do
+        FactoryGirl.create(:time_block, executive: @executive, hour: 8, minutes: 0, weekday: 0)
+        @params[:hour] = 8
+        @params[:minutes] = 0
+        get :schedule_appointment, params: @params
+        expect(response.body).to eq({ msg: "La hora ha sido correctamente agendada a las 8:00" }.to_json)
+        expect(response).to have_http_status :ok
+      end
+
+      it "prohibe al cliente agendar una hora si ya tiene una hora agendada, incluso si la hora pedida estaba correctamente pedida" do
+        FactoryGirl.create(:time_block, executive: @executive, hour: 8, minutes: 0, weekday: 0)
+        FactoryGirl.create(:appointment, time: Time.zone.parse("2017-10-9 14:10:00"), client_id: 1)
+        get :schedule_appointment, params: @params
+        expect(response.body).to eq({ error: "No se puede consultar el servicio de agendas porque ya tiene una hora agendada" }.to_json)
+        expect(response).to have_http_status :bad_request
+      end
+
+
+    end
+
 
     describe "algoritmo para detectar si tiene hora agendada ya, o no tiene" do
 
