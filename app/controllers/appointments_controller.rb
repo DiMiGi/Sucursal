@@ -29,7 +29,7 @@ class AppointmentsController < ApplicationController
     # Verifico que el dia formado sea correcto. En caso que no lo sea,
     # se debe arrojar un error.
     begin
-      day = Time.new(yyyy, mm, dd)
+      day = Time.zone.parse("#{yyyy}-#{mm}-#{dd}")
     rescue => e
       msg = "La fecha es incorrecta"
       render :json => { :error => msg }, :status => :bad_request
