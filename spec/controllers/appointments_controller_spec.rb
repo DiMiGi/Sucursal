@@ -25,7 +25,7 @@ RSpec.describe AppointmentsController, type: :controller do
     describe "algoritmo para detectar si tiene hora agendada ya, o no tiene" do
 
       before(:each) do
-        allow(Time).to receive(:now).and_return(Time.zone.parse('2017-10-05 23:59:59'))
+        allow(Time).to receive(:current).and_return(Time.zone.parse('2017-10-05 23:59:59'))
         a = FactoryGirl.create(:attention_type)
         b = FactoryGirl.create(:branch_office)
         @e = FactoryGirl.create(:executive, branch_office: b, attention_type: a)
@@ -80,7 +80,7 @@ RSpec.describe AppointmentsController, type: :controller do
 
     it "no entrega el listado de horas disponibles si se piden dentro del mismo dia, o antes" do
 
-      allow(Time).to receive(:now).and_return(Time.zone.parse('2017-10-05 23:59:59'))
+      allow(Time).to receive(:current).and_return(Time.zone.parse('2017-10-05 23:59:59'))
       @params[:mm] = 10
 
       [1, 2, 3, 4, 5].each do |d|
@@ -100,7 +100,7 @@ RSpec.describe AppointmentsController, type: :controller do
 
     it "permite solo reuniones dentro del rango especificado y no despues" do
 
-      allow(Time).to receive(:now).and_return(Time.zone.parse('2017-10-05 23:59:59'))
+      allow(Time).to receive(:current).and_return(Time.zone.parse('2017-10-05 23:59:59'))
 
       correct_days = [6, 7, 8, 9, 10, 11, 12]
       wrong_days = [13, 14, 15]
@@ -124,7 +124,7 @@ RSpec.describe AppointmentsController, type: :controller do
 
     it "permite solo reuniones dentro del rango especificado y no despues, incluso si ese rango pasa de un mes a otro" do
 
-      allow(Time).to receive(:now).and_return(Time.zone.parse('2017-10-28 23:59:59'))
+      allow(Time).to receive(:current).and_return(Time.zone.parse('2017-10-28 23:59:59'))
 
       # Cada elemento de las listas son [mes, dia]
       correct_days = [[10, 29], [10, 30], [10, 31], [11, 1], [11, 2], [11, 3], [11, 4]]
@@ -148,7 +148,7 @@ RSpec.describe AppointmentsController, type: :controller do
 
 
     it "obtiene un conjunto vacio si la sucursal no existe" do
-      allow(Time).to receive(:now).and_return(Time.zone.parse('2017-10-28 23:59:59'))
+      allow(Time).to receive(:current).and_return(Time.zone.parse('2017-10-28 23:59:59'))
       @params[:dd] = 30
       @params[:mm] = 10
       @params[:branch_office_id] = 100000
@@ -158,7 +158,7 @@ RSpec.describe AppointmentsController, type: :controller do
     end
 
     it "permite al cliente recibir los horarios disponibles en los cuales puede agendar una hora" do
-      allow(Time).to receive(:now).and_return(Time.zone.parse('2017-10-01 23:59:59'))
+      allow(Time).to receive(:current).and_return(Time.zone.parse('2017-10-01 23:59:59'))
 
       a = FactoryGirl.create(:attention_type)
       b = FactoryGirl.create(:branch_office)

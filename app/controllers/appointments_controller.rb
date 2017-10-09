@@ -42,7 +42,7 @@ class AppointmentsController < ApplicationController
     # corresponde al dia de manana (la hora es el inicio de ese dia 00:00:00).
     # Lo mismo con el dia que comienza en una semana (limite superior).
     range_days = 7
-    today = Time.now.beginning_of_day
+    today = Time.current.beginning_of_day
     tomorrow = today.tomorrow
 
     max_day = today
@@ -100,7 +100,7 @@ class AppointmentsController < ApplicationController
   def already_has_appointment?(client_id)
     latest_appointment = Appointment.where(client_id: client_id).order("time DESC").first
     return false if latest_appointment.nil?
-    today = Time.now.beginning_of_day
+    today = Time.current.beginning_of_day
     time = latest_appointment.time.beginning_of_day
     return today <= time
   end
