@@ -100,6 +100,13 @@ RSpec.describe AppointmentsController, type: :controller do
         expect(appointment).to be_nil
       end
 
+      it "obtiene nil si hay solo expiradas" do
+        FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-03 15:00:00'))
+        FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-04 16:00:00'))
+        appointment = @ctrl.send(:get_client_appointment, 3)
+        expect(appointment).to be_nil
+      end
+
       it "obtiene solo la mas reciente activa" do
         FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-07 15:00:00'))
         FactoryGirl.create(:appointment, client_id: 3, status: :cancelled,time: Time.zone.parse('2017-10-07 16:00:00'))
