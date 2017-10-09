@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe AppointmentsController, type: :controller do
 
+  pending "verificar el correcto funcionamiento de appointments#schedule_appointment"
+
   pending "el cliente no puede realizar ningun servicio de agendamiento si ya tiene una hora agendada"
 
   pending "validar que una peticion que no tiene credenciales de autorizacion (cliente movistar) no puede acceder a ninguno de los servicios de agendamiento"
@@ -9,6 +11,8 @@ RSpec.describe AppointmentsController, type: :controller do
   pending "al realizar servicios de agendamiento (pedir listado de horas disponibles, etc), la variable client_id o ID de cliente debe ser no nula"
 
   pending "verificar que si el cliente cancela su hora, ahora puede volver a pedir nuevas horas"
+
+
 
 
   describe "controlador para agendar horas" do

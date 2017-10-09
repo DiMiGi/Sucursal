@@ -38,7 +38,6 @@ class ScheduleBuilder
         dd = split[2].to_i
         hh = split[3].to_i
         min = split[4].to_i
-        #FactoryGirl.create(:appointment, executive: new_executive, time: DateTime.new(yyyy, mm, dd, hh, min))
         FactoryGirl.create(:appointment, :time => Time.zone.parse("#{yyyy}-#{mm}-#{dd} #{hh}:#{mm}:00"))
       end
     end
@@ -146,7 +145,6 @@ class ScheduleBuilder
     if type == "add_appointment"
       executive = @executives[query["executive"]]
       split = query["time"].split ' '
-      #time = DateTime.new(split[0].to_i, split[1].to_i, split[2].to_i, split[3].to_i, split[4].to_i)
       time = Time.zone.parse("#{split[0].to_i}-#{split[1].to_i}-#{split[2].to_i} #{split[3].to_i}:#{split[4].to_i}")
       FactoryGirl.create(:appointment, executive: executive, time: time)
     end

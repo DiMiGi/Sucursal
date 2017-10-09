@@ -26,4 +26,6 @@ Rails.application.routes.draw do
   get '/appointments/:yyyy/:mm/:dd/branch_office/:branch_office_id/attention_type/:attention_type_id',
   to: 'appointments#get_available_times'
 
+  post '/appointments/schedule_appointment', to: 'appointments#schedule_appointment'
+
 end

@@ -2,8 +2,67 @@ class AppointmentsController < ApplicationController
 
   include Scheduling
 
+  def schedule_appointment
+
+    ActiveRecord::Base.transaction do
+
+      times = get_times
+
+      if times.has_key? :error
+        render :json => times, :status => :bad_request
+        return
+      end
+
+      # Si no hay ningun error, entonces proceder a realizar el agendamiento
+
+      attention_type_id = params[:attention_type_id].to_i
+      yyyy = params[:yyyy].to_i
+      mm = params[:mm].to_i
+      dd = params[:dd].to_i
+      hour = params[:hour].to_i
+      minutes = params[:minutes].to_i
+
+      min = (hh * 60) + mm
+
+      # Si el tiempo seleccionado no pertenece al conjunto de tiempos
+      # disponibles, o si el conjunto de ejecutivos para ese tiempo es vacio
+      # (lo cual no deberia pasar), entonces se arroja error.
+      if times.empty? || !(times.has_key? min) || times[min].empty?
+        msg = "La hora seleccionada no se encuentra disponible"
+        render :json => { :error => msg }, :status => :bad_request
+        return
+      end
+
+      executive_id = times[min].shuffle.first
+
+      Appointment.new(executive_id: executive_id,
+        attention_type_id: attention_type_id,
+        time: Time.zone.parse("#{yyyy}-#{mm}-#{dd} #{hour}:#{minutes}:00"),
+        client_id: params[:client_id].to_i)
+
+      render :json => { msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes}" }, :status => :ok
+      return
+
+    end
+
+  end
+
   def get_available_times
 
+    times = get_times
+
+    if times.has_key? :error
+      render :json => times, :status => :bad_request
+      return
+    end
+
+    render :json => { times: times.keys.sort }, :status => :ok
+
+  end
+
+  private
+
+  def get_times
     # Aca se debe implementar una politica de acceso. El usuario debe estar
     # autorizado para ejecutar esta accion. Como aun no se tiene la integracion
     # con el resto del sistema movistar, queda pendiente.
@@ -13,7 +72,7 @@ class AppointmentsController < ApplicationController
     # /url?client_id = 123
     # Tambien se deja como Pending en los rspec (pruebas unitarias).
 
-    client_id = params[:client_id]
+    client_id = params[:client_id].to_i
 
     # ------------------------------------------
 
@@ -32,8 +91,7 @@ class AppointmentsController < ApplicationController
       day = Time.zone.parse("#{yyyy}-#{mm}-#{dd}")
     rescue => e
       msg = "La fecha es incorrecta"
-      render :json => { :error => msg }, :status => :bad_request
-      return
+      return { :error => msg }
     end
 
 
@@ -50,52 +108,30 @@ class AppointmentsController < ApplicationController
 
     if already_has_appointment? client_id
       msg = "No se puede consultar el servicio de agendas porque ya tiene una hora agendada"
-      render :json => { :error => msg }, :status => :bad_request
-      return
+      return { :error => msg }
     end
 
     if day.beginning_of_day < tomorrow
       msg = "Solo se puede pedir citas comenzando desde el día de mañana"
-      render :json => { :error => msg }, :status => :bad_request
-      return
+      return { :error => msg }
     end
 
     if max_day < day.beginning_of_day
       msg = "Solo se puede pedir citas hasta #{range_days} días después comenzando desde el día de mañana"
-      render :json => { :error => msg }, :status => :bad_request
-      return
+      return { :error => msg }
     end
 
 
     # Obtengo todos los tiempos en donde es posible agendar una hora.
-    times = get_all_available_appointments(
+    return get_all_available_appointments(
       day: day.to_date,
       branch_office_id: branch_office_id,
       attention_type_id: attention_type_id)
 
-    # Dado que la funcion retorna todos los tiempos, pero cada tiempo contiene
-    # listas de las IDs de ejecutivos que tienen ese bloque libre, es necesario
-    # filtrar ese resultado, y entregarle al cliente solo los bloques, sin las
-    # IDs de los ejecutivos.
-    #
-    # Este es un ejemplo de resultado (pseudocodigo):
-    # {
-    #   480 -> [0, 1, 2]
-    #   500 -> [0]
-    #   510 -> [0, 2]
-    # }
-    # En donde el primer numero es la clave del Hash, que representa el bloque,
-    # en formato (hora*60)+minuto, y el valor correspondiente a esa clave
-    # es la lista de IDs de ejecutivos que lo tienen disponible.
-
-    only_times = times.keys
-    times.keys.sort!
-
-    render :json => { times: only_times }, :status => :ok
-
   end
 
-  private
+
+
 
   def already_has_appointment?(client_id)
     latest_appointment = Appointment.where(client_id: client_id).order("time DESC").first
