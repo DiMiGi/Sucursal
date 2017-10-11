@@ -42,14 +42,53 @@ class AppointmentsController < ApplicationController
 
       executive_id = times[min].shuffle.first
 
-      Appointment.new(staff_id: executive_id,
+      new_appointment = Appointment.new(staff_id: executive_id,
         time: Time.zone.parse("#{yyyy}-#{mm}-#{dd} #{hour}:#{minutes}:00"),
         client_id: client_id)
 
-      render :json => { msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes.to_s.rjust(2, "0")}" }, :status => :ok
+      if new_appointment.save
+        render :json => { msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes.to_s.rjust(2, "0")}" }, :status => :ok
+      else
+        render :json => { msg: "No se pudo agendar su hora" }, :status => :bad_request
+      end
+
+
     end
 
   end
+
+  def current_appointment
+
+    # La client_id se debe sacar a traves de la autenticacion, y no desde
+    # algun parametro pasado por la peticion, ya que se podria pasar cualquier
+    # ID, y no necesariamente la que es del cliente.
+
+    appointment = get_client_appointment(params[:client_id])
+
+    if appointment.nil?
+      render :json => { }, :status => :ok
+    else
+      render :json => appointment.to_json, :status => :ok
+    end
+  end
+
+  def cancel_appointment
+
+    appointment = get_client_appointment(params[:client_id])
+
+    if appointment.nil?
+      render :json => { error: "No tiene cita agendada actualmente" }, :status => :bad_request
+    end
+
+    appointment.status = :cancelled
+
+    if appointment.save
+      head :no_content
+    else
+      render :json => { error: "La cita no se pudo cancelar" }, :status => :bad_request
+    end
+  end
+
 
   def get_available_times
 
