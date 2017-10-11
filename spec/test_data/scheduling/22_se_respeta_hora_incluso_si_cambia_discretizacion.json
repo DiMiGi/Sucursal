@@ -1,0 +1,61 @@
+{
+
+  "comment": "Aca se verifica que por mas que cambien los valores de estimacion y discretizacion, las horas agendadas por otros clientes siempre estaran protegidas y nunca se agendaran otras horas encima. Esto se debe a la manera como se redondean los intervalos. En el rango que ocupa una cita, el punto final (el tiempo donde termina) es redondeado hacia arriba para marcar el comienzo del nuevo bloque disponible. Si este redondeo fuera hacia abajo, se le quitaria tiempo a la cita, por lo tanto no se podria hacer asi. Tambien influye la manera como se va obteniendo los bloques iterando desde el inicio de un rango y deteniendose cuando no hay mas espacio para una nueva cita.",
+
+  "branch_offices": [4],
+
+  "attention_types": 1,
+
+  "executives": [
+    { "branch_office": 0, "attention_type": 0, "appointments": [] }
+  ],
+
+  "duration_estimations": [
+    { "branch_office": 0, "attention_type": 0, "duration": 7 }
+  ],
+
+  "global_days_off": [],
+  "executive_days_off": [],
+  "branch_office_days_off": [],
+  "time_blocks": [
+    { "executive": 0, "weekday": 0, "hour": 8, "minutes": 0 },
+    { "executive": 0, "weekday": 0, "hour": 8, "minutes": 15 }
+  ],
+
+  "queries": [
+
+    { "type": "add_appointment", "executive": 0, "time": "2017 10 2 8 6" },
+
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:12", "ids": [0] },
+      { "time": "8:20", "ids": [0] }
+    ] },
+
+    { "type": "change_discretization", "branch_office": 0, "value": 5 },
+
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:15", "ids": [0] }
+    ] },
+
+    { "type": "change_discretization", "branch_office": 0, "value": 3 },
+
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:15", "ids": [0] }
+    ] },
+
+    { "type": "change_estimation", "branch_office": 0, "attention_type": 0, "value": 3 },
+
+    { "type": "assert_all", "attention_type": 0, "branch_office": 0, "day": "2017 10 2", "result": [
+      { "time": "8:00", "ids": [0] },
+      { "time": "8:09", "ids": [0] },
+      { "time": "8:12", "ids": [0] },
+      { "time": "8:15", "ids": [0] },
+      { "time": "8:18", "ids": [0] },
+      { "time": "8:21", "ids": [0] },
+      { "time": "8:24", "ids": [0] },
+      { "time": "8:27", "ids": [0] }
+    ] }
+
+  ]
+
+}
