@@ -32,4 +32,13 @@ RSpec.describe Executive, type: :model do
     expect{ executive.destroy! }.to change(TimeBlock, :count).by(-3)
   end
 
+  it "valida el traspaso de horas a un ejecutivo sin horas (el cual siempre existe)" do
+    appointments = FactoryGirl.create_list(:appointment, 4)
+    executive = FactoryGirl.create(:executive, appointments: appointments)
+    replacement_executive = FactoryGirl.create(:executive)
+    executive.reassign_appointments_to(replacement_executive)
+
+    expect(replacement_executive.appointments).to include(executive.appointments[0],executive.appointments[1],executive.appointments[2],executive.appointments[3])
+  end
+
 end
