@@ -1,6 +1,7 @@
 class Appointment < ApplicationRecord
 
   belongs_to :executive, foreign_key: 'staff_id'
+  belongs_to :staff_took_appointment, :class_name => 'Executive', foreign_key: 'staff_id',  optional: true
   validates_presence_of :executive
   validates_presence_of :time
   validates_presence_of :client_id

@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.integer "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "staff_took_appointment_id"
     t.index ["staff_id"], name: "index_appointments_on_staff_id"
   end
 

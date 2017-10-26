@@ -20,5 +20,6 @@ class CreateAppointments < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
+    add_reference :appointments, :staff_took_appointment, index: false
   end
 end
