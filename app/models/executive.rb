@@ -5,7 +5,6 @@ class Executive < Staff
   belongs_to :attention_type, optional: true
   has_many :time_blocks, dependent: :delete_all
   has_many :appointments, :foreign_key => "staff_id"
-  has_many :staff_took_appointment, :class_name => "Appointment", :foreign_key => "staff_id"
   has_many :days_off, class_name: "ExecutiveDayOff", dependent: :delete_all, :foreign_key => "staff_id"
 
   validates_presence_of :branch_office
@@ -15,7 +14,7 @@ class Executive < Staff
   def reassign_appointments_to(replacement_executive)
     return false if !replacement_executive.is_a?(Executive)
     return false if !can_assign_appointmnets_to?(replacement_executive)
-    add_appointments_to(replacement_executive, appointments)
+    add_appointments_to(replacement_executive, self.appointments)
     return replacement_executive.save
   end
 

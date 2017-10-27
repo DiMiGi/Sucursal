@@ -1,10 +1,11 @@
 class Appointment < ApplicationRecord
 
-  belongs_to :executive, foreign_key: 'staff_id'
-  belongs_to :staff_took_appointment, :class_name => 'Executive', foreign_key: 'staff_id',  optional: true
+  belongs_to :executive,:class_name => 'Executive', foreign_key: 'staff_id'
+  belongs_to :staff_took_appointment, :class_name => 'Staff', foreign_key: 'staff_took_appointment_id',  optional: true
   validates_presence_of :executive
   validates_presence_of :time
   validates_presence_of :client_id
+  validate :tooked_appointment_valid?
 
   enum status: [ :normal, :cancelled ]
 
@@ -28,6 +29,19 @@ class Appointment < ApplicationRecord
     min = value * (min/value)
     time = time.change(min: min)
     return time
+  end
+
+  def finalize_appointment(staff_who_attend)
+    self.finished_time = Time.zone.now
+    self.staff_took_appointment = staff_who_attend
+    self.save
+  end
+
+  def tooked_appointment_valid?
+    return true if staff_took_appointment.nil?
+    if executive.branch_office != staff_took_appointment.branch_office
+      errors.add(:staff_took_appointment,"El ejecutivo que toma la hora debe pertenecer a la misma sucursal")
+    end
   end
 
 
