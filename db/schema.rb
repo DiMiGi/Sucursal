@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171025214224) do
+ActiveRecord::Schema.define(version: 20171002213522) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -67,11 +67,6 @@ ActiveRecord::Schema.define(version: 20171025214224) do
 
   create_table "regions", force: :cascade do |t|
     t.string "name", limit: 60, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "reports", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
