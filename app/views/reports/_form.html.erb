@@ -11,7 +11,19 @@
     </div>
   <% end %>
 
+  <div class="field">
+    <%= f.label :generar_archivo_desde %>
+    <%= f.date_select :fecha_inicio %>
+  </div>
+
+  <div class="field">
+    <%= f.label :generar_archivo_hasta %>
+    <%= f.date_select :fecha_fin %>
+  </div>
+
   <div class="actions">
     <%= form.submit %>
   </div>
+
+
 <% end %>
