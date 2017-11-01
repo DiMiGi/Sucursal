@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   get '/settings', to: 'settings#index'
   put '/settings', to: 'settings#update'
 
+
+
   resources :staff
 
   scope :branch_offices do
@@ -17,7 +19,8 @@ Rails.application.routes.draw do
     put ':id/time_blocks', to: 'staff#update_time_blocks'
   end
 
-
+  get '/staff/appointments/reassing', to: 'staff#new_reassign_appointments_to_executive'
+  post '/staff/appointments/reassing', to: 'staff#reassign_appointments_to_executive'
 
   scope :api do
 

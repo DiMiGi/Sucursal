@@ -1,0 +1,44 @@
+<form id="reassign-appointment-to-executive-form" class="row" action="<%=staff_appointments_reassing_path%>" method="post">
+  <input type="hidden"
+       value="<%= form_authenticity_token() %>"
+       name="authenticity_token"/>
+  <div class="col-md-12">
+    <h2>Reasignar horas de ejecutivos</h2>
+  </div>
+
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="content-box-large box-with-header">
+
+          <div class="form-group" title="Seleccione al ejecutivo al que se le reemplazará su carga horaria" rel="tooltip">
+            <label for="names" class="col-2 col-form-label">Quitar asignaciones de horas a</label>
+            <div class="col-10">
+              <select class="form-control" name="executives_appointment_taked_away" id="names_out">
+                <option value="" disabled selected>Seleccione un ejecutivo</option>
+                <%= options_from_collection_for_select(@ejecutivos, :id, :full_name) %>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" title="Seleccione al ejecutivo al que se le agregará la carga horaria" rel="tooltip">
+            <label for="names" class="col-2 col-form-label">Agregar asignaciones de horas a</label>
+            <div class="col-10">
+              <select class="form-control" name="executives_appointment_putted_in" id="names_in">
+                <option value="" disabled selected>Seleccione un ejecutivo</option>
+                <%= options_from_collection_for_select(@ejecutivos, :id, :full_name, @ejecutivo_seleccionado) %>
+              </select>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <button type="submit" class="btn btn-primary" id="save-assignment">Reasignar carga horaria</button> <span style="display: none;" class="glyphicon glyphicon-refresh spinning"></span>
+  </div>
+
+</form>

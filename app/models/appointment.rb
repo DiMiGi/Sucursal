@@ -2,6 +2,7 @@ class Appointment < ApplicationRecord
 
   belongs_to :executive,:class_name => 'Executive', foreign_key: 'staff_id'
   belongs_to :staff_took_appointment, :class_name => 'Staff', foreign_key: 'staff_took_appointment_id',  optional: true
+  belongs_to :staff_owner_appointment, :class_name => 'Staff', foreign_key: 'staff_owner_appointment_id',  optional: true
   validates_presence_of :executive
   validates_presence_of :time
   validates_presence_of :client_id
@@ -10,6 +11,12 @@ class Appointment < ApplicationRecord
   enum status: [ :normal, :cancelled ]
 
   after_validation :auto_discretization
+  after_create :assign_owner
+
+  def assign_owner
+    self.staff_owner_appointment = self.executive
+    self.save
+  end
 
 
   # Pasar un argumento de tipo Date, y retorna los appointments (citas) que hayan

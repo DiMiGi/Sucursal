@@ -5,6 +5,7 @@ class CreateAppointments < ActiveRecord::Migration[5.1]
       t.integer :status, null: false, default: 0
       t.belongs_to :staff, index: true
       t.belongs_to :staff, :staff_took_appointment, index: false
+      t.belongs_to :staff, :staff_owner_appointment, index: false
       t.datetime :time, null: false
       t.datetime :finished_time
 

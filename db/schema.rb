@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.integer "status", default: 0, null: false
     t.integer "staff_id"
     t.integer "staff_took_appointment_id"
+    t.integer "staff_owner_appointment_id"
     t.datetime "time", null: false
     t.datetime "finished_time"
     t.integer "client_id"
