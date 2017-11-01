@@ -4,62 +4,108 @@ class ReportsController < ApplicationController
   # GET /reports
   # GET /reports.json
   def index
-    @reports = Report.all
+    require 'pp'
+    @citas = Appointment.all
+    puts "resultado: "
+    pp @citas
   end
+
+def create 
+  puts "AHHHHHHHHHHHHHH"
+  #Falta agregar la fecha y la hora - No pude trabajar los datos del date_select
+  fechaHoraAppo = params[:fyh_solicitudes]
+  fechaHoraCanc = params[:fyh_cancelaciones]
+  duracion = params[:duracion_a]
+  tipoA = params[:tipos_a]
+  tipoC = params[:tipo_confirmacion]
+  horaC = params[:hora_confirmacion]
+  if !fechaHoraAppo.nil?
+    @csv = Appointment.select("time")
+  end
+  if !fechaHoraCanc.nil?
+    @csv = Appointment.select("time").where("status = 1")
+  end
+  if !duracion.nil?
+    @csv = DurationEstimation.select("duration")
+  end
+  respond_to do |format|
+    format.html
+    format.csv { render text: @csv.to_csv }
+  end
+
+
+end
+
+
+
+
+
+
+
+
+
+
 
   # GET /reports/1
   # GET /reports/1.json
-  def show
-  end
+  
+  #def show
+  #end
 
   # GET /reports/new
-  def new
-    @report = Report.new
-  end
+  #def new
+  #  @report = Report.new
+  #end
 
   # GET /reports/1/edit
-  def edit
-  end
+  #def edit
+  #end
 
   # POST /reports
   # POST /reports.json
-  def create
-    @report = Report.new(report_params)
+  
 
-    respond_to do |format|
-      if @report.save
-        format.html { redirect_to @report, notice: 'Report was successfully created.' }
-        format.json { render :show, status: :created, location: @report }
-      else
-        format.html { render :new }
-        format.json { render json: @report.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  #def create
+  #  @report = Report.new(report_params)
+
+  #  respond_to do |format|
+  #    if @report.save
+  #      format.html { redirect_to @report, notice: 'Report was successfully created.' }
+   #     format.json { render :show, status: :created, location: @report }
+  #    else
+  #      format.html { render :new }
+  #      format.json { render json: @report.errors, status: :unprocessable_entity }
+  #    end
+  #  end
+  #end
 
   # PATCH/PUT /reports/1
   # PATCH/PUT /reports/1.json
-  def update
-    respond_to do |format|
-      if @report.update(report_params)
-        format.html { redirect_to @report, notice: 'Report was successfully updated.' }
-        format.json { render :show, status: :ok, location: @report }
-      else
-        format.html { render :edit }
-        format.json { render json: @report.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  
+
+  #def update
+  #  respond_to do |format|
+  #    if @report.update(report_params)
+  #      format.html { redirect_to @report, notice: 'Report was successfully updated.' }
+  #      format.json { render :show, status: :ok, location: @report }
+  #    else
+  #      format.html { render :edit }
+  #      format.json { render json: @report.errors, status: :unprocessable_entity }
+  #    end
+  #  end
+  #end
 
   # DELETE /reports/1
   # DELETE /reports/1.json
-  def destroy
-    @report.destroy
-    respond_to do |format|
-      format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  
+
+  #def destroy
+  #  @report.destroy
+  #  respond_to do |format|
+  #    format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
+  #    format.json { head :no_content }
+  #  end
+  #end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -1,9 +1,65 @@
+    
+<%= form_for :report do |f| %> 
+
 <p id="notice"><%= notice %></p>
 
-<h1>Reports</h1>
+<h1>Generación de reportes </h1>
 
+<i>Parametros a consultar:</i>
 
+  <div class="field">
+    <%= f.label :desde %>
+    <%= f.date_select :desde %>
+  </div>
+  <div class="field">
+    <%= f.label :hasta %>
+    <%= f.date_select :hasta %>
+  </div>
+
+  <div class="field">
+    <%= check_box_tag "fyh_solicitudes" , "false"%>
+    <%= f.label :Fecha_y_hora_solicitudes %>
+  </div> 
+
+  <div class="field">
+    <%= check_box_tag "fyh_atenciones" , "false"%>
+    <%= f.label :Fecha_y_hora_atenciones %>
+  </div>
+
+  <div class="field">
+    <%= check_box_tag "fyh_cancelaciones", "false" %>
+    <%= f.label :Fecha_y_hora_cancelaciones %>
+  </div>
+
+  <div class="field">
+    <%= check_box_tag "duracion_a",  "false" %>
+    <%= f.label :duracion_atenciones %>
+  </div>
+
+  <div class="field">
+    <%= check_box_tag "tipos_s" %>
+    <%= f.label :Tipos_solicitud %>
+  </div>
+
+  <div class="field">
+    <%= check_box_tag "tipos_a"%>
+    <%= f.label :Tipos_atencion %>
+  </div>
+
+  <div class="field">
+    <%= check_box_tag "tipo_confirmacion" %>
+    <%= f.label :Tipos_confirmaciones %>
+  </div>
+
+  <div class="field">
+    <%= check_box_tag "hora_confirmacion" %>
+    <%= f.label :Fecha_y_hora_atenciones %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Generar CSV",  :class => "btn btn-primary"%>
+  </div>
 
 <br>
-
+<%end%>
 
