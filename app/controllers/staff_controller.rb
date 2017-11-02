@@ -98,11 +98,12 @@ class StaffController < ApplicationController
   end  
 
   def edit
-
+    @staff = Staff.find(params[:id])
+    
   end
   
   def select
-    @staff = Staff.all
+    @staffs = Staff.all
   end
 
 
