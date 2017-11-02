@@ -19,9 +19,21 @@ class BranchOfficesController < ApplicationController
 
     offices = BranchOffice.all
 
-    filtered = []
+    with_distance = []
 
-    render :json => filtered, :status => :ok
+    lat = params[:latitude].to_f
+    lon = params[:longitude].to_f
+
+    offices.each do |o|
+      h = Hash.new
+      h[:distance] = o.distance(longitude: lon, latitude: lat)
+      h[:office] = o
+      with_distance << h
+    end
+
+    with_distance.sort_by! { |o| o[:distance] }
+
+    render :json => with_distance.slice(0, 5), :status => :ok
 
   end
 

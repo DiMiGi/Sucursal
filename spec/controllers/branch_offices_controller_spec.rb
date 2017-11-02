@@ -2,6 +2,58 @@ require 'rails_helper'
 
 RSpec.describe BranchOfficesController, type: :controller do
 
+  describe "accion para entregar las sucursales mas cercanas" do
+
+    before(:all) do
+      BranchOffice.destroy_all
+    end
+
+    it "entrega un maximo de 5" do
+      get :nearest, params: { latitude: 10, longitude: 20 }
+      res = JSON.parse response.body
+      expect(res.length).to eq 0
+
+      FactoryGirl.create :branch_office
+      FactoryGirl.create :branch_office
+
+      get :nearest, params: { latitude: 10, longitude: 20 }
+      res = JSON.parse response.body
+      expect(res.length).to eq 2
+
+      7.times do
+        FactoryGirl.create :branch_office
+      end
+
+      get :nearest, params: { latitude: 10, longitude: 20 }
+      res = JSON.parse response.body
+      expect(res.length).to eq 5
+
+    end
+
+    it "las ordena por distancia" do
+
+      50.times do
+        FactoryGirl.create :branch_office
+      end
+
+      lat = [3.434, 1.2323, -23.3443, 56.3434, -3.3433, 45.343]
+      lon = [1.434, 522, 12, -85, 0, 1.55]
+
+      lat.length.times do |i|
+        get :nearest, params: { latitude: lat[i], longitude: lon[i] }
+        res = JSON.parse response.body
+        expect(res.length).to eq 5
+
+        dist = res[0]['distance']
+        res.each do |r|
+          expect(r['distance'] >= dist).to be true
+          dist = r['distance']
+        end
+      end
+    end
+
+  end
+
   describe "modificacion de las estimaciones que le da una sucursal a un tipo de atencion" do
 
     before(:all) do

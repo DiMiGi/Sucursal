@@ -26,7 +26,7 @@ class BranchOffice < ApplicationRecord
     d_lat = latitude - self.latitude
     d_lon = longitude - self.longitude
 
-    Math.sqrt((d_lat**2) - (d_lon**2))
+    Math.sqrt((d_lat**2) + (d_lon**2))
   end
 
 end

@@ -8,8 +8,8 @@ FactoryGirl.define do
 
     association :comuna
 
-    latitude -33.396434
-    longitude -70.562218
+    latitude { rand(-30..30) }
+    longitude { rand(-30..30) }
 
   end
 end
