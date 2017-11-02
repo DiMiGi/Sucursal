@@ -1,0 +1,24 @@
+<h2> Modificacion de usuario </h2>
+
+<table class="table"> 
+<thead>
+	<tr>
+		<th>Nombre</th>
+		<th>Email</th>
+		<th>Apellido Paterno </th>
+		<th>Apellido Materno </th>
+		<th colspan="1"></th>
+	</tr>
+</thead>
+<tbody>
+	<%@staff.each do |usuario| %>
+		<tr>
+			<td><%= usuario.names %></td>
+			<td><%= usuario.email %></td>
+			<td><%= usuario.first_surname %></td>
+			<td><%= usuario.second_surname %></td>
+			<td><%= link_to 'Editar', edit_staff_path(usuario)%></td>
+		</tr>
+	<% end %>
+</tbody>
+</table>

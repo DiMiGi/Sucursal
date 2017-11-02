@@ -172,5 +172,50 @@ RSpec.describe Appointment, type: :model do
     end
   end
 
+  it "valida asignacion de usuario que atiende a cliente" do
+
+    first_office = FactoryGirl.build(:branch_office)
+    second_office = FactoryGirl.build(:branch_office)
+
+    supervisor = FactoryGirl.build(:supervisor, :branch_office => first_office)
+    manager = FactoryGirl.build(:manager, :branch_office => first_office)
+
+    first_executive = FactoryGirl.build(:executive, :branch_office => first_office)
+    second_executive = FactoryGirl.build(:executive, :branch_office => first_office)
+    third_executive = FactoryGirl.build(:executive, :branch_office => second_office)
+
+    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => second_executive)
+    expect(appointment_valid).to be_valid
+    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => first_executive)
+    expect(appointment_valid).to be_valid
+    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => manager)
+    expect(appointment_valid).to be_valid
+    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => supervisor)
+    expect(appointment_valid).to be_valid
+    appointment_not_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => third_executive)
+    expect(appointment_not_valid).to_not be_valid
+  end
+
+  it "valida finalizacion de hora por cada usuario" do
+    first_office = FactoryGirl.create(:branch_office)
+
+    first_executive = FactoryGirl.create(:executive, :branch_office => first_office)
+
+    second_executive = FactoryGirl.create(:executive, :branch_office => first_office)
+    supervisor = FactoryGirl.build(:supervisor, :branch_office => first_office)
+    manager = FactoryGirl.build(:manager, :branch_office => first_office)
+
+    appointment = FactoryGirl.create(:appointment,:executive => first_executive, client_id: 1000)
+
+    appointment.finalize_appointment(second_executive)
+    expect(Appointment.find(appointment.id).staff_took_appointment).to eq second_executive
+
+    appointment.finalize_appointment(supervisor)
+    expect(Appointment.find(appointment.id).staff_took_appointment).to eq supervisor
+
+    appointment.finalize_appointment(manager)
+    expect(Appointment.find(appointment.id).staff_took_appointment).to eq manager
+  end
+
 
 end

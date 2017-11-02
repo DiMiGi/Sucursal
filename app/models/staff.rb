@@ -8,6 +8,8 @@ class Staff < ApplicationRecord
   auto_strip_attributes :first_surname, :squish => true
   auto_strip_attributes :second_surname, :squish => true
 
+  has_many :staff_took_appointment, :class_name => "Appointment", :foreign_key => "staff_took_appointment_id"
+
   validates_length_of :names, :minimum => 1
   validates_length_of :first_surname, :minimum => 1
   validates_presence_of :type

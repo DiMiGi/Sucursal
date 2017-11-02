@@ -4,7 +4,10 @@ class CreateAppointments < ActiveRecord::Migration[5.1]
 
       t.integer :status, null: false, default: 0
       t.belongs_to :staff, index: true
+      t.belongs_to :staff, :staff_took_appointment, index: false
+      t.belongs_to :staff, :staff_owner_appointment, index: false
       t.datetime :time, null: false
+      t.datetime :finished_time
 
       # No tiene llave foranea, por el hecho de que se encuentra en otra
       # base de datos. Esto se puede cambiar dependiendo de como se lleve
@@ -20,5 +23,6 @@ class CreateAppointments < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
+    #add_reference :appointments, :staff_took_appointment, index: false
   end
 end

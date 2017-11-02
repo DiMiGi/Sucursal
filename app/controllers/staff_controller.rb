@@ -65,6 +65,47 @@ class StaffController < ApplicationController
   end
 
 
+  def new_reassign_appointments_to_executive
+    if current_staff.executive?
+      raise Pundit::NotAuthorizedError
+    end
+
+    # Encontrar ejecutios de la misma sucursal
+    @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office)
+
+  end
+
+  def reassign_appointments_to_executive
+    if current_staff.executive?
+      raise Pundit::NotAuthorizedError
+    end
+
+    executive_to_take_appointments_out = Executive.find(params[:executives_appointment_taked_away].to_i)
+    executive_to_put_appointments_in = Executive.find(params[:executives_appointment_putted_in].to_i)
+
+    puts "||", executive_to_take_appointments_out.id, "=>" , executive_to_put_appointments_in.id, "||"
+
+    if executive_to_take_appointments_out.reassign_appointments_to(executive_to_put_appointments_in)
+      render :json => {}, :status => :ok
+    else
+      render :json => {}, :status => :not_modified
+    end
+
+  end
+
+  def show
+
+  end  
+
+  def edit
+
+  end
+  
+  def select
+    @staff = Staff.all
+  end
+
+
   private
   def set_staff
     @staff = Staff.find(params[:id])

@@ -1,11 +1,14 @@
 Rails.application.routes.draw do
 
+  resources :reports
   devise_for :staff
 
   root to: 'home#index'
 
   get '/settings', to: 'settings#index'
   put '/settings', to: 'settings#update'
+
+
 
   resources :staff
 
@@ -17,7 +20,11 @@ Rails.application.routes.draw do
     put ':id/time_blocks', to: 'staff#update_time_blocks'
   end
 
+  get '/staff/appointments/reassing', to: 'staff#new_reassign_appointments_to_executive'
+  post '/staff/appointments/reassing', to: 'staff#reassign_appointments_to_executive'
 
+  get '/staff/editar/select', to: 'staff#select'
+  post '/staff/edtar/select', to: 'staff#select'
 
   scope :api do
 
