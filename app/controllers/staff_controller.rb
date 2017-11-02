@@ -94,18 +94,30 @@ class StaffController < ApplicationController
   end
 
   def show
-
+    puts "AHHHHHHHH"
   end  
 
   def edit
     @staff = Staff.find(params[:id])
-    
   end
   
   def select
     @staffs = Staff.all
   end
 
+  def update
+    staff = Staff.find(params[:id])
+    nombre = params[:executive][:names]
+    papellido = params[:executive][:first_surname]
+    sapellido = params[:executive][:second_surname]
+    email = params[:executive][:email]
+    staff.update(names: nombre)
+    staff.update(first_surname: papellido)
+    staff.update(second_surname: sapellido)
+    staff.update(email: email)
+    redirect_to action: "select"
+
+  end 
 
   private
   def set_staff
