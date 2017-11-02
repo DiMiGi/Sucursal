@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :reports
   devise_for :staff
 
   root to: 'home#index'
