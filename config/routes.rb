@@ -23,6 +23,9 @@ Rails.application.routes.draw do
   get '/staff/appointments/reassing', to: 'staff#new_reassign_appointments_to_executive'
   post '/staff/appointments/reassing', to: 'staff#reassign_appointments_to_executive'
 
+  get '/staff/editar/select', to: 'staff#select'
+  post '/staff/edtar/select', to: 'staff#select'
+
   scope :api do
 
     # Servicio que entrega un JSON con regiones, y en cada region, sus comunas,
