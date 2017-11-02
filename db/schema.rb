@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.string "address", limit: 60, null: false
     t.integer "comuna_id"
     t.integer "minute_discretization", default: 5, null: false
+    t.float "latitude", null: false
+    t.float "longitude", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["comuna_id"], name: "index_branch_offices_on_comuna_id"

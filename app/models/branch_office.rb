@@ -21,4 +21,12 @@ class BranchOffice < ApplicationRecord
     @branch_office = "#{self.address}, #{comuna.name}, #{region.name}"
   end
 
+  def distance(latitude:, longitude:)
+
+    d_lat = latitude - self.latitude
+    d_lon = longitude - self.longitude
+
+    Math.sqrt((d_lat**2) - (d_lon**2))
+  end
+
 end

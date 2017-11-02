@@ -26,6 +26,13 @@ RSpec.describe BranchOffice, type: :model do
     expect(office.address).to eq 'a b c d'
   end
 
+  it "calcula la distancia correctamente" do
+    b = FactoryGirl.create(:branch_office, latitude: 10, longitude: 10)
+    expect(b.distance(latitude: 20, longitude: 10)).to eq 10
+    expect(b.distance(latitude: 10, longitude: 10)).to eq 0
+    expect(b.distance(latitude: 19, longitude: 10)).to eq 9
+  end
+
 
   context 'con estimaciones sobre tipos de atencion' do
 

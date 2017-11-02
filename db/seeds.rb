@@ -28,15 +28,15 @@ end
 
 metropolitana.save!
 
-bo1 = BranchOffice.create!(address: 'Calle Principal #123', comuna_id: metropolitana.comunas[3].id)
-bo2 = BranchOffice.create!(address: 'Paseo Bulnes #456', comuna_id: metropolitana.comunas[6].id)
-bo3 = BranchOffice.create!(address: 'Av. Providencia #789', comuna_id: metropolitana.comunas[10].id)
-bo4 = BranchOffice.create!(address: 'Autopista Central #101', comuna_id: metropolitana.comunas[20].id)
-bo5 = BranchOffice.create!(address: 'Avenida Alameda #777', comuna_id: metropolitana.comunas[20].id)
+bo1 = BranchOffice.create!(address: 'Calle Principal #123', comuna_id: metropolitana.comunas[3].id, latitude: -33.451736, longitude: -70.679012)
+bo2 = BranchOffice.create!(address: 'Paseo Bulnes #456', comuna_id: metropolitana.comunas[6].id, latitude: -33.446222, longitude: -70.660666)
+bo3 = BranchOffice.create!(address: 'Av. Providencia #789', comuna_id: metropolitana.comunas[10].id, latitude: -33.436410, longitude: -70.632342)
+bo4 = BranchOffice.create!(address: 'Autopista Central #101', comuna_id: metropolitana.comunas[20].id, latitude: -33.421152, longitude: -70.606850)
+bo5 = BranchOffice.create!(address: 'Avenida Alameda #777', comuna_id: metropolitana.comunas[20].id, latitude: -33.396434, longitude: -70.562218)
 
-bo6 = BranchOffice.create!(address: 'Miguel Ramirez #123', comuna_id: ohiggins.comunas[0].id)
-bo7 = BranchOffice.create!(address: 'Araucana #789', comuna_id: ohiggins.comunas[0].id)
-bo8 = BranchOffice.create!(address: 'Carretera del Cobre #456', comuna_id: ohiggins.comunas[1].id)
+bo6 = BranchOffice.create!(address: 'Miguel Ramirez #123', comuna_id: ohiggins.comunas[0].id, latitude: -33.520386, longitude: -70.614575)
+bo7 = BranchOffice.create!(address: 'Araucana #789', comuna_id: ohiggins.comunas[0].id, latitude: -33.501636, longitude: -70.690449)
+bo8 = BranchOffice.create!(address: 'Carretera del Cobre #456', comuna_id: ohiggins.comunas[1].id, latitude: -33.465270, longitude: -70.752419)
 
 ex1 = Executive.create!(branch_office: bo1, names: "juan andres", first_surname: "valdes", second_surname: "vasquez", email: 'juan@mail.com', password: '123123', password_confirmation: '123123')
 ex2 = Executive.create!(branch_office: bo1, names: "juan jose", first_surname: "valdes", second_surname: "rios", email: 'juan.jose@mail.com', password: '123123', password_confirmation: '123123')

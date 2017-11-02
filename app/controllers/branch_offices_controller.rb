@@ -1,6 +1,6 @@
 class BranchOfficesController < ApplicationController
 
-  before_action :authenticate_staff!, :except => [:get_by_location]
+  before_action :authenticate_staff!, :except => [:get_by_location, :nearest]
   before_action :set_branch_office, only: [:update_attention_types_estimations]
 
   def pundit_user
@@ -9,6 +9,20 @@ class BranchOfficesController < ApplicationController
 
 
   def index
+  end
+
+  def nearest
+
+    if !params.has_key?(:latitude) || !params.has_key?(:longitude)
+      render :json => { error: "Necesita los parametros latitude y longitude." }, :status => :bad_request
+    end
+
+    offices = BranchOffice.all
+
+    filtered = []
+
+    render :json => filtered, :status => :ok
+
   end
 
   #
