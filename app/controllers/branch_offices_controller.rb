@@ -27,7 +27,10 @@ class BranchOfficesController < ApplicationController
     offices.each do |o|
       h = Hash.new
       h[:distance] = o.distance(longitude: lon, latitude: lat)
-      h[:office] = o
+      h[:full_address] = o.full_address
+      h[:id] = o.id
+      h[:latitude] = o.latitude
+      h[:longitude] = o.longitude
       with_distance << h
     end
 

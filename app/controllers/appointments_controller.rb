@@ -2,6 +2,8 @@ class AppointmentsController < ApplicationController
 
   include Scheduling
 
+   skip_before_action :verify_authenticity_token
+
   def schedule_appointment
 
     ActiveRecord::Base.transaction do
@@ -68,7 +70,7 @@ class AppointmentsController < ApplicationController
     if appointment.nil?
       render :json => { }, :status => :ok
     else
-      render :json => appointment.to_json, :status => :ok
+      render :json => appointment.to_json(:include => { :executive => {:include => :branch_office}}), :status => :ok
     end
   end
 
