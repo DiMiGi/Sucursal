@@ -91,8 +91,18 @@ class StaffController < ApplicationController
       render :json => {}, :status => :not_modified
     end
 
+  end
 
+  def show
 
+  end  
+
+  def edit
+
+  end
+  
+  def select
+    @staff = Staff.all
   end
 
 

@@ -82,8 +82,13 @@
                     <li><a href="<%= new_staff_path %>"><i class="glyphicon glyphicon-user"></i> Crear usuario</a></li>
                     <% end %>
 
+       
                     <% if current_staff.admin? || current_staff.manager? || current_staff.supervisor?%>
                     <li><a href="<%= staff_appointments_reassing_path %>"><i class="glyphicon glyphicon-user"></i> Reasignar citas de ejecutivo</a></li>
+                    <% end %>
+
+                    <% if current_staff.admin? || current_staff.manager? || current_staff.supervisor?%>
+                    <li><a href="<%= reports_path %>"><i class="glyphicon glyphicon-list-alt"></i> Generar reportes</a></li>
                     <% end %>
 
                     <% if current_staff.admin? %>
