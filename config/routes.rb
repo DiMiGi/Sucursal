@@ -12,6 +12,9 @@ Rails.application.routes.draw do
 
   resources :staff
 
+  post '/staff/:id/edit', to: 'staff#edit'
+  post '/staff/:id',  to: 'staff#show'
+
   scope :branch_offices do
     put ':id/attention_types', to: 'branch_offices#update_attention_types_estimations'
   end

@@ -1,4 +1,4 @@
-<h2> Modificacion de usuario </h2>
+<h2> Edición de usuario </h2>
 
 <table class="table"> 
 <thead>
@@ -11,13 +11,13 @@
 	</tr>
 </thead>
 <tbody>
-	<%@staff.each do |usuario| %>
+	<%@staffs.each do |staff| %>
 		<tr>
-			<td><%= usuario.names %></td>
-			<td><%= usuario.email %></td>
-			<td><%= usuario.first_surname %></td>
-			<td><%= usuario.second_surname %></td>
-			<td><%= link_to 'Editar', edit_staff_path(usuario)%></td>
+			<td><%= staff.names %></td>
+			<td><%= staff.email %></td>
+			<td><%= staff.first_surname %></td>
+			<td><%= staff.second_surname %></td>
+			<td><%= link_to 'Editar', edit_staff_path(staff)%></td>
 		</tr>
 	<% end %>
 </tbody>

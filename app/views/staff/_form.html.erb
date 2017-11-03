@@ -1,0 +1,27 @@
+<%= form_for :staff do |f| %>
+
+  <div class="field">
+    <%= f.label :nombre %>
+    <%= f.text_field :names %>
+  </div>
+
+  <div class="field">
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+  </div>
+
+  <div class="field">
+    <%= f.label :apellido_paterno %>
+    <%= f.text_field :first_surname %>
+  </div>  
+
+  <div class="field">
+    <%= f.label :apellido_materno %>
+    <%= f.text_field :second_surname %>
+  </div>  
+
+</div>
+  <div class="actions">
+    <%= f.submit "Actualizar usuario" %>
+  </div>
+<% end %>

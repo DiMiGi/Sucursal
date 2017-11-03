@@ -8,42 +8,19 @@ class ReportsController < ApplicationController
     @citas = Appointment.all
     puts "resultado: "
     pp @citas
+    
   end
 
 def create 
   puts "AHHHHHHHHHHHHHH"
   #Falta agregar la fecha y la hora - No pude trabajar los datos del date_select
-  fechaHoraAppo = params[:fyh_solicitudes]
-  fechaHoraCanc = params[:fyh_cancelaciones]
-  duracion = params[:duracion_a]
-  tipoA = params[:tipos_a]
-  tipoC = params[:tipo_confirmacion]
-  horaC = params[:hora_confirmacion]
-  if !fechaHoraAppo.nil?
-    @csv = Appointment.select("time")
-  end
-  if !fechaHoraCanc.nil?
-    @csv = Appointment.select("time").where("status = 1")
-  end
-  if !duracion.nil?
-    @csv = DurationEstimation.select("duration")
-  end
-  respond_to do |format|
+  @csv = Appointment.all
+    respond_to do |format|
     format.html
     format.csv { render text: @csv.to_csv }
   end
 
-
 end
-
-
-
-
-
-
-
-
-
 
 
   # GET /reports/1

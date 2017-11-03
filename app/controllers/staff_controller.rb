@@ -71,7 +71,13 @@ class StaffController < ApplicationController
     end
 
     # Encontrar ejecutios de la misma sucursal
-    @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office)
+
+
+    if(current_staff.supervisor?)
+      @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office,:attention_type => current_staff.attention_type)
+    else
+      @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office)
+    end
 
   end
 
@@ -83,28 +89,40 @@ class StaffController < ApplicationController
     executive_to_take_appointments_out = Executive.find(params[:executives_appointment_taked_away].to_i)
     executive_to_put_appointments_in = Executive.find(params[:executives_appointment_putted_in].to_i)
 
-    puts "||", executive_to_take_appointments_out.id, "=>" , executive_to_put_appointments_in.id, "||"
-
     if executive_to_take_appointments_out.reassign_appointments_to(executive_to_put_appointments_in)
-      render :json => {}, :status => :ok
+      flash[:notice] = "Appointments successfully assigned"
+      redirect_to "/staff/appointments/reassing"
     else
-      render :json => {}, :status => :not_modified
+      flash[:notice] = "Appointments wasn't assigned"
+      redirect_to "/staff/appointments/reassing"
     end
 
   end
 
   def show
 
-  end  
+  end
 
   def edit
-
+    @staff = Staff.find(params[:id])
   end
-  
+
   def select
-    @staff = Staff.all
+    @staffs = Staff.all
   end
 
+  def update
+    staff = Staff.find(params[:id])
+    nombre = params[:admin][:names]
+    papellido = params[:admin][:first_surname]
+    sapellido = params[:admin][:second_surname]
+    email = params[:admin][:email]
+    staff.update(names: nombre)
+    staff.update(first_surname: papellido)
+    staff.update(second_surname: sapellido)
+    staff.update(email: email)
+    redirect_to action: "select"
+  end  
 
   private
   def set_staff

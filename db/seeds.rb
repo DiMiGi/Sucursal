@@ -67,10 +67,8 @@ end
 ex1.save!
 ex2.save!
 
-=begin
-Appointment.create!(executive: ex1,client_id: 1000,time: Time.zone.local(2018, 1, 1, 14, 0))
-Appointment.create!(executive: ex1,client_id: 1200,time: Time.zone.local(2018, 1, 6, 14, 0))
-Appointment.create!(executive: ex1,client_id: 1300,time: Time.zone.local(2018, 1, 7, 14, 0))
-Appointment.create!(executive: ex2,client_id: 1000,time: Time.zone.local(2018, 1, 2, 14, 0))
-Appointment.create!(executive: ex2,client_id: 1100,time: Time.zone.local(2018, 1, 4, 14, 0))
-=end
+Appointment.create!(executive: ex1,client_id: 1000,time: Time.zone.local(2017, 11, 15, 14, 0))
+Appointment.create!(executive: ex1,client_id: 1200,time: Time.zone.local(2017, 11, 6, 14, 0))
+Appointment.create!(executive: ex1,client_id: 1300,time: Time.zone.local(2017, 11, 7, 14, 0))
+Appointment.create!(executive: ex2,client_id: 1000,time: Time.zone.local(2017, 11, 2, 14, 0))
+Appointment.create!(executive: ex2,client_id: 1100,time: Time.zone.local(2017, 11, 4, 14, 0))
