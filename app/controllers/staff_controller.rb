@@ -107,15 +107,16 @@ class StaffController < ApplicationController
 
   def update
     staff = Staff.find(params[:id])
-    nombre = params[:executive][:names]
-    papellido = params[:executive][:first_surname]
-    sapellido = params[:executive][:second_surname]
-    email = params[:executive][:email]
+    nombre = params[:admin][:names]
+    papellido = params[:admin][:first_surname]
+    sapellido = params[:admin][:second_surname]
+    email = params[:admin][:email]
     staff.update(names: nombre)
     staff.update(first_surname: papellido)
     staff.update(second_surname: sapellido)
     staff.update(email: email)
     redirect_to action: "select"
+    
 
   end 
 

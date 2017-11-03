@@ -82,6 +82,10 @@
                     <li><a href="<%= new_staff_path %>"><i class="glyphicon glyphicon-user"></i> Crear usuario</a></li>
                     <% end %>
 
+                    <% if current_staff.admin? || current_staff.manager? %>
+                    <li><a href=/staff/editar/select><i class="glyphicon glyphicon-user"></i> Editar usuario</a></li>
+                    <% end %>
+
        
                     <% if current_staff.admin? || current_staff.manager? || current_staff.supervisor?%>
                     <li><a href="<%= staff_appointments_reassing_path %>"><i class="glyphicon glyphicon-user"></i> Reasignar citas de ejecutivo</a></li>
@@ -93,9 +97,7 @@
 
                     <% if current_staff.admin? %>
                     <li><a href="<%= settings_path %>"><i class="glyphicon glyphicon-cog"></i> Configuración global</a></li>
-                    <li><a href="calendar.html"><i class="glyphicon glyphicon-record"></i> Admin menu 1</a></li>
-                    <li><a href="stats.html"><i class="glyphicon glyphicon-tasks"></i> Admin menu 2</a></li>
-                    <li><a href="tables.html"><i class="glyphicon glyphicon-pencil"></i> Admin menu 3</a></li>
+                    
                     <% end %>
 
                     <li class="submenu">
