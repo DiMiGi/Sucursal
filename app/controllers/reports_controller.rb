@@ -6,13 +6,13 @@ class ReportsController < ApplicationController
   def index
     require 'pp'
     @citas = Appointment.all
-    puts "resultado: "
-    pp @citas
-    
+    #puts "resultado: "
+    #pp @citas
+
   end
 
-def create 
-  puts "AHHHHHHHHHHHHHH"
+def create
+  #puts "AHHHHHHHHHHHHHH"
   #Falta agregar la fecha y la hora - No pude trabajar los datos del date_select
   @csv = Appointment.all
     respond_to do |format|
@@ -25,7 +25,7 @@ end
 
   # GET /reports/1
   # GET /reports/1.json
-  
+
   #def show
   #end
 
@@ -40,7 +40,7 @@ end
 
   # POST /reports
   # POST /reports.json
-  
+
 
   #def create
   #  @report = Report.new(report_params)
@@ -58,7 +58,7 @@ end
 
   # PATCH/PUT /reports/1
   # PATCH/PUT /reports/1.json
-  
+
 
   #def update
   #  respond_to do |format|
@@ -74,7 +74,7 @@ end
 
   # DELETE /reports/1
   # DELETE /reports/1.json
-  
+
 
   #def destroy
   #  @report.destroy
