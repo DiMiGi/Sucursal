@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   resources :reports
+  resources :appointment, :controller=>:appointments
   devise_for :staff
 
   root to: 'home#index'
@@ -8,7 +9,7 @@ Rails.application.routes.draw do
   get '/settings', to: 'settings#index'
   put '/settings', to: 'settings#update'
 
-
+  put '/appointment/:id/finalize', to: 'appointments#finalize_appointment', as: 'finalize_appointment', controller: 'AppointmentsController'
 
   resources :staff
 
@@ -27,7 +28,10 @@ Rails.application.routes.draw do
   post '/staff/appointments/reassing', to: 'staff#reassign_appointments_to_executive'
 
   get '/staff/editar/select', to: 'staff#select'
-  post '/staff/edtar/select', to: 'staff#select'
+  post '/staff/editar/select', to: 'staff#select'
+
+  get '/staff/show/appointments/until/:days', to: 'staff#show_appointments', as: 'staff_show_appointments'
+
 
   scope :api do
 

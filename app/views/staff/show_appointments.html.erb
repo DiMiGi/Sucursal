@@ -1,0 +1,26 @@
+<h2> Appointments </h2>
+
+<table class="table">
+<thead>
+	<tr>
+		<th>Hora agendada</th>
+		<th>Cliente</th>
+		<th>Propietario de la hora </th>
+		<th>Tipologia </th>
+    <th>Estado </th>
+		<th colspan="1"></th>
+	</tr>
+</thead>
+<tbody>
+	<%@appointments.each do |appoint| %>
+		<tr>
+			<td><%= appoint.time %></td>
+			<td><%= appoint.client_id %></td>
+			<td><%= appoint.staff_owner_appointment.full_name %></td>
+			<td><%= appoint.staff_owner_appointment.attention_type.name %></td>
+      <td><%= appoint.status %></td>
+			<td><%= link_to 'Ver', appointment_path(appoint)%></td>
+		</tr>
+	<% end %>
+</tbody>
+</table>

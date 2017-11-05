@@ -64,6 +64,14 @@ class StaffController < ApplicationController
     render :json => {}, :status => :ok
   end
 
+  def show_appointments
+    if !current_staff.executive?
+      raise Pundit::NotAuthorizedError
+    end
+
+    @appointments = current_staff.appointments.where(:time => DateTime.current.beginning_of_day..DateTime.current.end_of_day.advance(:days => params[:days].to_i))
+
+  end
 
   def new_reassign_appointments_to_executive
     if current_staff.executive?
@@ -71,7 +79,6 @@ class StaffController < ApplicationController
     end
 
     # Encontrar ejecutios de la misma sucursal
-
 
     if(current_staff.supervisor?)
       @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office,:attention_type => current_staff.attention_type)
