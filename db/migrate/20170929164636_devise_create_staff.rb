@@ -36,6 +36,8 @@ class DeviseCreateStaff < ActiveRecord::Migration[5.1]
       t.string :first_surname
       t.string :second_surname
 
+      t.integer :assignment_show_until_days, default: 1
+
       t.timestamps null: false
     end
 

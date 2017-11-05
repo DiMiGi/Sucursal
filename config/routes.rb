@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   resources :staff
 
   post '/staff/:id/edit', to: 'staff#edit'
-  post '/staff/:id',  to: 'staff#show'
+  post '/staff/save_perfil', to: 'staff#staff_save_perfil', as: 'modify_perfil'
 
   scope :branch_offices do
     put ':id/attention_types', to: 'branch_offices#update_attention_types_estimations'

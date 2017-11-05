@@ -64,6 +64,22 @@ class StaffController < ApplicationController
     render :json => {}, :status => :ok
   end
 
+  def staff_save_perfil
+    was_saved = true
+    if params[:assignment_show_until_days]
+      current_staff.assignment_show_until_days = params[:assignment_show_until_days].to_i
+      was_saved = was_saved && current_staff.save
+    end
+
+    if was_saved
+      flash[:notice] = "Perfil saved"
+      redirect_to "/staff/#{current_staff.id}"
+    else
+      flash[:notice] = "Perfil not saved"
+      redirect_to "/staff/#{current_staff.id}"
+    end
+  end
+
   def show_appointments
     if !current_staff.executive?
       raise Pundit::NotAuthorizedError
@@ -129,7 +145,7 @@ class StaffController < ApplicationController
     staff.update(second_surname: sapellido)
     staff.update(email: email)
     redirect_to action: "select"
-  end  
+  end
 
   private
   def set_staff

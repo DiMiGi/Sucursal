@@ -1,0 +1,16 @@
+<form id="perfil_form" class="row" action="<%=modify_perfil_path%>" method="post">
+  <h2> Perfil </h2>
+  <input type="hidden"
+       value="<%= form_authenticity_token() %>"
+       name="authenticity_token"/>
+  <div>
+    <tr>
+  		<td>Cambiar las citas que se pueden ver a: </td>
+      <td> <input name="assignment_show_until_days" type="number" min="1" value="<%= current_staff.assignment_show_until_days %>"> </input> </td>
+      <td> dias</td>
+    </tr>
+  </div>
+  <div class="col-md-12">
+    <button type="submit" class="btn btn-primary" id="save-perfil">Guardar</button> <span style="display: none;" class="glyphicon glyphicon-refresh spinning"></span>
+  </div>
+</form>

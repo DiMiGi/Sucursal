@@ -92,7 +92,7 @@
                     <% end %>
 
                     <% if current_staff.executive?%>
-                    <li><a href="<%= staff_show_appointments_path(current_staff.assignment_show_times) %>"><i class="glyphicon glyphicon-user"></i> ver citas</a></li>
+                    <li><a href="<%= staff_show_appointments_path(current_staff.assignment_show_until_days) %>"><i class="glyphicon glyphicon-user"></i> ver citas</a></li>
                     <% end %>
 
                     <% if current_staff.admin? || current_staff.manager? || current_staff.supervisor?%>
@@ -111,7 +111,7 @@
                        </a>
                        <!-- Sub menu -->
                        <ul>
-                         <li><a href="profile.html">Cuenta</a></li>
+                         <li><a href="<%= staff_path(current_staff) %>">Cuenta</a></li>
                          <li><%= link_to 'Cerrar sesión', :destroy_staff_session %></li>
                       </ul>
                   </li>
