@@ -8,8 +8,9 @@ RSpec.describe Appointment, type: :model do
     expect(FactoryGirl.build(:appointment, :status => :cancelled)).to be_valid
     expect(FactoryGirl.build(:appointment, :status => 0)).to be_valid
     expect(FactoryGirl.build(:appointment, :status => 1)).to be_valid
+    expect(FactoryGirl.build(:appointment, :status => 2)).to be_valid
 
-    expect{FactoryGirl.build(:appointment, :status => 2)}.to raise_error ArgumentError
+    expect{FactoryGirl.build(:appointment, :status => 3)}.to raise_error ArgumentError
     expect{FactoryGirl.build(:appointment, :status => :invalid_qwerty)}.to raise_error ArgumentError
 
     expect(FactoryGirl.build(:appointment, :executive => nil)).to_not be_valid
