@@ -17,7 +17,7 @@ def create
   @csv = Appointment.all
     respond_to do |format|
     format.html
-    format.csv { render text: @csv.to_csv }
+    format.csv { send_data @csv.to_csv }
   end
 
 end
