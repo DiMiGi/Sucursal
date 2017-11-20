@@ -1,0 +1,26 @@
+<h2> Cita </h2>
+
+<table class="table">
+<thead>
+	<tr>
+		<th>Estado</th>
+		<th>Cliente</th>
+		<th>Propietario de la hora </th>
+		<th>Ejecutivo de atención </th>
+    <th>Hora inicio </th>
+    <th>Hora término </th>
+		<th colspan="1"></th>
+	</tr>
+</thead>
+<tbody>
+		<tr>
+			<td><%=@appointment.status%></td>
+			<td><%=@appointment.client_id%></td>
+			<td><%=@appointment.staff_owner_appointment.full_name%></td>
+			<td><%=@appointment.staff_took_appointment.full_name if @appointment.staff_took_appointment%></td>
+      <td><%=@appointment.time%></td>
+      <td><%=@appointment.finished_time%></td>
+			<td><%= link_to 'Finalizar', finalize_appointment_path(params[:id]), method: :put%></td>
+		</tr>
+</tbody>
+</table>

@@ -8,7 +8,7 @@ class Appointment < ApplicationRecord
   validates_presence_of :client_id
   validate :tooked_appointment_valid?
 
-  enum status: [ :normal, :cancelled ]
+  enum status: [ :normal, :cancelled, :finalized ]
 
   after_validation :auto_discretization
   after_create :assign_owner
@@ -40,6 +40,7 @@ class Appointment < ApplicationRecord
 
   def finalize_appointment(staff_who_attend)
     self.finished_time = Time.zone.now
+    self.status = :finalized
     self.staff_took_appointment = staff_who_attend
     self.save
   end

@@ -74,7 +74,7 @@ var BranchOfficeSelector = function(jQueryObj){
 
 
   $.ajax({
-    url: "/regions/comunas/branch_offices",
+    url: "/api/regions/comunas/branch_offices",
     method: 'GET',
     success: function(res){
       offices = res;

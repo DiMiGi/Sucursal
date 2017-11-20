@@ -2,7 +2,22 @@ class AppointmentsController < ApplicationController
 
   include Scheduling
 
-   skip_before_action :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
+
+  def show
+    @appointment = Appointment.find(params[:id])
+  end
+
+  def finalize_appointment
+    was_finalized = Appointment.find(params[:id]).finalize_appointment(current_staff)
+    if was_finalized
+      flash[:notice] = "Appointment successfully finalized"
+      redirect_to "/appointment/"+params[:id]
+    else
+      flash[:notice] = "Appointment wasn't finalized"
+      redirect_to "/appointment/"+params[:id]
+    end
+  end
 
   def schedule_appointment
 
@@ -90,7 +105,6 @@ class AppointmentsController < ApplicationController
       render :json => { error: "La cita no se pudo cancelar" }, :status => :bad_request
     end
   end
-
 
   def get_available_times
 

@@ -64,6 +64,30 @@ class StaffController < ApplicationController
     render :json => {}, :status => :ok
   end
 
+  def staff_save_perfil
+    was_saved = true
+    if params[:assignment_show_until_days]
+      current_staff.assignment_show_until_days = params[:assignment_show_until_days].to_i
+      was_saved = was_saved && current_staff.save
+    end
+
+    if was_saved
+      flash[:notice] = "Perfil saved"
+      redirect_to "/staff/#{current_staff.id}"
+    else
+      flash[:notice] = "Perfil not saved"
+      redirect_to "/staff/#{current_staff.id}"
+    end
+  end
+
+  def show_appointments
+    if !current_staff.executive?
+      raise Pundit::NotAuthorizedError
+    end
+
+    @appointments = current_staff.appointments.where(:time => DateTime.current.beginning_of_day..DateTime.current.end_of_day.advance(:days => params[:days].to_i))
+
+  end
 
   def new_reassign_appointments_to_executive
     if current_staff.executive?
@@ -71,7 +95,6 @@ class StaffController < ApplicationController
     end
 
     # Encontrar ejecutios de la misma sucursal
-
 
     if(current_staff.supervisor?)
       @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office,:attention_type => current_staff.attention_type)
@@ -122,7 +145,7 @@ class StaffController < ApplicationController
     staff.update(second_surname: sapellido)
     staff.update(email: email)
     redirect_to action: "select"
-  end  
+  end
 
   private
   def set_staff

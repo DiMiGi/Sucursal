@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.string "names"
     t.string "first_surname"
     t.string "second_surname"
+    t.integer "assignment_show_until_days", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "branch_office_id"
