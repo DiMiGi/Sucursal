@@ -136,7 +136,7 @@ class StaffController < ApplicationController
 
   def update
     staff = Staff.find(params[:id])
-    nombre = params[:names]
+    nombre = params[:nombre]
     papellido = params[:first_surname]
     sapellido = params[:second_surname]
     email = params[:email]
