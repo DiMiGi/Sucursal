@@ -3,8 +3,8 @@
 <%= form_for @staff, :url => {:action => "update"}  do |f| %>
 
   <div class="field">
-    <%= f.label :nombre %>
-    <%= f.text_field :names %>
+    <%= f.label :nombre  %>
+    <%= f.text_field :names, :name => "nombre" %>
   </div>
   <div class="field">
     <%= f.label :contraseña %>
@@ -12,12 +12,12 @@
   </div>
   <div class="field">
     <%= f.label :apellido_paterno %>
-    <%= f.text_field :first_surname %>
+    <%= f.text_field :first_surname, :name => "first_surname" %>
   </div>  
 
   <div class="field">
     <%= f.label :apellido_materno %>
-    <%= f.text_field :second_surname %>
+    <%= f.text_field :second_surname, :name => "second_surname" %>
   </div>   
   <div class="actions">
     <%= f.submit "Actualizar usuario" %>
