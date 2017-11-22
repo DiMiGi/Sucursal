@@ -135,7 +135,6 @@ class StaffController < ApplicationController
   end
 
   def update
-    #probando integracion
     staff = Staff.find(params[:id])
     nombre = params[:nombre]
     papellido = params[:first_surname]
