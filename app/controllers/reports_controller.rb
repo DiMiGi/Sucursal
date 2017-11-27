@@ -15,10 +15,14 @@ def create
   #puts "AHHHHHHHHHHHHHH"
   #Falta agregar la fecha y la hora - No pude trabajar los datos del date_select
   @csv = Appointment.all
+  puts @csv
     respond_to do |format|
     format.html
     format.csv { send_data @csv.to_csv }
+    flash[:notice] = "Report created"
+    redirect_to "/reports"
   end
+
 
 end
 
