@@ -6,11 +6,9 @@ class Report < ApplicationRecord
   	puts attributes
     CSV.generate(headers: true) do |csv|
       puts "AHHHHHHHHHHHHH"
-      csv << column_names
-      puts csv
+      csv << attributes
       Appointment.all.each do |cita|
-        csv << cita.attributes.values_at(*column_names)
-        puts cita.attributes.values_at(*column_names)
+        csv << cita.attributes.values
       end
     end
   end

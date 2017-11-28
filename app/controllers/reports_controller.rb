@@ -16,6 +16,7 @@ def create
   #Falta agregar la fecha y la hora - No pude trabajar los datos del date_select
   
   puts @csv
+    Report.to_csv
     respond_to do |format|
     format.html
     format.csv { send_data Report.to_csv }
