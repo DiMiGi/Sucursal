@@ -23,10 +23,19 @@ class BranchOffice < ApplicationRecord
 
   def distance(latitude:, longitude:)
 
-    d_lat = latitude - self.latitude
-    d_lon = longitude - self.longitude
+    d_lat = deg2rad(latitude - self.latitude)
+    d_lon = deg2rad(longitude - self.longitude)
 
-    Math.sqrt((d_lat**2) + (d_lon**2))
+    a = Math.sin(d_lat/2) * Math.sin(d_lat/2) + Math.cos(deg2rad(latitude)) * Math.cos(deg2rad(self.latitude)) * Math.sin(d_lon/2) * Math.sin(d_lon/2)
+
+    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+
+    # R = 6371 => radio de la tierra en Km
+    distanciaEnKm = 6371 * c
+  end
+
+  def deg2rad(grados)
+    return grados * (Math::PI/180)
   end
 
 end

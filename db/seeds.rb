@@ -72,3 +72,21 @@ Appointment.create!(executive: ex1,client_id: 1200,time: Time.zone.local(2017, 1
 Appointment.create!(executive: ex1,client_id: 1300,time: Time.zone.local(2017, 11, 7, 14, 0))
 Appointment.create!(executive: ex2,client_id: 1000,time: Time.zone.local(2017, 11, 2, 14, 0))
 Appointment.create!(executive: ex2,client_id: 1100,time: Time.zone.local(2017, 11, 4, 14, 0))
+
+
+a = BranchOffice.create!(:comuna => Comuna.find(26), :address => "Nueva Maria Angelica 6437", :latitude => -33.509240, :longitude => -70.526862)
+DurationEstimation.create!(:branch_office => a, :attention_type => AttentionType.find(1), :duration => 13)
+b = Executive.create!(:branch_office => a, attention_type_id: 1, names: "jose miguel", first_surname: "valdes", second_surname: "vasquez", email: 'josem@mail.com', password: '123123', password_confirmation: '123123')
+for i in [0,1,2,3,4,5,6]
+	for j in [8,9,10,11,12,13,14]
+		for k in [0,15,30,45]
+			b.time_blocks << TimeBlock.new(:weekday => i, :hour => j, :minutes => k)
+			if(j == 14)
+				break
+			end
+		end
+	end
+end
+
+a.save!
+b.save!
