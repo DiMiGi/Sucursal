@@ -20,6 +20,11 @@ class AppointmentsController < ApplicationController
     end
   end
 
+  def confirm_appointment
+
+    render json: {}, status: :ok
+  end
+
   def schedule_appointment
 
     ActiveRecord::Base.transaction do
