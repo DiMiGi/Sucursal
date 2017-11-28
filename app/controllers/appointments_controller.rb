@@ -1,6 +1,7 @@
 class AppointmentsController < ApplicationController
 
   include Scheduling
+  include Notification
 
   skip_before_action :verify_authenticity_token
 
@@ -64,7 +65,12 @@ class AppointmentsController < ApplicationController
         client_id: client_id)
 
       if new_appointment.save
-        render :json => { msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes.to_s.rjust(2, "0")}" }, :status => :ok
+        render :json => {
+
+          msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes.to_s.rjust(2, "0")}",
+          notifications: create_notifications(start: DateTime.now.to_date, finish: new_appointment.time, quantity: 3)
+
+          }, :status => :ok
       else
         render :json => { msg: "No se pudo agendar su hora" }, :status => :bad_request
       end
