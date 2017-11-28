@@ -133,7 +133,8 @@ RSpec.describe AppointmentsController, type: :controller do
     it "agenda la hora correctamente" do
       FactoryGirl.create(:time_block, executive: @executive, hour: 14, minutes: 15, weekday: 0)
       post :schedule_appointment, params: @params
-      expect(response.body).to eq({ msg: "La hora ha sido correctamente agendada a las 14:15" }.to_json)
+      res = JSON.parse response.body
+      expect(res["msg"]).to eq "La hora ha sido correctamente agendada a las 14:15"
       expect(response).to have_http_status :ok
     end
 
@@ -142,7 +143,8 @@ RSpec.describe AppointmentsController, type: :controller do
       @params[:hour] = 8
       @params[:minutes] = 0
       post :schedule_appointment, params: @params
-      expect(response.body).to eq({ msg: "La hora ha sido correctamente agendada a las 8:00" }.to_json)
+      res = JSON.parse response.body
+      expect(res["msg"]).to eq "La hora ha sido correctamente agendada a las 8:00"
       expect(response).to have_http_status :ok
     end
 
