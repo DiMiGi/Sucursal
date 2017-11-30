@@ -44,13 +44,22 @@ class AppointmentsController < ApplicationController
       dd = params[:dd].to_i
       hour = params[:hour].to_i
       minutes = params[:minutes].to_i
-      client_id = params[:client_id].to_i
 
-      if client_id.nil? || !(client_id.is_a? Integer) || client_id < 0
+      validadorCliente = params[:cliente]
+
+      # FALTA VALIDACION DE SI client_id ES RUT
+      if (validadorCliente.nil?)
         msg = "El cliente a efectuar el agendamiento no existe"
         render :json => { :error => msg }, :status => :bad_request
         return
       end
+
+      client_id = params[:cliente][:clientId]
+      client_names = params[:cliente][:clientNames]
+      client_email = params[:cliente][:clientEmail]
+
+
+
 
       min = (hour * 60) + minutes
 
@@ -67,7 +76,7 @@ class AppointmentsController < ApplicationController
 
       new_appointment = Appointment.new(staff_id: executive_id,
         time: Time.zone.parse("#{yyyy}-#{mm}-#{dd} #{hour}:#{minutes}:00"),
-        client_id: client_id)
+        client_id: client_id, client_names: client_names, client_email: client_email)
 
       if new_appointment.save
         render :json => {
@@ -91,7 +100,7 @@ class AppointmentsController < ApplicationController
     # algun parametro pasado por la peticion, ya que se podria pasar cualquier
     # ID, y no necesariamente la que es del cliente.
 
-    appointment = get_client_appointment(params[:client_id])
+    appointment = get_client_appointment(params[:cliente][:clientId])
 
     if appointment.nil?
       render :json => { }, :status => :ok
@@ -102,7 +111,7 @@ class AppointmentsController < ApplicationController
 
   def cancel_appointment
 
-    appointment = get_client_appointment(params[:client_id])
+    appointment = get_client_appointment(params[:cliente][:clientId])
 
     if appointment.nil?
       render :json => { error: "No tiene cita agendada actualmente" }, :status => :bad_request
@@ -142,7 +151,7 @@ class AppointmentsController < ApplicationController
     # /url?client_id = 123
     # Tambien se deja como Pending en los rspec (pruebas unitarias).
 
-    client_id = params[:client_id].to_i
+    client_id = params[:cliente][:clientId].to_s
 
     # ------------------------------------------
 

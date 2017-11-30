@@ -17,7 +17,10 @@ RSpec.describe AppointmentsController, type: :controller do
 
   before(:all) do
     @params = {
-      client_id: 12,
+      cliente:{
+        client_id: "12",
+        client_names: "nombre completo"
+      },
       branch_office_id: 12,
       attention_type_id: 55,
       yyyy: 2017
@@ -43,14 +46,17 @@ RSpec.describe AppointmentsController, type: :controller do
         dd: 9,
         hour: 14,
         minutes: 15,
-        client_id: 1,
+        cliente:{
+          clientId: "1",
+          clientNames: "nombre completo"
+        },
         attention_type_id: @attention_type_id,
         branch_office_id: @branch_office_id
       }
     end
 
     it "cuando pide su hora actual, entrega al cliente un JSON vacio si no tiene hora agendada" do
-      get :current_appointment, params: { client_id: 166 }
+      get :current_appointment, params: { cliente: { clientId: "166" }}
       expect(response.body).to eq({}.to_json)
       expect(response).to have_http_status :ok
     end
@@ -59,12 +65,12 @@ RSpec.describe AppointmentsController, type: :controller do
     it "cuando pide su hora actual, entrega al cliente la cita actual que tiene" do
 
       FactoryGirl.create(:time_block, executive: @executive, hour: 14, minutes: 15, weekday: 0)
-      @params[:client_id] = 166
+      @params[:cliente][:clientId] = "166"
       post :schedule_appointment, params: @params
 
-      get :current_appointment, params: { client_id: 166 }
+      get :current_appointment, params: { cliente: { clientId: "166" }}
       json = JSON.parse response.body
-      expect(json["client_id"]).to eq(166)
+      expect(json["client_id"]).to eq("166")
       expect(json["staff_id"]).to eq(@executive.id)
       expect(json["time"]).to include "2017-10-09"
       expect(json["time"]).to include "14:15:00"
@@ -76,14 +82,14 @@ RSpec.describe AppointmentsController, type: :controller do
 
       # Creo una cita
       FactoryGirl.create(:time_block, executive: @executive, hour: 14, minutes: 45, weekday: 0)
-      @params[:client_id] = 200
+      @params[:cliente][:clientId] = "200"
       @params[:minutes] = 45
       post :schedule_appointment, params: @params
 
       # Obtengo la cita, y verifico que es la que pedi
-      get :current_appointment, params: { client_id: 200 }
+      get :current_appointment, params: { cliente: { clientId: "200" }}
       json = JSON.parse response.body
-      expect(json["client_id"]).to eq(200)
+      expect(json["client_id"]).to eq("200")
       expect(json["staff_id"]).to eq(@executive.id)
       expect(json["time"]).to include "2017-10-09"
       expect(json["time"]).to include "14:45:00"
@@ -95,7 +101,7 @@ RSpec.describe AppointmentsController, type: :controller do
 
       # Cancelo la cita, y verifico que la cantidad de citas en estado "normal" disminuye en uno
       expect {
-        delete :cancel_appointment, params: { client_id: 200 }
+        delete :cancel_appointment, params: { cliente: { clientId: "200" }}
       }.to change(Appointment, :count).by 0
 
       expect(response).to have_http_status :no_content
@@ -103,7 +109,7 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(Appointment.where(status: :cancelled).count).to eq(count_cancelled + 1)
 
       # Obtengo la cita actual, y el cliente no tiene ninguna agendada
-      get :current_appointment, params: { client_id: 200 }
+      get :current_appointment, params: { cliente: { clientId: "200" }}
       expect(response.body).to eq({}.to_json)
       expect(response).to have_http_status :ok
 
@@ -116,12 +122,13 @@ RSpec.describe AppointmentsController, type: :controller do
       expect(response.body).to eq({ error: "La fecha es incorrecta" }.to_json)
     end
 
-    it "no acepta IDs negativas de clientes" do
-      @params[:client_id] = -1
-      post :schedule_appointment, params: @params
-      expect(response).to have_http_status :bad_request
-      expect(response.body).to eq({ error: "El cliente a efectuar el agendamiento no existe" }.to_json)
-    end
+    # NO APLICA DEBIDO AL CAMBIO DE ID POR STRING
+    #it "no acepta IDs negativas de clientes" do
+    #  @params[:cliente][:clientId] = -1
+    #  post :schedule_appointment, params: @params
+    #  expect(response).to have_http_status :bad_request
+    #  expect(response.body).to eq({ error: "El cliente a efectuar el agendamiento no existe" }.to_json)
+    #end
 
     it "arroja error indicando que el bloque seleccionado no se encuentra disponible" do
       FactoryGirl.create(:time_block, executive: @executive, hour: 14, minutes: 0, weekday: 0)
@@ -150,7 +157,7 @@ RSpec.describe AppointmentsController, type: :controller do
 
     it "prohibe al cliente agendar una hora si ya tiene una hora agendada, incluso si la hora pedida estaba correctamente pedida" do
       FactoryGirl.create(:time_block, executive: @executive, hour: 8, minutes: 0, weekday: 0)
-      FactoryGirl.create(:appointment, time: Time.zone.parse("2017-10-9 14:10:00"), client_id: 1)
+      FactoryGirl.create(:appointment, time: Time.zone.parse("2017-10-9 14:10:00"), client_id: "1")
       post :schedule_appointment, params: @params
       expect(response.body).to eq({ error: "No se puede consultar el servicio de agendas porque ya tiene una hora agendada" }.to_json)
       expect(response).to have_http_status :bad_request
@@ -176,33 +183,33 @@ RSpec.describe AppointmentsController, type: :controller do
       get :get_available_times, params: @params
       expect(response).to have_http_status :ok
       expect(response.body).to eq({ times: [] }.to_json)
-      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-08 23:59:59'))
+      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:cliente][:clientId], time: Time.zone.parse('2017-10-08 23:59:59'))
       get :get_available_times, params: @params
       expect(response.body).to eq({ error: @already_has_appointment_msg }.to_json)
       expect(response).to have_http_status :bad_request
     end
 
     it "si la hora que tiene agendada esta en el mismo dia de hoy, tambien se arroja el error de que no se puede pedir hora si tiene una agendada" do
-      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-05 23:59:59'))
+      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:cliente][:clientId], time: Time.zone.parse('2017-10-05 23:59:59'))
       get :get_available_times, params: @params
       expect(response.body).to eq({ error: @already_has_appointment_msg }.to_json)
       expect(response).to have_http_status :bad_request
     end
 
     it "entrega el listado de horas disponibles en caso que la ultima hora del cliente sea inferior al dia actual (lo cual hace que automaticamente se consideren expiradas)" do
-      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-04 23:59:59'))
+      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:cliente][:clientId], time: Time.zone.parse('2017-10-04 23:59:59'))
       get :get_available_times, params: @params
       expect(response.body).to eq({ times: [] }.to_json)
       expect(response).to have_http_status :ok
     end
 
     it "toma la hora con mayor tiempo (mas lejana en el futuro) como la hora a considerar para saber si tiene hora agendada o no" do
-      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-04 23:59:59'))
+      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:cliente][:clientId], time: Time.zone.parse('2017-10-04 23:59:59'))
       get :get_available_times, params: @params
       expect(response.body).to eq({ times: [] }.to_json)
       expect(response).to have_http_status :ok
 
-      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:client_id], time: Time.zone.parse('2017-10-06 23:59:59'))
+      @e.appointments << FactoryGirl.build(:appointment, client_id: @params[:cliente][:clientId], time: Time.zone.parse('2017-10-06 23:59:59'))
       get :get_available_times, params: @params
       expect(response.body).to eq({ error: @already_has_appointment_msg }.to_json)
       expect(response).to have_http_status :bad_request
@@ -220,41 +227,41 @@ RSpec.describe AppointmentsController, type: :controller do
     end
 
     it "obtiene la mas reciente" do
-      FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-06 15:00:00'))
-      FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-06 16:00:00'))
-      FactoryGirl.create(:appointment, client_id: 4, time: Time.zone.parse('2017-10-06 18:00:00'))
-      appointment = @ctrl.send(:get_client_appointment, 3)
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", time: Time.zone.parse('2017-10-06 15:00:00'))
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", time: Time.zone.parse('2017-10-06 16:00:00'))
+      FactoryGirl.create(:appointment, client_id: "4",client_names: "nombre completo", time: Time.zone.parse('2017-10-06 18:00:00'))
+      appointment = @ctrl.send(:get_client_appointment, "3")
       expect(appointment.time).to eq(Time.zone.parse '2017-10-06 16:00:00')
     end
 
     it "obtiene nil si hay solo canceladas" do
-      FactoryGirl.create(:appointment, client_id: 3, status: :cancelled, time: Time.zone.parse('2017-10-06 15:00:00'))
-      FactoryGirl.create(:appointment, client_id: 3, status: :cancelled, time: Time.zone.parse('2017-10-06 16:00:00'))
-      appointment = @ctrl.send(:get_client_appointment, 3)
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", status: :cancelled, time: Time.zone.parse('2017-10-06 15:00:00'))
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", status: :cancelled, time: Time.zone.parse('2017-10-06 16:00:00'))
+      appointment = @ctrl.send(:get_client_appointment, "3")
       expect(appointment).to be_nil
     end
 
     it "obtiene nil si hay solo expiradas" do
-      FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-03 15:00:00'))
-      FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-04 16:00:00'))
-      appointment = @ctrl.send(:get_client_appointment, 3)
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", time: Time.zone.parse('2017-10-03 15:00:00'))
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", time: Time.zone.parse('2017-10-04 16:00:00'))
+      appointment = @ctrl.send(:get_client_appointment, "3")
       expect(appointment).to be_nil
     end
 
     it "obtiene solo la mas reciente activa" do
-      FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-07 15:00:00'))
-      FactoryGirl.create(:appointment, client_id: 3, status: :cancelled,time: Time.zone.parse('2017-10-07 16:00:00'))
-      appointment = @ctrl.send(:get_client_appointment, 3)
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", time: Time.zone.parse('2017-10-07 15:00:00'))
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", status: :cancelled,time: Time.zone.parse('2017-10-07 16:00:00'))
+      appointment = @ctrl.send(:get_client_appointment, "3")
       expect(appointment.time).to eq Time.zone.parse('2017-10-07 15:00:00')
     end
 
     it "obtiene solo las que estan despues o igual a hoy" do
-      FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-04 15:00:00'))
-      FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-05 00:00:00'))
-      appointment = @ctrl.send(:get_client_appointment, 3)
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", time: Time.zone.parse('2017-10-04 15:00:00'))
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", time: Time.zone.parse('2017-10-05 00:00:00'))
+      appointment = @ctrl.send(:get_client_appointment, "3")
       expect(appointment.time).to eq Time.zone.parse('2017-10-05 00:00:00')
-      FactoryGirl.create(:appointment, client_id: 3, time: Time.zone.parse('2017-10-05 11:00:00'))
-      appointment = @ctrl.send(:get_client_appointment, 3)
+      FactoryGirl.create(:appointment, client_id: "3",client_names: "nombre completo", time: Time.zone.parse('2017-10-05 11:00:00'))
+      appointment = @ctrl.send(:get_client_appointment, "3")
       expect(appointment.time).to eq Time.zone.parse('2017-10-05 11:00:00')
     end
 

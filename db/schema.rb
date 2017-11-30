@@ -19,7 +19,9 @@ ActiveRecord::Schema.define(version: 20171002213522) do
     t.integer "staff_owner_appointment_id"
     t.datetime "time", null: false
     t.datetime "finished_time"
-    t.integer "client_id"
+    t.string "client_id", null: false
+    t.string "client_names", null: false
+    t.string "client_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["staff_id"], name: "index_appointments_on_staff_id"

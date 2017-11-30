@@ -19,7 +19,7 @@
 <tbody>
 		<tr>
 			<td><%=@appointment.status%></td>
-			<td><%=@appointment.client_id%></td>
+			<td><%=@appointment.client_names%></td>
 			<td><%=@appointment.staff_owner_appointment.full_name%></td>
 			<td><%=@appointment.staff_took_appointment.full_name if @appointment.staff_took_appointment%></td>
       <td><%=@appointment.time%></td>
@@ -28,5 +28,3 @@
 		</tr>
 </tbody>
 </table>
-
-

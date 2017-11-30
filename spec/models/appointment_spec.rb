@@ -23,7 +23,8 @@ RSpec.describe Appointment, type: :model do
     a = Appointment.new
     a.executive = e
     a.time = Time.current
-    a.client_id = 10000
+    a.client_id = "10000"
+    a.client_names = "José Manuel Jimenez"
     a.save!
     expect(a.status.to_sym).to eq :normal
   end
@@ -185,15 +186,15 @@ RSpec.describe Appointment, type: :model do
     second_executive = FactoryGirl.build(:executive, :branch_office => first_office)
     third_executive = FactoryGirl.build(:executive, :branch_office => second_office)
 
-    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => second_executive)
+    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: "1000", :staff_took_appointment => second_executive)
     expect(appointment_valid).to be_valid
-    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => first_executive)
+    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: "1000", :staff_took_appointment => first_executive)
     expect(appointment_valid).to be_valid
-    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => manager)
+    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: "1000", :staff_took_appointment => manager)
     expect(appointment_valid).to be_valid
-    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => supervisor)
+    appointment_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: "1000", :staff_took_appointment => supervisor)
     expect(appointment_valid).to be_valid
-    appointment_not_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: 1000, :staff_took_appointment => third_executive)
+    appointment_not_valid = FactoryGirl.build(:appointment,:executive => first_executive, client_id: "1000", :staff_took_appointment => third_executive)
     expect(appointment_not_valid).to_not be_valid
   end
 
@@ -206,7 +207,7 @@ RSpec.describe Appointment, type: :model do
     supervisor = FactoryGirl.build(:supervisor, :branch_office => first_office)
     manager = FactoryGirl.build(:manager, :branch_office => first_office)
 
-    appointment = FactoryGirl.create(:appointment,:executive => first_executive, client_id: 1000)
+    appointment = FactoryGirl.create(:appointment,:executive => first_executive, client_id: "1000")
 
     appointment.finalize_appointment(second_executive)
     expect(Appointment.find(appointment.id).staff_took_appointment).to eq second_executive

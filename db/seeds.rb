@@ -67,11 +67,11 @@ end
 ex1.save!
 ex2.save!
 
-Appointment.create!(executive: ex1,client_id: 1000,time: Time.zone.local(2017, 11, 15, 14, 0))
-Appointment.create!(executive: ex1,client_id: 1200,time: Time.zone.local(2017, 11, 6, 14, 0))
-Appointment.create!(executive: ex1,client_id: 1300,time: Time.zone.local(2017, 11, 7, 14, 0))
-Appointment.create!(executive: ex2,client_id: 1000,time: Time.zone.local(2017, 11, 2, 14, 0))
-Appointment.create!(executive: ex2,client_id: 1100,time: Time.zone.local(2017, 11, 4, 14, 0))
+Appointment.create!(executive: ex1,client_id: "1000-0",client_names: "Jorge Saavedra", client_email: "",time: Time.zone.local(2017, 12, 1, 14, 0))
+Appointment.create!(executive: ex1,client_id: "1200-1",client_names: "Sonia Pereira", client_email: "",time: Time.zone.local(2017, 12, 1, 15, 0))
+Appointment.create!(executive: ex1,client_id: "1300-k",client_names: "Jhon Schvaez", client_email: "",time: Time.zone.local(2017, 12, 4, 14, 0))
+Appointment.create!(executive: ex2,client_id: "1000-2",client_names: "Jorge Sandoval", client_email: "",time: Time.zone.local(2017, 12, 2, 14, 0))
+Appointment.create!(executive: ex2,client_id: "1100-3",client_names: "Pedro Rodriguez", client_email: "",time: Time.zone.local(2017, 12, 4, 14, 0))
 
 
 a = BranchOffice.create!(:comuna => Comuna.find(26), :address => "Nueva Maria Angelica 6437", :latitude => -33.509240, :longitude => -70.526862)

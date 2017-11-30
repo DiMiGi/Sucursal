@@ -12,7 +12,9 @@ class CreateAppointments < ActiveRecord::Migration[5.1]
       # No tiene llave foranea, por el hecho de que se encuentra en otra
       # base de datos. Esto se puede cambiar dependiendo de como se lleve
       # a cabo la integracion con el resto del sistema en Movistar.
-      t.integer :client_id
+      t.string :client_id, null: false
+      t.string :client_names, null: false
+      t.string :client_email, null: true
 
 
       # El modelo de BD tiene un "branch_office", pero eso se puede

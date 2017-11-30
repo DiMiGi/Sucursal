@@ -16,7 +16,7 @@
 	<%@appointments.each do |appoint| %>
 		<tr>
 			<td><%= appoint.time %></td>
-			<td><%= appoint.client_id %></td>
+			<td><%= appoint.client_names %></td>
 			<td><%= appoint.staff_owner_appointment.full_name %></td>
 			<td><%= appoint.staff_owner_appointment.attention_type.name %></td>
       <td><%= appoint.status %></td>

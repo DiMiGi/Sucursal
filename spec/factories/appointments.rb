@@ -3,7 +3,9 @@ FactoryGirl.define do
 
     association :executive
 
-    client_id 5
+    client_id "5"
+
+    client_names "José Tomás"
 
     status :normal
 
