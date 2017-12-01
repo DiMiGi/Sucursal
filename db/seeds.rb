@@ -26,12 +26,12 @@ bo1 = BranchOffice.create!(id: 1, address: 'Av. Americo Vespucio 1501, Los Cerri
 bo2 = BranchOffice.create!(id: 2, address: 'Bellas Artes 1234', comuna_id: metropolitana.comunas[1].id, latitude: -33.436539, longitude: -70.644306)
 
 ex1 = Executive.create!(branch_office: bo1, attention_type_id: 1, names: "juan andres", first_surname: "valdes", second_surname: "vasquez", email: 'juan@mail.com', password: '123123', password_confirmation: '123123')
-ex2 = Executive.create!(branch_office: bo1, attention_type_id: 1, names: "juan jose", first_surname: "valdes", second_surname: "rios", email: 'juan.jose@mail.com', password: '123123', password_confirmation: '123123')
-Executive.create!(branch_office: bo1, names: "pedro pablo", first_surname: "silva", second_surname: "osorio", email: 'pedro@mail.com', password: '123123', password_confirmation: '123123')
+ex2 = Executive.create!(branch_office: bo1, attention_type_id: 1, names: "juan jose", first_surname: "rios", second_surname: "rios", email: 'juan.jose@mail.com', password: '123123', password_confirmation: '123123')
+Executive.create!(branch_office: bo1, attention_type_id: 2, names: "pedro pablo", first_surname: "silva", second_surname: "osorio", email: 'pedro@mail.com', password: '123123', password_confirmation: '123123')
 Manager.create!(branch_office: bo2, names: "natalia belen", first_surname: "vilches", second_surname: "cespedes", email: 'natalia@mail.com', password: '123123', password_confirmation: '123123')
 Manager.create!(branch_office: bo1, names: "juan carlos", first_surname: "bodoque", second_surname: "bodoque", email: 'jcarlos@mail.com', password: '123123', password_confirmation: '123123')
 Supervisor.create!(branch_office: bo2, names: "pablo matias", first_surname: "Díaz de Valdés", second_surname: "pastene", email: 'pablo@mail.com', password: '123123', password_confirmation: '123123')
-Supervisor.create!(branch_office: bo2, names: "richard", first_surname: "li", email: 'carlos@mail.com', password: '123123', password_confirmation: '123123')
+Supervisor.create!(branch_office: bo1, attention_type_id: 1, names: "richard", first_surname: "li", email: 'carlos@mail.com', password: '123123', password_confirmation: '123123')
 
 Admin.create!(names: "rodrigo juan", first_surname: "martinez", second_surname: "un", email: 'admin@mail.com', password: '123123', password_confirmation: '123123')
 

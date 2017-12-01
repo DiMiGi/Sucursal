@@ -51,6 +51,8 @@ Rails.application.routes.draw do
 
     post '/appointments/schedule_appointment', to: 'appointments#schedule_appointment'
 
+    post '/appointments/reschedule_appointment', to: 'appointments#reschedule_appointment'
+
     post '/appointments/confirm_appointment', to: 'appointments#confirm_appointment'
 
     get '/appointments/current', to: 'appointments#current_appointment'

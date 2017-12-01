@@ -97,9 +97,9 @@ class StaffController < ApplicationController
     # Encontrar ejecutios de la misma sucursal
 
     if(current_staff.supervisor?)
-      @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office,:attention_type => current_staff.attention_type)
+      @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office_id,:attention_type => current_staff.attention_type_id)
     else
-      @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office)
+      @ejecutivos = Executive.all.where(:branch_office => current_staff.branch_office_id)
     end
 
   end

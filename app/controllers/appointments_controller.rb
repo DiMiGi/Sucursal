@@ -80,7 +80,6 @@ class AppointmentsController < ApplicationController
 
 
       if new_appointment.save
-        puts "============>s"
         render :json => {
 
           msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes.to_s.rjust(2, "0")}",
@@ -88,7 +87,6 @@ class AppointmentsController < ApplicationController
 
           }, :status => :ok
       else
-        puts "============>ns"
         render :json => { msg: "No se pudo agendar su hora" }, :status => :bad_request
       end
 
@@ -109,6 +107,29 @@ class AppointmentsController < ApplicationController
       render :json => { }, :status => :ok
     else
       render :json => appointment.to_json(:include => { :executive => {:include => :branch_office}}), :status => :ok
+    end
+  end
+
+  def reschedule_appointment
+
+    yyyy = params[:yyyy].to_i
+    mm = params[:mm].to_i
+    dd = params[:dd].to_i
+    hour = params[:hour].to_i
+    minutes = params[:minutes].to_i
+
+    appointment = get_client_appointment(params[:client][:client_id])
+
+    if appointment.nil?
+      render :json => { error: "No tiene cita agendada actualmente" }, :status => :bad_request
+    end
+
+    appointment.time = Time.zone.parse("#{yyyy}-#{mm}-#{dd} #{hour}:#{minutes}:00")
+
+    if appointment.save
+      head :no_content
+    else
+      render :json => { error: "La cita no se pudo reagendar" }, :status => :bad_request
     end
   end
 
