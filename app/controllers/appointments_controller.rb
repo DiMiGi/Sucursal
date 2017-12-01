@@ -58,10 +58,9 @@ class AppointmentsController < ApplicationController
       client_names = params[:client][:client_names]
       client_email = params[:client][:client_email]
 
-
-
-
       min = (hour * 60) + minutes
+
+      puts params[:client]
 
       # Si el tiempo seleccionado no pertenece al conjunto de tiempos
       # disponibles, o si el conjunto de ejecutivos para ese tiempo es vacio
@@ -78,7 +77,10 @@ class AppointmentsController < ApplicationController
         time: Time.zone.parse("#{yyyy}-#{mm}-#{dd} #{hour}:#{minutes}:00"),
         client_id: client_id, client_names: client_names, client_email: client_email)
 
+
+
       if new_appointment.save
+        puts "============>s"
         render :json => {
 
           msg: "La hora ha sido correctamente agendada a las #{hour}:#{minutes.to_s.rjust(2, "0")}",
@@ -86,6 +88,7 @@ class AppointmentsController < ApplicationController
 
           }, :status => :ok
       else
+        puts "============>ns"
         render :json => { msg: "No se pudo agendar su hora" }, :status => :bad_request
       end
 
@@ -100,7 +103,7 @@ class AppointmentsController < ApplicationController
     # algun parametro pasado por la peticion, ya que se podria pasar cualquier
     # ID, y no necesariamente la que es del cliente.
 
-    appointment = get_client_appointment(params[:client][:client_id])
+    appointment = get_client_appointment(params[:client_id])
 
     if appointment.nil?
       render :json => { }, :status => :ok
@@ -111,7 +114,7 @@ class AppointmentsController < ApplicationController
 
   def cancel_appointment
 
-    appointment = get_client_appointment(params[:client][:client_id])
+    appointment = get_client_appointment(params[:client_id])
 
     if appointment.nil?
       render :json => { error: "No tiene cita agendada actualmente" }, :status => :bad_request
@@ -151,7 +154,7 @@ class AppointmentsController < ApplicationController
     # /url?client_id = 123
     # Tambien se deja como Pending en los rspec (pruebas unitarias).
 
-    client_id = params[:client][:client_id].to_i
+    client_id = params[:client_id].to_i
 
     # ------------------------------------------
 
