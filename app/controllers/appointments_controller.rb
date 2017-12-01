@@ -45,7 +45,7 @@ class AppointmentsController < ApplicationController
       hour = params[:hour].to_i
       minutes = params[:minutes].to_i
 
-      validadorCliente = params[:cliente]
+      validadorCliente = params[:client]
 
       # FALTA VALIDACION DE SI client_id ES RUT
       if (validadorCliente.nil?)
@@ -54,9 +54,9 @@ class AppointmentsController < ApplicationController
         return
       end
 
-      client_id = params[:cliente][:client_id]
-      client_names = params[:cliente][:client_names]
-      client_email = params[:cliente][:client_email]
+      client_id = params[:client][:client_id]
+      client_names = params[:client][:client_names]
+      client_email = params[:client][:client_email]
 
 
 
@@ -100,7 +100,7 @@ class AppointmentsController < ApplicationController
     # algun parametro pasado por la peticion, ya que se podria pasar cualquier
     # ID, y no necesariamente la que es del cliente.
 
-    appointment = get_client_appointment(params[:cliente][:client_id])
+    appointment = get_client_appointment(params[:client][:client_id])
 
     if appointment.nil?
       render :json => { }, :status => :ok
@@ -111,7 +111,7 @@ class AppointmentsController < ApplicationController
 
   def cancel_appointment
 
-    appointment = get_client_appointment(params[:cliente][:client_id])
+    appointment = get_client_appointment(params[:client][:client_id])
 
     if appointment.nil?
       render :json => { error: "No tiene cita agendada actualmente" }, :status => :bad_request
@@ -151,7 +151,7 @@ class AppointmentsController < ApplicationController
     # /url?client_id = 123
     # Tambien se deja como Pending en los rspec (pruebas unitarias).
 
-    client_id = params[:cliente][:client_id].to_i
+    client_id = params[:client][:client_id].to_i
 
     # ------------------------------------------
 
